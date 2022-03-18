@@ -1,8 +1,10 @@
 package io.github.tubean.eureka.zuulserver.security;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-public class JwtConfig {
+@Component
+public class JwtConfiguration {
     @Value("${security.jwt.uri:/auth/**}")
     private String Uri;
 
