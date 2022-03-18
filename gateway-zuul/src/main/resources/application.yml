@@ -1,0 +1,22 @@
+eureka:
+    client:
+        service-url:
+            default-zone: http://localhost:8761/eureka/
+        fetch-registry: 'false'
+        register-with-eureka: 'false'
+zuul:
+    ignored-services: '*'
+    routes:
+        auth-service:
+            service-id: AUTH-SERVICE
+            sensitive-headers: Cookie,Set-Cookie
+            path: /auth/**
+            strip-prefix: 'false'
+        gallery-service:
+            service-id: gallery-service
+            path: /gallery/**
+spring:
+    application:
+        name: gateway-zuul
+server:
+    port: '8762'
