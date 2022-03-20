@@ -1,0 +1,27 @@
+spring:
+    application:
+        name: gateway-zuul
+    cloud:
+        gateway:
+            routes:
+                - id: auth_route
+                  uri: http://localhost:9100
+                  predicates:
+                      - Path=/auth/**,/token/**
+                - id: gallery-route
+                  uri: http://localhost:8100
+                  predicates:
+                      - Path=/gallery/**
+                -   id: image-route
+                    uri: http://localhost:8200
+                    predicates:
+                        - Path=/image/**
+server:
+    port: '8761'
+
+jwt:
+    secret: ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave64ByteLength
+    ext: 28800
+    iteration: 33
+    keylength: 256
+
