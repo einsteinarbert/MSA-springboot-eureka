@@ -15,5 +15,5 @@
   - Authorization: Bearer xxxxxx
 
 ### 3. call microservice
-GET http://localhost:8761/image/ping
+GET http://localhost:8761/api/ping
 >> pong

@@ -4,18 +4,10 @@ spring:
     cloud:
         gateway:
             routes:
-                - id: auth_route
-                  uri: http://localhost:9100
-                  predicates:
-                      - Path=/auth/**,/token/**
-                - id: gallery-route
-                  uri: http://localhost:8100
-                  predicates:
-                      - Path=/gallery/**
-                -   id: image-route
+                -   id: game_api-route
                     uri: http://localhost:8200
                     predicates:
-                        - Path=/image/**
+                        - Path=/api/**
 server:
     port: '8761'
 
