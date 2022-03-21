@@ -1,13 +1,13 @@
-package io.github.config;
+package io.github.eureka.image;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ConfigApplication {
+public class GameApiApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ConfigApplication.class, args);
+        SpringApplication.run(GameApiApplication.class, args);
     }
 
 }
