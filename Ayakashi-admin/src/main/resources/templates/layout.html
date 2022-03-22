@@ -11,6 +11,7 @@
     <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
     <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
     <link rel="shortcut icon" th:href="@{/images/favicon.png}" />
 </head>
 
@@ -27,6 +28,9 @@
             </a>
         </div>
         <div class="navbar-menu-wrapper d-flex align-items-center">
+            <!--  Breadcrumb  -->
+            <section class="content-header" th:replace="common/breadcrumb::breadcrumb_fragment"></section>
+            <!--  END Breadcrumb  -->
             <ul class="navbar-nav navbar-nav-right">
                 <li class="nav-item dropdown d-none d-xl-inline-block">
                     <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
@@ -86,7 +90,7 @@
                     <div class="collapse" id="ui-jewel">
                         <ul class="nav flex-column sub-menu">
                             <li class="nav-item">
-                                <a class="nav-link" th:href="@{wallet/jewel-manager}">ジュエル商品</a>
+                                <a class="nav-link" th:href="@{jewel-manager}">ジュエル商品</a>
                             </li>
                         </ul>
                     </div>

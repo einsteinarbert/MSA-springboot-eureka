@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 public class WalletController {
 
-    @GetMapping(value = "/wallet/jewel-manager")
+    @GetMapping(value = "jewel-manager")
     public ModelMap jewelProductManager() {
         log.info("jewelProductManager()");
         return new ModelMap();
