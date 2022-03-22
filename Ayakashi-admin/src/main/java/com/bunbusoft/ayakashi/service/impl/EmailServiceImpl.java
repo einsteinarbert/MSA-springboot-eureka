@@ -8,6 +8,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
@@ -28,7 +30,14 @@ public class EmailServiceImpl implements EmailService {
                     StandardCharsets.UTF_8.name());
             Context context = new Context();
             context.setVariables(mail.getModel());
-            String html = templateEngine.process("email/email-template", context);
+            ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+            templateResolver.setPrefix("email");
+            templateResolver.setSuffix(".html");
+            templateResolver.setTemplateMode(TemplateMode.HTML);
+            templateResolver.setCharacterEncoding("UTF-8");
+            templateResolver.setOrder(0);
+            templateEngine.setTemplateResolver(templateResolver);
+            String html = templateEngine.process("//email-template", context);
             helper.setTo(mail.getTo());
             helper.setText(html, true);
             helper.setSubject(mail.getSubject());
