@@ -40,7 +40,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.rememberMe().key("uniqueAndSecret").tokenValiditySeconds(604800);
         http.authorizeRequests().antMatchers(
                         "/registration**",
                         "/registration/forgot-password**",
