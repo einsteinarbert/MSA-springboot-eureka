@@ -13,8 +13,8 @@ public class Administrators {
     private Long id;
 
     @NotNull
-    @Column(name = "activation")
-    private Integer activation;
+    @Column(name = "status")
+    private Integer status;
 
     @Column(name="name")
     private String name;
@@ -52,12 +52,12 @@ public class Administrators {
         this.id = id;
     }
 
-    public Integer getActivation() {
-        return activation;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setActivation(Integer activation) {
-        this.activation = activation;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public String getName() {

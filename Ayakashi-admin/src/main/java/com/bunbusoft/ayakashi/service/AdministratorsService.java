@@ -7,4 +7,5 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface AdministratorsService extends UserDetailsService {
     Administrators save(AdminRegistrationDTO registrationDto);
 
+    void updatePassword(String updatedPassword, Long id);
 }

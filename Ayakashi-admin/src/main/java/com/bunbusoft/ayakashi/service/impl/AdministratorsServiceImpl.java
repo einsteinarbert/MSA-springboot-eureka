@@ -34,6 +34,13 @@ public class AdministratorsServiceImpl implements AdministratorsService {
     }
 
     @Override
+    public void updatePassword(String updatedPassword, Long id) {
+        Administrators administrators = administratorsRepository.getById(id);
+        administrators.setEncryptedPassword(updatedPassword);
+        administratorsRepository.save(administrators);
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Administrators user = administratorsRepository.findByEmail(username);
         if(user == null) {

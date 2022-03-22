@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AdministratorsRepository extends JpaRepository<Administrators, Long> {
     Administrators findByEmail(String email);
+    Administrators findByResetPasswordToken(String token);
 }

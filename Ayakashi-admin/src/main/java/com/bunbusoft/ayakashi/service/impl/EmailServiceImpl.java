@@ -30,16 +30,9 @@ public class EmailServiceImpl implements EmailService {
                     StandardCharsets.UTF_8.name());
             Context context = new Context();
             context.setVariables(mail.getModel());
-            ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-            templateResolver.setPrefix("email");
-            templateResolver.setSuffix(".html");
-            templateResolver.setTemplateMode(TemplateMode.HTML);
-            templateResolver.setCharacterEncoding("UTF-8");
-            templateResolver.setOrder(0);
-            templateEngine.setTemplateResolver(templateResolver);
-            String html = templateEngine.process("//email-template", context);
+            String content = templateEngine.process("email/email-template", context);
             helper.setTo(mail.getTo());
-            helper.setText(html, true);
+            helper.setText(content, true);
             helper.setSubject(mail.getSubject());
             helper.setFrom(mail.getFrom());
             emailSender.send(message);

@@ -1,31 +1,41 @@
 package com.bunbusoft.ayakashi.controller;
 
-import com.bunbusoft.ayakashi.domain.Administrators;
-import com.bunbusoft.ayakashi.repository.AdministratorsRepository;
-import com.bunbusoft.ayakashi.service.AdministratorsService;
 import com.bunbusoft.ayakashi.service.RegistrationService;
 import com.bunbusoft.ayakashi.service.SecurityService;
 import com.bunbusoft.ayakashi.service.dto.PasswordForgotDTO;
+import com.bunbusoft.ayakashi.service.dto.PasswordResetDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
 public class RegistrationController {
-    @Autowired
+
     private SecurityService securityService;
-    @Autowired
-    RegistrationService registrationService;
+    private RegistrationService registrationService;
+
+    public RegistrationController(SecurityService securityService, RegistrationService registrationService) {
+        this.securityService = securityService;
+        this.registrationService = registrationService;
+    }
 
     @ModelAttribute("forgotPasswordForm")
     public PasswordForgotDTO forgotPasswordDto() {
         return new PasswordForgotDTO();
+    }
+
+    @ModelAttribute("passwordResetForm")
+    public PasswordResetDTO passwordResetDTO() {
+        return new PasswordResetDTO();
     }
 
     @GetMapping("/registration/login")
@@ -46,5 +56,19 @@ public class RegistrationController {
             BindingResult result,
             HttpServletRequest request) {
         return registrationService.sendMailToResetPassword(result, request, form);
+    }
+
+
+    @GetMapping("/registration/reset-password")
+    public String displayResetPasswordPage(@RequestParam(required = false) String token,
+                                           Model model) {
+        return registrationService.getDisplayResetPasswordPage(token, model);
+    }
+
+    @PostMapping("/registration/reset-password")
+    public String resetPasswordProcess(@ModelAttribute("passwordResetForm") @Valid PasswordResetDTO form,
+                                       BindingResult result,
+                                       RedirectAttributes redirectAttributes) {
+        return registrationService.resetPassword(result, redirectAttributes, form);
     }
 }
