@@ -13,19 +13,38 @@
 <body>
 <section layout:fragment="content">
     <form class="forms-sample form-inline">
-        <!--rename variable with th:with-->
-        <div th:with="data=${operations}" class="form-group mb-2 w-25 select-w-150">
-            <section  th:object="${data}" th:replace="common/select-css::select_fragment"/>
+        <div class="row">
+            <div class="col">
+<!--                start loop -->
+                <div class="row m-left-10x">
+                    <div class="form-group row pb-2 select-w-312x" th:with="data=${fields}">
+                        <section  th:object="${data}" th:replace="common/select-css::select_fragment"/>
+                    </div>
+                    <div class="form-group row pb-2 m-left-28x select-w-110" th:with="data=${conditions}">
+                        <section  th:object="${data}" th:replace="common/select-css::select_fragment"/>
+                    </div>
+                    <div class="form-group row pb-2 m-left-2 select-w-312x" th:with="data=${keywords}">
+                        <section  th:object="${data}" th:replace="common/select-css::select_fragment"/>
+                    </div>
+                    <div class="form-group row pb-2">
+                        <button class="btn btn-dark m-left-btn-30x">削除</button>
+                    </div>
+                </div>
+<!--                end loop-->
+                <div class="row m-left-10x">
+                    <div class="form-group row pb-2">
+                        <button class="btn btn-dark">検索条件を追加</button>
+                    </div>
+                    <div class="form-group row pb-2">
+                        <button class="btn btn-dark m-left-2">クリア</button>
+                    </div>
+                    <div class="form-group row pb-2">
+                        <button class="btn btn-dark m-left-2">検索</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div th:with="data=${conditions}" class="form-group mx-sm-3 mb-2 w-25">
-            <section  th:object="${data}" th:replace="common/select-css::select_fragment"/>
-        </div>
-        <div th:with="data=${keywords}" class="form-group mx-sm-3 mb-2 select-w-25">
-            <section  th:object="${data}" th:replace="common/select-css::select_fragment"/>
-        </div>
-        <div class="form-group mx-sm-3 mb-2">
-            <button class="btn btn-dark">削除</button>
-        </div>
+
     </form>
 </section>
 </body>

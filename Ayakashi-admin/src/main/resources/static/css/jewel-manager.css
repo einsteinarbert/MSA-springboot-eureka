@@ -16,3 +16,35 @@
 .select-w-250 select {
     width: 250% !important;
 }
+
+.select-w-312x select {
+    width: 312px !important;
+}
+
+.m-left-2, .m-left-2 select {
+    margin-inline-start: 2em
+}
+
+.m-left-28x select {
+    margin-left: 28px;
+}
+.m-left-btn-30x {
+    margin-left: 30px;
+}
+
+.m-left-5, .m-left-5 select {
+    margin-inline-start: 5em
+}
+.m-left-7 select {
+    margin-inline-start: 7em
+}
+.m-left-8 select {
+    margin-inline-start: 8em
+}
+.m-left-10 select {
+    margin-inline-start: 10em
+}
+
+.m-left-10x {
+    margin-inline-start: 10px
+}

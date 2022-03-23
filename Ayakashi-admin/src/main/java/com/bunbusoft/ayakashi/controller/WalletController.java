@@ -28,7 +28,7 @@ public class WalletController {
                 new Option("field2 longly loooog", "2"),
                 new Option("field3", "3")
         );
-        model.addAttribute("operations", Selector.builder()
+        model.addAttribute("fields", Selector.builder()
                 .showLabel(false)
                 .showToolTip(true)
                 .toolTip("フィールド")
