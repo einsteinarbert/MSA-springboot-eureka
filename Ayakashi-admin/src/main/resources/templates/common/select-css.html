@@ -1,0 +1,7 @@
+<div class="form-group" th:fragment="select_fragment">
+    <label for="exampleFormControlSelect1" th:if="${data.showLabel}" th:text="${data.labelValue}">Large select</label>
+    <select class="form-control form-control-lg" id="exampleFormControlSelect1">
+        <option th:text="${data.toolTip}"></option>
+        <option th:each="item : ${data.options}" th:value="${item.value}" th:text="${item.text}"></option>
+    </select>
+</div>

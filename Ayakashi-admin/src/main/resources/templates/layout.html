@@ -12,7 +12,7 @@
     <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/layout.css}">
-    <link rel="shortcut icon" th:href="@{/images/favicon.png}" />
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}"/>
 </head>
 
 <body>
@@ -21,10 +21,10 @@
     <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
             <a class="navbar-brand brand-logo" th:href="@{/pages/dashboard}">
-                <img th:src="@{/images/svg.svg}" alt="logo" />
+                <img th:src="@{/images/svg.svg}" alt="logo"/>
             </a>
             <a class="navbar-brand brand-logo-mini" th:href="@{/pages/dashboard}">
-                <img th:src="@{/images/logo-mini.svg}" alt="logo" />
+                <img th:src="@{/images/logo-mini.svg}" alt="logo"/>
             </a>
         </div>
         <div class="navbar-menu-wrapper d-flex align-items-center">
@@ -33,7 +33,8 @@
             <!--  END Breadcrumb  -->
             <ul class="navbar-nav navbar-nav-right">
                 <li class="nav-item dropdown d-none d-xl-inline-block">
-                    <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown"
+                       aria-expanded="false">
                         <span class="profile-text">Hello, Richard V.Welsh !</span>
                         <img class="img-xs rounded-circle" th:src="@{/images/faces/face1.jpg}" alt="Profile image">
                     </a>
@@ -41,13 +42,14 @@
                         <a class="dropdown-item">
                             Change Password
                         </a>
-                <a sec:authorize="isAuthenticated()" class="dropdown-item" th:href="@{/registration/logout}" >
+                        <a sec:authorize="isAuthenticated()" class="dropdown-item" th:href="@{/registration/logout}">
                             Sign Out
                         </a>
                     </div>
                 </li>
             </ul>
-            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                    data-toggle="offcanvas">
                 <span class="icon-menu"></span>
             </button>
         </div>
@@ -65,7 +67,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                    <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false"
+                       aria-controls="ui-basic">
                         <i class="menu-icon mdi mdi-content-copy"></i>
                         <span class="menu-title">仮想通貨</span>
                         <i class="menu-arrow"></i>
@@ -82,7 +85,8 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#ui-jewel" aria-expanded="false" aria-controls="ui-jewel">
+                    <a class="nav-link" data-toggle="collapse" href="#ui-jewel" aria-expanded="false"
+                       aria-controls="ui-jewel">
                         <i class="menu-icon mdi mdi-content-copy"></i>
                         <span class="menu-title">ウォレット</span>
                         <i class="menu-arrow"></i>
@@ -183,7 +187,7 @@
 <script th:src="@{/js/dashboard.js}"></script>
 <script type="text/javascript">
 
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         funApplicationDisabled();
 
