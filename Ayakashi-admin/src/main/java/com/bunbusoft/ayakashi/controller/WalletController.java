@@ -28,7 +28,7 @@ public class WalletController {
                 new Option("field2 longly loooog", "2"),
                 new Option("field3", "3")
         );
-        model.addAttribute("conditions", Selector.builder()
+        model.addAttribute("operations", Selector.builder()
                 .showLabel(false)
                 .showToolTip(true)
                 .toolTip("フィールド")
@@ -41,11 +41,18 @@ public class WalletController {
                 new Option("LIKE", "2"),
                 new Option("NOT LIKE", "3")
         );
-        model.addAttribute("operators", Selector.builder()
+        model.addAttribute("conditions", Selector.builder()
                 .showLabel(false)
                 .showToolTip(true)
                 .toolTip("条件")
                 .options(operators)
+                .build()
+        );
+        model.addAttribute("keywords", Selector.builder()
+                .showLabel(false)
+                .showToolTip(true)
+                .toolTip("キーワード")
+                .options(lst)
                 .build()
         );
         return "pages/jewel-manager"; // view
