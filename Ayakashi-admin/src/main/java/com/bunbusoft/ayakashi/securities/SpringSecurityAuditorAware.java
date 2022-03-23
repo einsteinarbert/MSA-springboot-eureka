@@ -1,6 +1,6 @@
 package com.bunbusoft.ayakashi.securities;
 
-import com.bunbusoft.ayakashi.utils.Constants;
+import com.bunbusoft.ayakashi.commons.Constants;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 

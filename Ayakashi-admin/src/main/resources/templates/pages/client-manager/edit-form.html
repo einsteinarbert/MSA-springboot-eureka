@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>新規登録</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="row">
+        <div class="col-md-12 text-center mb-2">
+            <h2 class="heading-section"> Cho nay la breadcrum</h2>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-7 grid-margin stretch-card">
+            <div class="col-md-9 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div th:if="${error}">
+                            <div class="alert alert-danger">
+                                <span th:text="${error}"></span>
+                            </div>
+                        </div>
+                        <form class="forms-sample" th:action="@{/pages/client-manager/edit-client}" th:object="${newClientForm}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" th:field="*{id}">
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label" for="client_token">クライアントID (*)</label>
+                                <input type="text" th:field="*{clientToken}" class="form-control col-sm-7" id="client_token" placeholder="クライアントID" required="true"/>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label" for="name">クライアント名 (*)</label>
+                                <input type="text" th:field="*{name}" class="form-control col-sm-7" id="name" placeholder="クライアント名">
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label" for="type">種別 (*)</label>
+                                <select th:field="*{clientType}" class="form-control form-control-sm col-sm-7" id="type" required="true">
+                                    <option value=0>ios</option>
+                                    <option value=1>android</option>
+                                </select>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label" for="version">要求バージョン (*)</label>
+                                <input type="text" th:field="*{requiredVersion}" class="form-control col-sm-7" id="version" placeholder="要求バージョン">
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label" for="itune">iTunes共有秘密鍵 (*)</label>
+                                <textarea th:field="*{itSecretKey}" class="form-control col-sm-7" id="itune" rows="5" required="true"></textarea>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label" for="uploadFile">P12証明書ファイル (*)</label>
+                                <input type="file" th:field="*{googlePlayJsonFile}" class="form-control-file col-sm-7" id="uploadFile" required="true">
+                            </div>
+                            <div class="w-100 text-md-center">
+                                <button type="submit" class="btn btn-success mr-2">登録</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
