@@ -1,15 +1,13 @@
 package com.bunbusoft.ayakashi.service.impl;
 
 import com.bunbusoft.ayakashi.service.EmailService;
-import com.bunbusoft.ayakashi.service.dto.Mail;
+import com.bunbusoft.ayakashi.service.dto.object.Mail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;

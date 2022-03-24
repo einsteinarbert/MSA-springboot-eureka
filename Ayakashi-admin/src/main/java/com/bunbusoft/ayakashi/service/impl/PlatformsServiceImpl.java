@@ -1,15 +1,20 @@
 package com.bunbusoft.ayakashi.service.impl;
 
+import com.bunbusoft.ayakashi.commons.Constants;
 import com.bunbusoft.ayakashi.domain.Platforms;
 import com.bunbusoft.ayakashi.repository.PlatformsRepository;
 import com.bunbusoft.ayakashi.service.PlatformsService;
-import com.bunbusoft.ayakashi.service.dto.ClientsDTO;
-import com.bunbusoft.ayakashi.service.dto.ClientssDTO;
-import com.bunbusoft.ayakashi.service.dto.NewPlatform;
+import com.bunbusoft.ayakashi.service.dto.object.ClientsDTO;
+import com.bunbusoft.ayakashi.service.dto.object.ClientssDTO;
+import com.bunbusoft.ayakashi.service.dto.object.NewPlatform;
+import com.bunbusoft.ayakashi.service.dto.paged.PageableCustom;
 import com.bunbusoft.ayakashi.utils.DataUtil;
 import com.bunbusoft.ayakashi.utils.JpaUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -17,6 +22,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,7 +45,8 @@ public class PlatformsServiceImpl implements PlatformsService {
     EntityManager em;
 
     @Override
-    public List<ClientssDTO> searchPlatform(ClientsDTO searchForm) {
+    public Page<ClientssDTO> searchPlatform(ClientsDTO searchForm, int pageNumber) {
+        PageableCustom pageable = new PageableCustom(pageNumber, Constants.numberPerPage, null);
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder("SELECT id, platform_token, name, platform_type, IF(platform_type = 0, 'ios', 'android') platform_type_name, " +
                                                 "required_version FROM platforms WHERE 1=1 ");
@@ -56,9 +64,15 @@ public class PlatformsServiceImpl implements PlatformsService {
             sql.append("AND IF(platform_type = 0, 'ios', 'android') = :platformType ");
             params.put("platformType", searchForm.getPlatformTypeName());
         }
-        Query query = em.createNativeQuery(sql.toString(), ClientssDTO.class);
+        String sqlCount = "SELECT COUNT(id) FROM ( " + sql + " ) T";
+        Query queryCount = em.createNativeQuery(sqlCount);
+        JpaUtil.setQueryParams(queryCount, params);
+        Query query = em.createNativeQuery(sql.toString(), ClientssDTO.class).setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize());;
         JpaUtil.setQueryParams(query, params);
-        return query.getResultList();
+        List<ClientssDTO> result = query.getResultList();
+        Long count = ((BigInteger) queryCount.getSingleResult()).longValue();
+        return new PageImpl<>(result, pageable, count);
     }
 
     @Override
@@ -69,11 +83,11 @@ public class PlatformsServiceImpl implements PlatformsService {
         if(!DataUtil.isNullOrEmpty(existClient)){
             if(DataUtil.isNullOrEmpty(form.getId())) {
                 model.addAttribute("error", "クライアントIDが存在します");
-                return "pages/platforms-manager/add-form";
+                return "pages/platform-manager/add-form";
             }else{
                 if(!existClient.getId().equals(form.getId())){
                     model.addAttribute("error", "クライアントIDが存在します");
-                    return "redirect:/pages/platforms-manager/edit-client?id="+form.getId();
+                    return "redirect:/pages/platform-manager/edit-client?id="+form.getId();
                 }
             }
         }
@@ -83,7 +97,7 @@ public class PlatformsServiceImpl implements PlatformsService {
             newClient.setCreatedAt(new Date());
             newClient.setUpdateAt(new Date());
             platformsRepository.save(newClient);
-            return ":redirect/pages/platforms-manager/search-form?add-success";
+            return ":redirect/pages/platform-manager/search-form?add-success";
         }else{
             Optional<Platforms>  oldClients = platformsRepository.findById(form.getId());
             if(oldClients.isPresent()) {
@@ -97,7 +111,7 @@ public class PlatformsServiceImpl implements PlatformsService {
                 newClient.setUpdateAt(new Date());
                 platformsRepository.save(newClient);
             }
-            return ":redirect/pages/platforms-manager/search-form?edit-success";
+            return ":redirect/pages/platform-manager/search-form?edit-success";
         }
     }
 }

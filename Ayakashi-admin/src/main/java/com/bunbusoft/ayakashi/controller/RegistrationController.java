@@ -2,9 +2,8 @@ package com.bunbusoft.ayakashi.controller;
 
 import com.bunbusoft.ayakashi.service.RegistrationService;
 import com.bunbusoft.ayakashi.service.SecurityService;
-import com.bunbusoft.ayakashi.service.dto.PasswordForgotDTO;
-import com.bunbusoft.ayakashi.service.dto.PasswordResetDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bunbusoft.ayakashi.service.dto.object.PasswordForgotDTO;
+import com.bunbusoft.ayakashi.service.dto.object.PasswordResetDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;

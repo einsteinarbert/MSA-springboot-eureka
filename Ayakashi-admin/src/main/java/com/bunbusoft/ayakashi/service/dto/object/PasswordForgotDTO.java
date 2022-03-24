@@ -1,4 +1,4 @@
-package com.bunbusoft.ayakashi.service.dto;
+package com.bunbusoft.ayakashi.service.dto.object;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;

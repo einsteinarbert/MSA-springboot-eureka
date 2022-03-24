@@ -7,6 +7,7 @@ public class Constants {
     public static final String SYSTEM = "system";
     public static final String DEFAULT_LANGUAGE = "en";
     public static final char DEFAULT_ESCAPE_CHAR = '\\';
+    public static final Integer numberPerPage = 10;
 
     private Constants() {}
 }

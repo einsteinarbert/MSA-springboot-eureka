@@ -1,4 +1,4 @@
-package com.bunbusoft.ayakashi.service.dto;
+package com.bunbusoft.ayakashi.service.dto.object;
 
 import com.bunbusoft.ayakashi.securities.FieldMatch;
 

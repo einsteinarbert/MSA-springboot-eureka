@@ -3,8 +3,8 @@ package com.bunbusoft.ayakashi.controller;
 import com.bunbusoft.ayakashi.domain.Platforms;
 import com.bunbusoft.ayakashi.repository.PlatformsRepository;
 import com.bunbusoft.ayakashi.service.PlatformsService;
-import com.bunbusoft.ayakashi.service.dto.ClientsDTO;
-import com.bunbusoft.ayakashi.service.dto.NewPlatform;
+import com.bunbusoft.ayakashi.service.dto.object.ClientsDTO;
+import com.bunbusoft.ayakashi.service.dto.object.NewPlatform;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,9 +31,12 @@ public class PlatformsController {
     }
 
     @GetMapping("/search-platform")
-    public String searchClient(@ModelAttribute("searchForm")@Valid ClientsDTO searchForm, Model model){
+    public String searchClient(@ModelAttribute("searchForm")@Valid ClientsDTO searchForm,
+                               @RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber, Model model){
 //        model.addAttribute("client", platformsService.searchClients(searchForm));
-        model.addAttribute("platforms", platformsService.searchPlatform(searchForm));
+
+        model.addAttribute("data", platformsService.searchPlatform(searchForm, pageNumber));
+        model.addAttribute("currentPage", pageNumber);
         return "pages/platforms-manager/search-form";
     }
 

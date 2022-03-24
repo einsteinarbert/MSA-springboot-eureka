@@ -30,7 +30,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="platform: ${platforms}">
+                            <tr th:each="platform: ${data}">
                                 <td th:text="${platform.id}"></td>
                                 <td th:text="${platform.platformToken}"></td>
                                 <td th:text="${platform.name}"></td>
@@ -39,6 +39,7 @@
                             </tr>
                             </tbody>
                         </table>
+                        <div th:insert="~{common/pagination :: pagination(data=${data}, currentPage=${currentPage})}"></div>
                     </div>
                 </div>
             </div>

@@ -22,7 +22,7 @@
                                 <span th:text="${error}"></span>
                             </div>
                         </div>
-                        <form class="forms-sample" th:action="@{/pages/platforms-manager/edit-platform}" th:object="${newPlatform}" method="post" enctype="multipart/form-data">
+                        <form class="forms-sample" th:action="@{/pages/platform-manager/edit-platform}" th:object="${newPlatform}" method="post" enctype="multipart/form-data">
                             <input type="hidden" th:field="*{id}">
                             <div class="form-group row">
                                 <label class="col-sm-4 col-form-label" for="platform_token">クライアントID (*)</label>
