@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * Project: MSA-springboot-eureka.<br/>
  * Des: <br/>
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Option {
+public class Option implements Serializable {
     private String text;
-    private String value;
+    private int value;
 }

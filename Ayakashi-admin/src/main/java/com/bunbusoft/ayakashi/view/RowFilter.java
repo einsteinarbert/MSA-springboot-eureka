@@ -6,24 +6,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Project: MSA-springboot-eureka.<br/>
  * Des: <br/>
  * User: HieuTT<br/>
- * Date: 23/03/2022<br/>
- * Time: 15:38<br/>
+ * Date: 24/03/2022<br/>
+ * Time: 14:50<br/>
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
-public class Selector implements Serializable {
-    private boolean showLabel = true;
-    private String labelValue;
-    private boolean showToolTip = true;
-    private String toolTip;
-    private List<Option> options;
-    private int curValue = 0; // current selected value
+public class RowFilter implements Serializable {
+    private List<Selector> selectors;
+    private boolean isDefault;
 }
