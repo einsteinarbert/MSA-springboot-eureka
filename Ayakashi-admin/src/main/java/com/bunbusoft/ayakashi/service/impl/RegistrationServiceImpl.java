@@ -5,10 +5,9 @@ import com.bunbusoft.ayakashi.repository.AdministratorsRepository;
 import com.bunbusoft.ayakashi.service.AdministratorsService;
 import com.bunbusoft.ayakashi.service.EmailService;
 import com.bunbusoft.ayakashi.service.RegistrationService;
-import com.bunbusoft.ayakashi.service.dto.Mail;
-import com.bunbusoft.ayakashi.service.dto.PasswordForgotDTO;
-import com.bunbusoft.ayakashi.service.dto.PasswordResetDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bunbusoft.ayakashi.service.dto.object.Mail;
+import com.bunbusoft.ayakashi.service.dto.object.PasswordForgotDTO;
+import com.bunbusoft.ayakashi.service.dto.object.PasswordResetDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -83,9 +82,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     public String getDisplayResetPasswordPage(String token, Model model) {
         Administrators administrators = administratorsRepository.findByResetPasswordToken(token);
         if (administrators == null){
-            model.addAttribute("error", "Could not find password reset token.");
+            model.addAttribute("error", "パスワードリセットトークンが見つかりませんでした。");
         } else if (this.isExpired(administrators.getResetPasswordSentAt(), 30)){
-            model.addAttribute("error", "Token has expired, please request a new password reset.");
+            model.addAttribute("error", "トークンの有効期限が切れています。新しいパスワードのリセットをリクエストしてください。");
         } else {
             model.addAttribute("token", token);
         }

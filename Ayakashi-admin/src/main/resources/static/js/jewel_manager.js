@@ -48,11 +48,11 @@ $(document).ready(function () {
     if (filter.length > 0) {
       // ajax
       post("/api/search-jewel", filter, function (data) {
-        console.info(data);
-      },
-      function (a, _b, _c) {
-        console.error(a)
-      }
+          console.info(data);
+        },
+          function (a, _b, _c) {
+          console.error(a)
+        }
       );
     }
   });

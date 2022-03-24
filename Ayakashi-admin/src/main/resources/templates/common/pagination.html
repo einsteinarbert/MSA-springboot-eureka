@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pagination</title>
+</head>
+<body>
+<div class="justify-content-end" th:fragment="pagination(data, currentPage)">
+    <div class="row col-sm-12 justify-content-end">
+        <div class="col-sm-1">
+        [[${data.totalElements}]]件
+        </div>
+        <div class="col-sm-11 flex-column flex-wrap">
+        <ul class="pagination justify-content-end flex-wrap" th:if="${data.totalElements > 1}">
+            <li class="page-item" th:classappend="${ currentPage != 1 ? '' : 'disabled'}">
+                <a class="page-link" th:href="@{'?pageNumber=' + ${currentPage - 1}}">前のページ</a>
+            </li>
+            <th:block th:each="i: ${#numbers.sequence(1, data.totalPages)}">
+                <li class="page-item" th:classappend="${ i == currentPage ? 'active' : '' }">
+                    <a class="page-link" th:href="@{'?pageNumber=' + ${i}}" th:text="${i}"></a>
+                </li>
+            </th:block>
+            <li class="page-item" th:classappend="${ currentPage != data.totalPages ? '' : 'disabled'}">
+                <a class="page-link" th:href="@{'?pageNumber=' + ${currentPage + 1}}">次のページ</a>
+            </li>
+        </ul>
+    </div>
+    </div>
+<!--    </nav>-->
+</div>
+</body>
+</html>

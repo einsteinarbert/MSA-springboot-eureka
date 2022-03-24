@@ -3,13 +3,11 @@ package com.bunbusoft.ayakashi.service.impl;
 import com.bunbusoft.ayakashi.domain.Administrators;
 import com.bunbusoft.ayakashi.repository.AdministratorsRepository;
 import com.bunbusoft.ayakashi.service.AdministratorsService;
-import com.bunbusoft.ayakashi.service.dto.AdminRegistrationDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bunbusoft.ayakashi.service.dto.object.AdminRegistrationDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;

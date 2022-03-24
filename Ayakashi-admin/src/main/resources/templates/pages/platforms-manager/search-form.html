@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>新規登録</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="row">
+        <div class="col-md-12 text-center mb-2">
+            <h4 class="heading-section"> Cho nay la breadcrum</h4>
+        </div>
+        <div> Cho nay la search form</div>
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <a class="btn btn-dark" th:href="@{/pages/platform-manager/add-platform}">新規登録</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>プラットホームID</th>
+                                <th>プラットホーム名</th>
+                                <th>種別</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="platform: ${data}">
+                                <td th:text="${platform.id}"></td>
+                                <td th:text="${platform.platformToken}"></td>
+                                <td th:text="${platform.name}"></td>
+                                <td th:text="${platform.platformTypeName}"></td>
+                                <td><a th:href="@{/pages/platform-manager/edit-platform?id={id}(id=${platform.id})}">編集</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div th:insert="~{common/pagination :: pagination(data=${data}, currentPage=${currentPage})}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
