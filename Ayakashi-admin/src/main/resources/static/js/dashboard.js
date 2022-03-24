@@ -68,3 +68,39 @@
     }
   });
 })(jQuery);
+
+function post(url, data, callback, raise) {
+  $.ajax({
+    url: url,
+    type: 'post',
+    data: JSON.stringify(data), // convert to json
+    contentType: "application/json",
+    beforeSend: function(xhr){
+      xhr.withCredentials = true;
+    },
+    success: function (data) {
+      callback(data);
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+      raise(xhr, ajaxOptions, thrownError);
+    }
+  });
+}
+
+function get(url, data, callback, raise) {
+  $.ajax({
+    url: url,
+    type: 'get',
+    data: JSON.stringify(data),
+    contentType: "application/json", // convert to json
+    beforeSend: function(xhr){
+      xhr.withCredentials = true;
+    },
+    success: function (data) {
+      callback(data);
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+      raise(xhr, ajaxOptions, thrownError);
+    }
+  });
+}

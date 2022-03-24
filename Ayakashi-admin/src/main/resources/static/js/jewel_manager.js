@@ -44,12 +44,16 @@ $(document).ready(function () {
           });
         }
     }
-    console.log(filter);
+    console.log(JSON.stringify(filter));
     if (filter.length > 0) {
       // ajax
-      $.post("/api/search-jewel", filter, function (res) {
-        console.log("Ajax result:" + res);
-      });
+      post("/api/search-jewel", filter, function (data) {
+        console.info(data);
+      },
+      function (a, _b, _c) {
+        console.error(a)
+      }
+      );
     }
   });
 
