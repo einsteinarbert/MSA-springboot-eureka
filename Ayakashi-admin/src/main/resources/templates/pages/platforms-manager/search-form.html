@@ -16,26 +16,26 @@
             <div class="card">
                 <div class="card-body">
                     <div class="form-group">
-                        <a class="btn btn-primary" th:href="@{/pages/client-manager/add-client}">新規登録</a>
+                        <a class="btn btn-dark" th:href="@{/pages/platform-manager/add-platform}">新規登録</a>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>クライアントID</th>
-                                <th>クライアント名</th>
+                                <th>プラットホームID</th>
+                                <th>プラットホーム名</th>
                                 <th>種別</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="client: ${clients}">
-                                <td th:text="${client.id}"></td>
-                                <td th:text="${client.clientToken}"></td>
-                                <td th:text="${client.name}"></td>
-                                <td th:text="${client.clientTypeName}"></td>
-                                <td><a th:href="@{/pages/client-manager/edit-client?id={id}(id=${client.id})}">編集</a></td>
+                            <tr th:each="platform: ${platforms}">
+                                <td th:text="${platform.id}"></td>
+                                <td th:text="${platform.platformToken}"></td>
+                                <td th:text="${platform.name}"></td>
+                                <td th:text="${platform.platformTypeName}"></td>
+                                <td><a th:href="@{/pages/platform-manager/edit-platform?id={id}(id=${platform.id})}">編集</a></td>
                             </tr>
                             </tbody>
                         </table>
@@ -45,6 +45,5 @@
         </div>
     </div>
 </section>
-
 </body>
 </html>

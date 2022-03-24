@@ -5,24 +5,24 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-@Table(name="clients")
-public class Clients {
+@Table(name="platforms")
+public class Platforms {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
 
     @NotNull
-    @Column(name="client_token")
-    private String clientToken;
+    @Column(name="platform_token")
+    private String platFormToken;
 
     @NotNull
     @Column(name="name")
     private String name;
 
     @NotNull
-    @Column(name="client_type")
-    private Integer clientType;
+    @Column(name="platform_type")
+    private Integer platformType;
 
     @NotNull
     @Column(name="required_version")
@@ -50,12 +50,12 @@ public class Clients {
         this.id = id;
     }
 
-    public String getClientToken() {
-        return clientToken;
+    public String getPlatFormToken() {
+        return platFormToken;
     }
 
-    public void setClientToken(String clientToken) {
-        this.clientToken = clientToken;
+    public void setPlatFormToken(String platFormToken) {
+        this.platFormToken = platFormToken;
     }
 
     public String getName() {
@@ -66,12 +66,12 @@ public class Clients {
         this.name = name;
     }
 
-    public Integer getClientType() {
-        return clientType;
+    public Integer getPlatformType() {
+        return platformType;
     }
 
-    public void setClientType(Integer clientType) {
-        this.clientType = clientType;
+    public void setPlatformType(Integer platformType) {
+        this.platformType = platformType;
     }
 
     public Integer getRequiredVersion() {

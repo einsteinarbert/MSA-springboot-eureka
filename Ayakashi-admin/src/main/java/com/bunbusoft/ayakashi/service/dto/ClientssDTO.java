@@ -10,17 +10,17 @@ public class ClientssDTO {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "client_token", nullable = false)
-    private String clientToken;
+    @Column(name = "platform_token", nullable = false)
+    private String platformToken;
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "client_type", nullable = false)
-    private Integer clientType;
+    @Column(name = "platform_type", nullable = false)
+    private Integer platformType;
 
-    @Column(name = "client_type_name", nullable = false, length = 7)
-    private String clientTypeName;
+    @Column(name = "platform_type_name", nullable = false, length = 7)
+    private String platformTypeName;
 
     @Column(name = "required_version", nullable = false)
     private Integer requiredVersion;
@@ -29,20 +29,20 @@ public class ClientssDTO {
         return requiredVersion;
     }
 
-    public String getClientTypeName() {
-        return clientTypeName;
+    public String getPlatformTypeName() {
+        return platformTypeName;
     }
 
-    public Integer getClientType() {
-        return clientType;
+    public Integer getPlatformType() {
+        return platformType;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getClientToken() {
-        return clientToken;
+    public String getPlatformToken() {
+        return platformToken;
     }
 
     public Long getId() {

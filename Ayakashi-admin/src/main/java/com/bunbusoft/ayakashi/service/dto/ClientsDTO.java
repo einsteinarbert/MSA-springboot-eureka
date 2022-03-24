@@ -2,17 +2,17 @@ package com.bunbusoft.ayakashi.service.dto;
 
 public class ClientsDTO {
     private Long id;
-    private String clientToken;
+    private String platformToken;
     private String name;
-    private Integer clientType;
-    private String clientTypeName;
+    private Integer platformType;
+    private String platformTypeName;
 
-    public ClientsDTO(Long id, String clientToken, String name, Integer clientType, String clientTypeName) {
+    public ClientsDTO(Long id, String platformToken, String name, Integer platformType, String platformTypeName) {
         this.id = id;
-        this.clientToken = clientToken;
+        this.platformToken = platformToken;
         this.name = name;
-        this.clientType = clientType;
-        this.clientTypeName = clientTypeName;
+        this.platformType = platformType;
+        this.platformTypeName = platformTypeName;
     }
 
     public ClientsDTO() {
@@ -30,12 +30,12 @@ public class ClientsDTO {
         this.id = id;
     }
 
-    public String getClientToken() {
-        return clientToken;
+    public String getPlatformToken() {
+        return platformToken;
     }
 
-    public void setClientToken(String clientToken) {
-        this.clientToken = clientToken;
+    public void setPlatformToken(String platformToken) {
+        this.platformToken = platformToken;
     }
 
     public String getName() {
@@ -46,19 +46,19 @@ public class ClientsDTO {
         this.name = name;
     }
 
-    public Integer getClientType() {
-        return clientType;
+    public Integer getPlatformType() {
+        return platformType;
     }
 
-    public void setClientType(Integer clientType) {
-        this.clientType = clientType;
+    public void setPlatformType(Integer platformType) {
+        this.platformType = platformType;
     }
 
-    public String getClientTypeName() {
-        return clientTypeName;
+    public String getPlatformTypeName() {
+        return platformTypeName;
     }
 
-    public void setClientTypeName(String clientTypeName) {
-        this.clientTypeName = clientTypeName;
+    public void setPlatformTypeName(String platformTypeName) {
+        this.platformTypeName = platformTypeName;
     }
 }

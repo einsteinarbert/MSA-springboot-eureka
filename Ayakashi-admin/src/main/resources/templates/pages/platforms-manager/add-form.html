@@ -22,11 +22,10 @@
                                 <span th:text="${error}"></span>
                             </div>
                         </div>
-                        <form class="forms-sample" th:action="@{/pages/client-manager/edit-client}" th:object="${newClientForm}" method="post" enctype="multipart/form-data">
-                            <input type="hidden" th:field="*{id}">
+                        <form class="forms-sample" th:action="@{/pages/platforms-manager/add-platform}" th:object="${newPlatform}" method="post" enctype="multipart/form-data">
                             <div class="form-group row">
-                                <label class="col-sm-4 col-form-label" for="client_token">クライアントID (*)</label>
-                                <input type="text" th:field="*{clientToken}" class="form-control col-sm-7" id="client_token" placeholder="クライアントID" required="true"/>
+                                <label class="col-sm-4 col-form-label" for="platform_token">クライアントID (*)</label>
+                                <input type="text" th:field="*{platformToken}" class="form-control col-sm-7" id="platform_token" placeholder="クライアントID" required="true"/>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-4 col-form-label" for="name">クライアント名 (*)</label>
@@ -34,7 +33,7 @@
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-4 col-form-label" for="type">種別 (*)</label>
-                                <select th:field="*{clientType}" class="form-control form-control-sm col-sm-7" id="type" required="true">
+                                <select th:field="*{platformType}" class="form-control form-control-sm col-sm-7" id="type" required="true">
                                     <option value=0>ios</option>
                                     <option value=1>android</option>
                                 </select>
@@ -53,7 +52,7 @@
                                 <input type="file" th:field="*{googlePlayJsonFile}" class="form-control-file col-sm-7" id="uploadFile" required="true">
                             </div>
                             <div class="w-100 text-md-center">
-                                <button type="submit" class="btn btn-success mr-2">登録</button>
+                            <button type="submit" class="btn btn-success mr-2">登録</button>
                             </div>
                         </form>
                     </div>
