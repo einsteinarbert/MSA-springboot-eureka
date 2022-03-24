@@ -1,10 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>新規登録</title>
 </head>
 <body>
+<section layout:fragment="content">
+    <div class="row">
+        <div class="col-md-12 text-center mb-2">
+            <h4 class="heading-section"> Cho nay la breadcrum</h4>
+        </div>
+        <div> Cho nay la search form</div>
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <a class="btn btn-primary" th:href="@{/pages/client-manager/add-client}">新規登録</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>クライアントID</th>
+                                <th>クライアント名</th>
+                                <th>種別</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="client: ${clients}">
+                                <td th:text="${client.id}"></td>
+                                <td th:text="${client.clientToken}"></td>
+                                <td th:text="${client.name}"></td>
+                                <td th:text="${client.clientTypeName}"></td>
+                                <td><a th:href="@{/pages/client-manager/edit-client?id={id}(id=${client.id})}">編集</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 </body>
 </html>

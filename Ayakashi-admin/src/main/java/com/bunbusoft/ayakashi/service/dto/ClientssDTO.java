@@ -25,10 +25,6 @@ public class ClientssDTO {
     @Column(name = "required_version", nullable = false)
     private Integer requiredVersion;
 
-
-    @Column(name = "it_secret_key", nullable = false)
-    private String itSecretKey;
-
     public Integer getRequiredVersion() {
         return requiredVersion;
     }

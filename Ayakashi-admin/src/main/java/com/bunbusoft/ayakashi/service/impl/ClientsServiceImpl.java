@@ -42,22 +42,22 @@ public class ClientsServiceImpl implements ClientsService {
     EntityManager em;
 
     @Override
-    public List<ClientssDTO> searchClients(ClientssDTO searchForm) {
+    public List<ClientssDTO> searchClients(ClientsDTO searchForm) {
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder("SELECT id, client_token, name, client_type, IF(client_type = 0, 'ios', 'android') client_type_name, " +
                                                 "required_version FROM clients WHERE 1=1 ");
-        if(DataUtil.isNullOrEmpty(searchForm.getClientToken())){
-            sql.append("AND client_token = :clientToken");
+        if(!DataUtil.isNullOrEmpty(searchForm.getClientToken())){
+            sql.append("AND client_token = :clientToken ");
             params.put("clientToken", searchForm.getClientToken());
         }
 
-        if(DataUtil.isNullOrEmpty(searchForm.getName())){
-            sql.append("AND name = :name");
+        if(!DataUtil.isNullOrEmpty(searchForm.getName())){
+            sql.append("AND name = :name ");
             params.put("name", searchForm.getName());
         }
 
-        if(DataUtil.isNullOrEmpty(searchForm.getName())){
-            sql.append("AND IF(client_type = 0, 'ios', 'android') = :clientType");
+        if(!DataUtil.isNullOrEmpty(searchForm.getName())){
+            sql.append("AND IF(client_type = 0, 'ios', 'android') = :clientType ");
             params.put("clientType", searchForm.getClientTypeName());
         }
         Query query = em.createNativeQuery(sql.toString(), ClientssDTO.class);

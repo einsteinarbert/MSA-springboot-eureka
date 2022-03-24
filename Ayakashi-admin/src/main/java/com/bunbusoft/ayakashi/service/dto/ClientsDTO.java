@@ -15,6 +15,9 @@ public class ClientsDTO {
         this.clientTypeName = clientTypeName;
     }
 
+    public ClientsDTO() {
+    }
+
     public ClientsDTO(Long id) {
         this.id = id;
     }

@@ -3,6 +3,8 @@ package com.bunbusoft.ayakashi.controller;
 import com.bunbusoft.ayakashi.domain.Clients;
 import com.bunbusoft.ayakashi.repository.ClientsRepository;
 import com.bunbusoft.ayakashi.service.ClientsService;
+import com.bunbusoft.ayakashi.service.dto.ClientsDTO;
+import com.bunbusoft.ayakashi.service.dto.ClientssDTO;
 import com.bunbusoft.ayakashi.service.dto.NewClientForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +29,13 @@ public class ClientsController {
     @ModelAttribute("newClientForm")
     public NewClientForm newClientFormDTO() {
         return new NewClientForm();
+    }
+
+    @GetMapping("/search-client")
+    public String searchClient(@ModelAttribute("searchForm")@Valid ClientsDTO searchForm, Model model){
+//        model.addAttribute("client", clientsService.searchClients(searchForm));
+        model.addAttribute("clients", clientsService.searchClients(searchForm));
+        return "pages/client-manager/search-form";
     }
 
     @GetMapping("/add-client")
