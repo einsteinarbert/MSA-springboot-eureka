@@ -6,12 +6,11 @@
 </head>
 <body>
 <div class="justify-content-end" th:fragment="pagination(data, currentPage)">
-    <div class="row col-sm-12 justify-content-end">
-        <div class="col-sm-1">
+    <div class="row mr-0 justify-content-end pr-0">
+        <div class="mr-5 mt-2" style="font-size: 14px;">
         [[${data.totalElements}]]件
         </div>
-        <div class="col-sm-11 flex-column flex-wrap">
-        <ul class="pagination justify-content-end flex-wrap" th:if="${data.totalElements > 1}">
+        <ul class="pagination" th:if="${data.totalElements > 1}">
             <li class="page-item" th:classappend="${ currentPage != 1 ? '' : 'disabled'}">
                 <a class="page-link" th:href="@{'?pageNumber=' + ${currentPage - 1}}">前のページ</a>
             </li>
@@ -24,7 +23,6 @@
                 <a class="page-link" th:href="@{'?pageNumber=' + ${currentPage + 1}}">次のページ</a>
             </li>
         </ul>
-    </div>
     </div>
 <!--    </nav>-->
 </div>
