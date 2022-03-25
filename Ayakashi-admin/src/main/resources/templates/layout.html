@@ -22,26 +22,24 @@
             <a class="navbar-brand brand-logo" th:href="@{/pages/dashboard}">
                 <img th:src="@{/images/svg.svg}" alt="logo" />
             </a>
-            <a class="navbar-brand brand-logo-mini" th:href="@{/pages/dashboard}">
-                <img th:src="@{/images/logo-mini.svg}" alt="logo" />
-            </a>
         </div>
         <div class="navbar-menu-wrapper d-flex align-items-center">
             <ul class="navbar-nav navbar-nav-right">
-                <li class="nav-item dropdown d-none d-xl-inline-block">
-                    <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
-                        <span class="profile-text">Hello, Richard V.Welsh !</span>
-                        <img class="img-xs rounded-circle" th:src="@{/images/faces/face1.jpg}" alt="Profile image">
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
-                        <a class="dropdown-item">
-                            Change Password
+                <span class="profile-text">Hello, Richard V.Welsh!</span>
+                <div class="mr-1"></div>
+<!--                <li class="nav-item dropdown d-none d-xl-inline-block">-->
+<!--                    <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">-->
+<!--                        <span class="profile-text">Hello, Richard V.Welsh !</span>-->
+<!--                    </a>-->
+<!--                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">-->
+<!--                        <a class="dropdown-item">-->
+<!--                            Change Password-->
+<!--                        </a>-->
+                        <a sec:authorize="isAuthenticated()" class="btn btn-dark" th:href="@{/registration/logout}" >
+                            ログアウト
                         </a>
-                <a sec:authorize="isAuthenticated()" class="dropdown-item" th:href="@{/registration/logout}" >
-                            Sign Out
-                        </a>
-                    </div>
-                </li>
+<!--                    </div>-->
+<!--                </li>-->
             </ul>
             <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
                 <span class="icon-menu"></span>
@@ -84,9 +82,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{platform-manager/search-platform?pageNumber=1}">
-                        <i class="menu-icon mdi mdi-chart-line"></i>
-                        <span class="menu-title">Charts</span>
+                    <a class="nav-link" th:href="@{/pages/platform-manager/search-platform?pageNumber=1}">
+                        <span class="menu-title">プラットホーム</span>
                     </a>
                 </li>
                 <li class="nav-item">
