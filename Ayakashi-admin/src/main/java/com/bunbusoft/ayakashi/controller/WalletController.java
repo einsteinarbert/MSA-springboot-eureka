@@ -1,81 +1,40 @@
 package com.bunbusoft.ayakashi.controller;
 
 import com.bunbusoft.ayakashi.securities.FieldMatch;
-import com.bunbusoft.ayakashi.view.JewelState;
-import com.bunbusoft.ayakashi.view.Option;
+import com.bunbusoft.ayakashi.utils.ViewUtils;
 import com.bunbusoft.ayakashi.view.RowFilter;
-import com.bunbusoft.ayakashi.view.Selector;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "pages")
 @Slf4j
 @Scope("request")
 public class WalletController {
-    @Autowired
-    private JewelState state;
 
     @ModelAttribute("rowFilter")
-    public List<RowFilter> inIntScreen(Model model) {
-
-        List<RowFilter> list = (List<RowFilter>) model.getAttribute("rowFilter");
-        if (CollectionUtils.isEmpty(list)) {
-            list = new ArrayList<>();
-            List<Option> lst = Arrays.asList(
-                    new Option("field1", 1),
-                    new Option("field2 longly loooog", 2),
-                    new Option("field3", 3)
-            );
-            Selector field = Selector.builder()
-                    .showLabel(false)
-                    .showToolTip(true)
-                    .toolTip("フィールド")
-                    .options(lst)
-                    .build();
-            RowFilter row = RowFilter.builder()
-                    .isDefault(true)
-                    .selectors(new ArrayList<>())
-                    .build();
-            row.getSelectors().add(field);
-            List<Option> operators = Arrays.asList(
-                    new Option("=", 1),
-                    new Option("LIKE", 2),
-                    new Option("NOT LIKE", 3)
-            );
-            var conditions = Selector.builder()
-                    .showLabel(false)
-                    .showToolTip(true)
-                    .toolTip("条件")
-                    .options(operators)
-                    .build();
-            row.getSelectors().add(conditions);
-
-            var keywords = Selector.builder()
-                    .showLabel(false)
-                    .showToolTip(true)
-                    .toolTip("キーワード")
-                    .options(lst)
-                    .build();
-            row.getSelectors().add(keywords);
-            list.add(row);
-        }
-        state.setData(list);
-        return list;
+    public List<RowFilter> inIntScreen() {
+        Map<String, String> fieldMap = new HashMap<>();
+        fieldMap.put("jp.id", "ID");
+        fieldMap.put("jp.client_id", "クライアント");
+        fieldMap.put("jp.product_code", "商品ID");
+        fieldMap.put("w.display_name", "ウォレット名");
+        fieldMap.put("jp.number", "枚数");
+        fieldMap.put("bonus.display_name", "ボーナス\nウォレット名");
+        fieldMap.put("jp.bonus_number", "ボーナス\n枚数");
+        return ViewUtils.getFormCondition(fieldMap);
     }
 
     @Data
