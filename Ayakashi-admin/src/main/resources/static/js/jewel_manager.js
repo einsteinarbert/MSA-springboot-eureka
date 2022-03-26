@@ -44,7 +44,6 @@ $(document).ready(function () {
           });
         }
     }
-    console.log(JSON.stringify(filter));
     if (filter.length > 0) {
       // ajax
       post("/api/search-jewel", filter, function (data) {

@@ -20,8 +20,9 @@
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
-            <a class="navbar-brand brand-logo" th:href="@{/pages/dashboard}">
-                <img th:src="@{/images/svg.svg}" alt="logo"/>
+            <a class="navbar-brand brand-logo text-body align-items-center" th:href="@{/pages/dashboard}">
+            <h1 class="mb-0">AKAYASHI</h1>
+<!--                <img th:src="@{/images/svg.svg}" alt="logo"/>-->
             </a>
         </div>
         <div class="navbar-menu-wrapper d-flex align-items-center">
@@ -137,14 +138,10 @@
                 </li>
             </ul>
         </nav>
-        <!-- partial -->
         <div class="main-panel">
             <div class="content-wrapper" layout:fragment="content">
                 Content is Here!
             </div>
-            <!-- content-wrapper ends -->
-
-            <!-- partial:partials/_footer.html -->
             <footer class="footer">
                 <div class="container-fluid clearfix">
             <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © 2018
@@ -154,17 +151,9 @@
             </span>
                 </div>
             </footer>
-            <!-- partial -->
         </div>
-        <!-- main-panel ends -->
-
     </div>
-
-    <!-- page-body-wrapper ends -->
 </div>
-<!-- container-scroller -->
-
-<!-- plugins:js -->
 <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
 <script th:src="@{/vendors/js/vendor.bundle.addons.js}"></script>
 <script th:src="@{/js/off-canvas.js}"></script>
@@ -222,6 +211,5 @@
 
 </script>
 <script th:src="@{/js/jewel_manager.js}"></script>
-
 </body>
 </html>

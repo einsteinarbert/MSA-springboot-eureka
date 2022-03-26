@@ -8,7 +8,6 @@
 <section layout:fragment="content">
     <form class="forms-sample form-inline" id="search_form" th:object="${filterJewelDTO}">
         <div class="row" th:object="${rowFilter}">
-<!--            <input style="display: none" th:value="${rowFilter}" id="rowFilterLst"/>-->
             <div class="col">
 <!--                start loop -->
                 <div class="row m-left-10x form-group-filter" th:each="item : ${rowFilter}" id="form_condition_root">
@@ -25,7 +24,6 @@
                         <button class="btn btn-dark m-left-btn-30x btn_remove" id="${item.isDefault} ? 'btn_clear' : ''">削除</button>
                     </div>
                 </div>
-<!--                end loop-->
                 <div class="row m-left-10x" id="button-group">
                     <div class="form-group row pb-2">
                         <button class="btn btn-dark" th:onclick="'addConditions()'">検索条件を追加</button>
@@ -39,7 +37,6 @@
                 </div>
             </div>
         </div>
-
     </form>
     <link rel="stylesheet" th:href="@{/css/jewel-manager.css}">
 </section>

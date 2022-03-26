@@ -32,7 +32,6 @@ public class WalletController {
 
     @ModelAttribute("rowFilter")
     public List<RowFilter> inIntScreen(Model model) {
-
         List<RowFilter> list = (List<RowFilter>) model.getAttribute("rowFilter");
         if (CollectionUtils.isEmpty(list)) {
             list = new ArrayList<>();

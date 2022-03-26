@@ -83,11 +83,11 @@ public class PlatformsServiceImpl implements PlatformsService {
         if(!DataUtil.isNullOrEmpty(existClient)){
             if(DataUtil.isNullOrEmpty(form.getId())) {
                 model.addAttribute("error", "クライアントIDが存在します");
-                return "pages/platform-manager/add-form";
+                return "pages/platform-manager/add-platform";
             }else{
                 if(!existClient.getId().equals(form.getId())){
                     model.addAttribute("error", "クライアントIDが存在します");
-                    return "redirect:/pages/platform-manager/edit-client?id="+form.getId();
+                    return "redirect:/pages/platform-manager/edit-platform?id="+form.getId();
                 }
             }
         }
@@ -97,7 +97,7 @@ public class PlatformsServiceImpl implements PlatformsService {
             newClient.setCreatedAt(new Date());
             newClient.setUpdateAt(new Date());
             platformsRepository.save(newClient);
-            return ":redirect/pages/platform-manager/search-form?add-success";
+            return ":redirect/pages/platform-manager/search-platform?add-success";
         }else{
             Optional<Platforms>  oldClients = platformsRepository.findById(form.getId());
             if(oldClients.isPresent()) {
