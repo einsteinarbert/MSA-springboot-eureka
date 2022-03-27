@@ -1,21 +1,23 @@
 function datatable({
-                       selector,
-                       columns = [],
-                       pageSize = 0,
-                       totalRow = 0,
-                       currentPage = 1,
-                       totalPages = 0,
-                       pagination = false,
-                       tdTag = '',
-                       data = [],
-                       jumpFunc, // callback
-                   }) {
+    selector,
+    pageListLen = 10,
+    pageSizeList = [],
+    showPageSize = true,
+    columns = [],
+    pageSize = 0,
+    totalRecord = 0,
+    currentPage = 1,
+    totalPages = 0,
+    pagination = false,
+    tdTag = '',
+    data = [],
+    jumpFunc, // callback
+}) {
     const self = $(selector)[0]; // convert to jquery variable
     if (tdTag.length === 0) {
         tdTag = '<td class="py-1 table-td">#content</td>';
     }
     let tr = '<tr class="table-tr"></tr>';
-    // $('.table-responsive > table > tbody')[2].remove();
     // find <table>
     let tbody = self.getElementsByTagName('table')[0].getElementsByTagName('tbody')[0];
     $(tbody).find('tr').remove();
@@ -30,6 +32,25 @@ function datatable({
 
     // pagination
     if (pagination) {
+        if (!showPageSize) {
+            $('.page-size-ctrl').remove();
+        } else {
+            let select = $('.page-size-ctrl > select');
+            if (pageSizeList.length > 0) {
+                $(select).find('option').remove();
+                for (let i = 0; i < pageSizeList.length; i ++) {
+                    $(select).append(
+                        jQuery.parseHTML('<option value="'+pageSizeList[i]+'">'+pageSizeList[i]+'</option>')
+                    );
+                }
+            }
+            $(select).unbind('change');
+            $(select).val(pageSize);
+            $(select).change(function (){
+                jumpFunc(currentPage, this.value);
+            });
+        }
+        $('.total-row-ctrl').text(totalRecord + " 件");
         let pagingElement = $(self).find('.datatable-pagination');
         let ul = $(pagingElement).find('ul[class*="pagination"]');
         $(ul).find('li[class*="page-num"]').remove();
@@ -39,7 +60,10 @@ function datatable({
                 '            </li>';
             $(ul).find('li[class*="next-page"]').before(jQuery.parseHTML(li));
         } else {
+            let head = currentPage != null ? currentPage - Math.floor(pageListLen/2) - 1: 0;
+            let tail = currentPage != null ? currentPage + Math.floor(pageListLen/2) + 1: totalPages - 1 ;
             for (let i = 0; i < totalPages; i++) {
+                // if (i < head || i > tail) continue;
                 let clazz = "page-item page-num";
                 if (i === currentPage) clazz += " active";
                 let li = '<li class="' + clazz + '">' +
@@ -71,9 +95,11 @@ function datatable({
             }
             // callback
             if (null != jump)
-                jumpFunc(jump);
+                jumpFunc(jump, $('.page-size-ctrl > select').val());
         });
         activePage(ul, currentPage);
+    } else {
+        $('.pagination-footer').remove();
     }
 }
 

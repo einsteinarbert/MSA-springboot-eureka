@@ -1,4 +1,3 @@
-let pageSize = 10;
 let table = null;
 $(document).ready(function () {
   init();
@@ -73,8 +72,8 @@ function init() {
 }
 
 
-function search(nextPage) {
-  let data = getFilterSearch(nextPage);
+function search(nextPage, size) {
+  let data = getFilterSearch(nextPage, size);
   post("/api/search-jewel", data,
   function (res) {
       renderDataTable(res, $('.container-table'));
@@ -85,7 +84,7 @@ function (a, _b, _c) {
   );
 }
 
-function getFilterSearch(nextPage) {
+function getFilterSearch(nextPage, size) {
   let filter = [];
   for (let ele of $('.form-group-filter')) {
     let valid = true;
@@ -105,11 +104,10 @@ function getFilterSearch(nextPage) {
     }
   }
   // ajax
-  pageSize = $('select[name="data_table_length"]').val();
   return {
     "filter": filter,
     "currentPage": nextPage,
-    "pageSize": 10,
+    "pageSize": size == null ? 10 : size,
     "sortField": "jp.id",
     "isASC": true
   };
@@ -129,14 +127,18 @@ function renderDataTable(response, selector) {
       "isBought"
     ],
     pagination: true,
-    totalRow: response.totalElements,
+    totalRecord: response.totalElements,
     pageSize: response.pageable.pageSize,
     totalPages: response.totalPages,
     currentPage: response.pageable.pageNumber,
     data: response.content,
-    jumpFunc: function (to) {
+    pageListLen: 6,
+    pageSizeList: [10, 15, 50, 100, 150, 500],
+    showPageSize: false,
+    jumpFunc: function (to, pageSize) {
       console.log("Go to page: " + to);
-      search(to);
+      console.log("Size: " + pageSize);
+      search(to, pageSize);
     }
   });
 }
