@@ -4,9 +4,7 @@ import com.bunbusoft.ayakashi.commons.Constants;
 import com.bunbusoft.ayakashi.domain.Platforms;
 import com.bunbusoft.ayakashi.repository.PlatformsRepository;
 import com.bunbusoft.ayakashi.service.PlatformsService;
-import com.bunbusoft.ayakashi.service.dto.object.ClientsDTO;
-import com.bunbusoft.ayakashi.service.dto.object.ClientssDTO;
-import com.bunbusoft.ayakashi.service.dto.object.NewPlatform;
+import com.bunbusoft.ayakashi.service.dto.object.*;
 import com.bunbusoft.ayakashi.service.dto.paged.PageableCustom;
 import com.bunbusoft.ayakashi.utils.DataUtil;
 import com.bunbusoft.ayakashi.utils.JpaUtil;
@@ -45,25 +43,25 @@ public class PlatformsServiceImpl implements PlatformsService {
     EntityManager em;
 
     @Override
-    public Page<ClientssDTO> searchPlatform(ClientsDTO searchForm, int pageNumber) {
+    public Page<ClientssDTO> searchPlatform(FilterDTOWrapper searchForm, int pageNumber) {
         PageableCustom pageable = new PageableCustom(pageNumber, Constants.numberPerPage, null);
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder("SELECT id, platform_token, name, platform_type, IF(platform_type = 0, 'ios', 'android') platform_type_name, " +
                                                 "required_version FROM platforms WHERE 1=1 ");
-        if(!DataUtil.isNullOrEmpty(searchForm.getPlatformToken())){
-            sql.append("AND platform_token = :platformToken ");
-            params.put("platformToken", searchForm.getPlatformToken());
-        }
-
-        if(!DataUtil.isNullOrEmpty(searchForm.getName())){
-            sql.append("AND name = :name ");
-            params.put("name", searchForm.getName());
-        }
-
-        if(!DataUtil.isNullOrEmpty(searchForm.getName())){
-            sql.append("AND IF(platform_type = 0, 'ios', 'android') = :platformType ");
-            params.put("platformType", searchForm.getPlatformTypeName());
-        }
+//        if(!DataUtil.isNullOrEmpty(searchForm.getPlatformToken())){
+//            sql.append("AND platform_token = :platformToken ");
+//            params.put("platformToken", searchForm.getPlatformToken());
+//        }
+//
+//        if(!DataUtil.isNullOrEmpty(searchForm.getName())){
+//            sql.append("AND name = :name ");
+//            params.put("name", searchForm.getName());
+//        }
+//
+//        if(!DataUtil.isNullOrEmpty(searchForm.getName())){
+//            sql.append("AND IF(platform_type = 0, 'ios', 'android') = :platformType ");
+//            params.put("platformType", searchForm.getPlatformTypeName());
+//        }
         String sqlCount = "SELECT COUNT(id) FROM ( " + sql + " ) T";
         Query queryCount = em.createNativeQuery(sqlCount);
         JpaUtil.setQueryParams(queryCount, params);

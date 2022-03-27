@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  $('#search_form').submit(false); // disable submit event on form
+  // $('#search_form').submit(false); // disable submit event on form
 
   /**
    * reset default state
@@ -24,37 +24,37 @@ $(document).ready(function () {
   /**
    * search action
    */
-  $('#btn_search').click(function (e) {
-      // $.post()
-    let filter = [];
-    for (let ele of $('.form-group-filter')) {
-        let valid = true;
-        for (let select of ele.getElementsByTagName('select')) {
-          if (select.value === '0') {
-            valid = false;
-            break;
-          }
-        }
-        if (valid) {
-          let selects = ele.getElementsByTagName('select');
-          filter.push({
-            "field": selects[0].getElementsByTagName("option")[selects[0].value].text,
-            "condition": selects[1].getElementsByTagName("option")[selects[1].value].text,
-            "keyword": selects[2].getElementsByTagName("option")[selects[2].value].text,
-          });
-        }
-    }
-    if (filter.length > 0) {
-      // ajax
-      post("/api/search-jewel", filter, function (data) {
-          console.info(data);
-        },
-          function (a, _b, _c) {
-          console.error(a)
-        }
-      );
-    }
-  });
+  // $('#btn_search').click(function (e) {
+  //     // $.post()
+  //   let filter = [];
+  //   for (let ele of $('.form-group-filter')) {
+  //       let valid = true;
+  //       for (let select of ele.getElementsByTagName('select')) {
+  //         if (select.value === '0') {
+  //           valid = false;
+  //           break;
+  //         }
+  //       }
+  //       if (valid) {
+  //         let selects = ele.getElementsByTagName('select');
+  //         filter.push({
+  //           "field": selects[0].getElementsByTagName("option")[selects[0].value].text,
+  //           "condition": selects[1].getElementsByTagName("option")[selects[1].value].text,
+  //           "keyword": selects[2].getElementsByTagName("option")[selects[2].value].text,
+  //         });
+  //       }
+  //   }
+  //   if (filter.length > 0) {
+  //     // ajax
+  //     post("/api/search-jewel", filter, function (data) {
+  //         console.info(data);
+  //       },
+  //         function (a, _b, _c) {
+  //         console.error(a)
+  //       }
+  //     );
+  //   }
+  // });
 
 
 });
