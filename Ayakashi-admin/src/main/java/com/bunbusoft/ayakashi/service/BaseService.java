@@ -2,6 +2,7 @@ package com.bunbusoft.ayakashi.service;
 
 import com.bunbusoft.ayakashi.service.dto.FilterJewelDTO;
 import com.bunbusoft.ayakashi.service.dto.object.JewelFormDTO;
+import com.bunbusoft.ayakashi.service.dto.paged.PageResultDTO;
 import com.bunbusoft.ayakashi.service.dto.paged.PageableCustom;
 import com.bunbusoft.ayakashi.utils.JpaUtil;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,7 @@ public class BaseService {
     @PersistenceContext
     private final EntityManager em;
 
-    public <T> PageImpl<T> createNativeSql(final String query, final String countQuery, JewelFormDTO data, Class<T> mapping) {
+    public <T> PageResultDTO<T> createNativeSql(final String query, final String countQuery, JewelFormDTO data, Class<T> mapping) {
         StringBuilder sql = new StringBuilder(query);
         StringBuilder count = new StringBuilder(StringUtils.hasLength(countQuery) ? countQuery : "");
         HashMap<String, Object> params = new HashMap<>();
@@ -45,22 +46,17 @@ public class BaseService {
             Query cq = em.createNativeQuery(count.toString());
             JpaUtil.setQueryParams(cq, params);
             total = ((BigInteger) cq.getSingleResult()).longValue();
-/*            pageable = new PageableCustom(data.getCurrentPage(), data.getPageSize(),
-                    StringUtils.hasLength(data.getSortField()) ?
-                            Sort.by(
-                                    data.isASC() ? Sort.Direction.ASC : Sort.Direction.DESC, data.getSortField())
-                            :Sort.unsorted()
-            );*/
             pageable = PageRequest.of(
                     data.getCurrentPage(), data.getPageSize(),
                     StringUtils.hasLength(data.getSortField()) ?
                             Sort.by(
                                     data.isASC() ? Sort.Direction.ASC : Sort.Direction.DESC, data.getSortField())
-                            :Sort.unsorted()
+                            : Sort.unsorted()
             );
-            select = select.setFirstResult(data.getCurrentPage()).setMaxResults(data.getPageSize());
+            select = select.setFirstResult((data.getCurrentPage() - 1) * data.getPageSize()).setMaxResults(data.getPageSize());
         }
         List<T> result = select.getResultList();
-        return new PageImpl<>(result, pageable, total);
+        long totalPage = total % pageable.getPageSize() > 0 ? total / pageable.getPageSize() + 1 : total / pageable.getPageSize();
+        return new PageResultDTO<T>(pageable, totalPage, total, result);
     }
 }

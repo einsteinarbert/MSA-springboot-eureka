@@ -1,5 +1,4 @@
 let pageSize = 10;
-let curPage = 0;
 let table = null;
 $(document).ready(function () {
   init();
@@ -61,21 +60,21 @@ function init() {
      */
     $('#btn_search').click(function () {
       // $.post()
-      search();
+      search(1);
     });
 
     // DATA TABLE TRUNK
     $('select[name="data_table_length"]').change((function (){
-      search();
+      search(1);
     }));
-    search();
+    search(1);
   }
 
 }
 
 
-function search() {
-  let data = getFilterSearch();
+function search(nextPage) {
+  let data = getFilterSearch(nextPage);
   post("/api/search-jewel", data,
   function (res) {
       renderDataTable(res, $('.container-table'));
@@ -86,7 +85,7 @@ function (a, _b, _c) {
   );
 }
 
-function getFilterSearch() {
+function getFilterSearch(nextPage) {
   let filter = [];
   for (let ele of $('.form-group-filter')) {
     let valid = true;
@@ -107,13 +106,10 @@ function getFilterSearch() {
   }
   // ajax
   pageSize = $('select[name="data_table_length"]').val();
-  curPage = $('.pagination > li.paginate_button.page-item.active').val();
-  if (!pageSize) pageSize = 10;
-  if (!curPage) curPage = 0;
   return {
     "filter": filter,
-    "currentPage": curPage,
-    "pageSize": pageSize,
+    "currentPage": nextPage,
+    "pageSize": 10,
     "sortField": "jp.id",
     "isASC": true
   };
@@ -136,7 +132,11 @@ function renderDataTable(response, selector) {
     totalRow: response.totalElements,
     pageSize: response.pageable.pageSize,
     totalPages: response.totalPages,
-    currentPage: response.pageable.offset,
-    data: response.content
+    currentPage: response.pageable.pageNumber,
+    data: response.content,
+    jumpFunc: function (to) {
+      console.log("Go to page: " + to);
+      search(to);
+    }
   });
 }

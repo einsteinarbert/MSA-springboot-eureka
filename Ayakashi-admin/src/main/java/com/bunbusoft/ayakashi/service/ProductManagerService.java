@@ -2,9 +2,9 @@ package com.bunbusoft.ayakashi.service;
 
 import com.bunbusoft.ayakashi.domain.entity.JewelResultEntity;
 import com.bunbusoft.ayakashi.service.dto.object.JewelFormDTO;
-import org.springframework.data.domain.Page;
+import com.bunbusoft.ayakashi.service.dto.paged.PageResultDTO;
 
 public interface ProductManagerService {
-    Page<JewelResultEntity> searchPagination(JewelFormDTO filter);
+    PageResultDTO<JewelResultEntity> searchPagination(JewelFormDTO filter);
 
 }
