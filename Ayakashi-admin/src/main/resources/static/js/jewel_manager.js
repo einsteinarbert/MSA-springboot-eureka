@@ -1,42 +1,8 @@
 let pageSize = 10;
 let curPage = 0;
 let table = null;
-let local = [];
 $(document).ready(function () {
-  $('#search_form').submit(false); // disable submit event on form
-  setupActionDataTable();
-  search(); // init table
-
-
-  /**
-   * reset default state
-   */
-  $('#btn_clear').click(function (e) {
-    let parent = e.currentTarget.parentNode.parentNode;
-    for (let select of parent.getElementsByTagName("select")) {
-      select.value = 0;
-    }
-  });
-
-  /**
-   * Clear all added row
-   */
-  $('#btn_clear_all').click(function (e) {
-    for (let el of $(".form-condition")) {
-      remove(el, false);
-    }
-    $('#btn_clear').trigger(e);
-  });
-
-  /**
-   * search action
-   */
-  $('#btn_search').click(function () {
-      // $.post()
-    search();
-  });
-
-
+  init();
 });
 
 /**
@@ -67,15 +33,60 @@ function addConditions() {
   parent.insertBefore(ele, document.getElementById("button-group").previousSibling); // insert new row
 }
 
-function setupActionDataTable() {
-  $('select[name="data_table_length"]').change((function (){
+function init() {
+  if (document.location.href.includes('/pages/jewel-manager')) {
+    $('#search_form').submit(false); // disable submit event on form
+    /**
+     * reset default state
+     */
+    $('#btn_clear').click(function (e) {
+      let parent = e.currentTarget.parentNode.parentNode;
+      for (let select of parent.getElementsByTagName("select")) {
+        select.value = 0;
+      }
+    });
+
+    /**
+     * Clear all added row
+     */
+    $('#btn_clear_all').click(function (e) {
+      for (let el of $(".form-condition")) {
+        remove(el, false);
+      }
+      $('#btn_clear').trigger(e);
+    });
+
+    /**
+     * search action
+     */
+    $('#btn_search').click(function () {
+      // $.post()
+      search();
+    });
+
+    // DATA TABLE TRUNK
+    $('select[name="data_table_length"]').change((function (){
+      search();
+    }));
     search();
-  }));
+  }
 
 }
 
 
 function search() {
+  let data = getFilterSearch();
+  post("/api/search-jewel", data,
+  function (res) {
+      renderDataTable(res, $('.container-table'));
+    },
+function (a, _b, _c) {
+      console.error(a)
+    }
+  );
+}
+
+function getFilterSearch() {
   let filter = [];
   for (let ele of $('.form-group-filter')) {
     let valid = true;
@@ -99,50 +110,33 @@ function search() {
   curPage = $('.pagination > li.paginate_button.page-item.active').val();
   if (!pageSize) pageSize = 10;
   if (!curPage) curPage = 0;
-  let data = {
+  return {
     "filter": filter,
     "currentPage": curPage,
     "pageSize": pageSize,
     "sortField": "jp.id",
     "isASC": true
-  }
-  console.log(JSON.stringify(data));
-  post("/api/search-jewel", data, function (res) {
-    local = res.content;
-    if (table) {
-      table.clear();
-      for (let row of local) {
-        table.row.add(row);
-      }
-      table.page.len(res.totalPages);
-      table.page(curPage+1);
-      table.draw();
-    } else {
-      table = $('#data_table').DataTable({
-        data:  res.content,
-        paging: true,
-        page: curPage+1,
-        len: res.totalPages,
-        searching: false,
-        "initComplete": function(_settings, _json) {
-          console.log( 'DataTables has finished its initialisation.' );
-          setupActionDataTable();
-        },
-        columns: [
-          { "data": "id" },
-          { "data": "clientId" },
-          { "data": "productCode" },
-          { "data": "walletName" },
-          { "data": "number" },
-          { "data": "bonusWalletName" },
-          { "data": "bonusNumber" },
-          { "data": "isBought" }
-        ]
-      });
-    }
-      },
-      function (a, _b, _c) {
-        console.error(a)
-      }
-  );
+  };
+}
+
+function renderDataTable(response, selector) {
+  datatable({
+    selector: selector,
+    columns: [
+      "id",
+      "clientId",
+      "productCode",
+      "walletName",
+      "number",
+      "bonusWalletName",
+      "bonusNumber",
+      "isBought"
+    ],
+    pagination: true,
+    totalRow: response.totalElements,
+    pageSize: response.pageable.pageSize,
+    totalPages: response.totalPages,
+    currentPage: response.pageable.offset,
+    data: response.content
+  });
 }

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pagination</title>
+</head>
+<body>
+<div class="justify-content-end" th:fragment="pagination">
+    <div class="row col-sm-12 justify-content-end">
+        <div class="col-sm-1">
+            件
+        </div>
+        <div class="col-sm-11 flex-column flex-wrap">
+        <ul class="pagination justify-content-end flex-wrap">
+            <li class="page-item">
+                <a class="page-link">前のページ</a>
+            </li>
+            <li class="page-item active page-num">
+                <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item next-page">
+                <a class="page-link">次のページ</a>
+            </li>
+        </ul>
+    </div>
+    </div>
+<!--    </nav>-->
+</div>
+</body>
+</html>

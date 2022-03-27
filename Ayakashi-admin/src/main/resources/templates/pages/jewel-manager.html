@@ -40,28 +40,42 @@
         </div>
 
     </form>
-    <div class="container-table">
-        <table id="data_table" class="display" style="width:100%">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>クライアント</th>
-                <th>商品ID</th>
-                <th>ウォレット名</th>
-                <th>枚数</th>
-                <th>ボーナス
-                    ウォレット名
-                </th>
-                <th>
-                    ボーナス
-                    枚数
-                </th>
-                <th>
-                    Action
-                </th>
-            </tr>
-            </thead>
-        </table>
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group">
+                    <a class="btn btn-dark" th:href="@{/pages/platform-manager/add-platform}">新規登録</a>
+                </div>
+                <div class="table-responsive container-table">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>クライアント</th>
+                            <th>商品ID</th>
+                            <th>ウォレット名</th>
+                            <th>枚数</th>
+                            <th>ボーナス
+                                ウォレット名
+                            </th>
+                            <th>
+                                ボーナス
+                                枚数
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="datatable-pagination">
+                        <div th:replace="common/pagination-js::pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <link rel="stylesheet" th:href="@{/css/jewel-manager.css}">
 </section>
