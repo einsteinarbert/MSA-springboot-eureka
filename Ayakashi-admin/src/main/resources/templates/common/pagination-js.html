@@ -1,0 +1,51 @@
+
+<div class="justify-content-end pagination-footer" th:fragment="pagination">
+    <style>
+        .label-paging {
+            position: relative;
+            display: block;
+            padding: 0.5rem 0.75rem;
+            margin-left: -1px;
+            line-height: 1.25;
+            color: #007bff;
+            background-color: #fff;
+        }
+        .page-size {
+            position: relative;
+            display: block;
+            margin-left: -1px;
+            line-height: 1.25;
+            color: #007bff;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+        }
+    </style>
+    <div class="row col-sm-12 justify-content-end">
+        <div class="page-size-ctrl row col-sm-2">
+            <label class="label-paging" style="margin-top: 6px;" for="page_size">ページサイズ</label>
+            <select class="page-size input-filter" id="page_size">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+            </select>
+        </div>
+        <div class="total-row-ctrl col-sm-1 label-paging" style="padding-top: 12px;">
+            件
+        </div>
+        <div class="flex-column flex-wrap " style="padding-top: 6px;">
+            <ul class="pagination justify-content-end flex-wrap">
+                <li class="page-item">
+                    <a class="page-link page-pre" href="#pre">前のページ</a>
+                </li>
+                <li class="page-item active page-num">
+                    <a class="page-link" href="#">1</a>
+                </li>
+                <li class="page-item next-page">
+                    <a class="page-link page-next" href="#next">次のページ</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

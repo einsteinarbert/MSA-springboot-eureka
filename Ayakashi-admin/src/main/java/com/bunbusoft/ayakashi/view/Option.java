@@ -1,6 +1,7 @@
 package com.bunbusoft.ayakashi.view;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +17,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class Option implements Serializable {
     private String text;
-    private int value;
+    private Object value;
 }

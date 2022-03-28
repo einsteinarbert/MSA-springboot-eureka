@@ -20,6 +20,13 @@
 .select-w-312x select {
     width: 312px !important;
 }
+.input-w-312x {
+    width: 312px !important;
+    height: 102%;
+}
+.input-mg-w-56x {
+    margin-inline-start: 56px;
+}
 
 .m-left-2, .m-left-2 select {
     margin-inline-start: 2em
