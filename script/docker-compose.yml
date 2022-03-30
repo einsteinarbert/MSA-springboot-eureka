@@ -1,0 +1,27 @@
+version: "3.1"
+
+services:
+    gateway:
+        image: 123.31.41.13:8297/gateway-service:1.0
+        ports:
+            - "8761:8761"
+        environment:
+            SPRING_APPLICATION_NAME: gateway-service
+            SERVER_PORT: 8761
+            ZUUL_HOST_CONNECT-TIMEOUT-MILLIS: 130000
+            ZUUL_HOST_SOCKET-TIMEOUT-MILLIS: 130000
+            HYSTRIX_COMMAND_DEFAULT_EXECUTION_ISOLATION_THREAD-TIMEOUTINMILLISECONDS: 120000
+        deploy:
+            replicas: 1
+    game-api:
+        image: 123.31.41.13:8297/game-api:1.0
+        ports:
+            - "8200:8080"
+        environment:
+            SPRING_APPLICATION_NAME: game-api-service
+            SERVER_PORT: 8080
+            ZUUL_HOST_CONNECT-TIMEOUT-MILLIS: 130000
+            ZUUL_HOST_SOCKET-TIMEOUT-MILLIS: 130000
+            HYSTRIX_COMMAND_DEFAULT_EXECUTION_ISOLATION_THREAD-TIMEOUTINMILLISECONDS: 120000
+        deploy:
+            replicas: 1

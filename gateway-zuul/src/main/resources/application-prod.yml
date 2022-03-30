@@ -5,7 +5,7 @@ spring:
         gateway:
             routes:
                 - id: game-api-route
-                  uri: http://localhost:8200
+                  uri: http://game-api-service:8200
                   predicates:
                       - Path=/api/**
 server:
