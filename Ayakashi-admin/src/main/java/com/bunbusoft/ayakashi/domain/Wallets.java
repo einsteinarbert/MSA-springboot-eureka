@@ -7,9 +7,9 @@ import java.util.Objects;
 @Entity
 @Table(name = "wallets")
 public class Wallets {
-    private long id;
+    private Long id;
     private String walletName;
-    private String displayName;
+    private Long itemId;
     private Integer limit;
     private Timestamp createdAt;
     private Timestamp updateAt;
@@ -35,13 +35,13 @@ public class Wallets {
     }
 
     @Basic
-    @Column(name = "display_name", nullable = false, length = 255)
-    public String getDisplayName() {
-        return displayName;
+    @Column(name = "item_id", nullable = false, length = 255)
+    public Long getItemId() {
+        return itemId;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
     }
 
     @Basic
@@ -79,11 +79,11 @@ public class Wallets {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Wallets that = (Wallets) o;
-        return id == that.id && Objects.equals(walletName, that.walletName) && Objects.equals(displayName, that.displayName) && Objects.equals(limit, that.limit) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updateAt, that.updateAt);
+        return id == that.id && Objects.equals(walletName, that.walletName) && Objects.equals(itemId, that.itemId) && Objects.equals(limit, that.limit) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updateAt, that.updateAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, walletName, displayName, limit, createdAt, updateAt);
+        return Objects.hash(id, walletName, itemId, limit, createdAt, updateAt);
     }
 }

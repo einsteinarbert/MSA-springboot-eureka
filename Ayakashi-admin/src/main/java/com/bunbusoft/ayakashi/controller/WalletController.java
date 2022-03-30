@@ -60,5 +60,4 @@ public class WalletController {
         }
         return "pages/jewel-manager"; // view
     }
-
 }

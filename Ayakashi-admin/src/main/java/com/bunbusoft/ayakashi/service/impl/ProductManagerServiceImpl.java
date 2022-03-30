@@ -3,9 +3,8 @@ package com.bunbusoft.ayakashi.service.impl;
 import com.bunbusoft.ayakashi.domain.entity.JewelResultEntity;
 import com.bunbusoft.ayakashi.service.BaseService;
 import com.bunbusoft.ayakashi.service.ProductManagerService;
-import com.bunbusoft.ayakashi.service.dto.object.JewelFormDTO;
+import com.bunbusoft.ayakashi.service.dto.object.SearchFormDTO;
 import com.bunbusoft.ayakashi.service.dto.paged.PageResultDTO;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -18,7 +17,7 @@ public class ProductManagerServiceImpl extends BaseService implements ProductMan
     }
 
     @Override
-    public PageResultDTO<JewelResultEntity> searchPagination(JewelFormDTO filter) {
+    public PageResultDTO<JewelResultEntity> searchPagination(SearchFormDTO filter) {
         return createNativeSql(SEARCH_SQL, COUNT_SEARCH_SQL, filter, JewelResultEntity.class);
     }
 

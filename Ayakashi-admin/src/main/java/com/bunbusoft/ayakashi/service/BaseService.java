@@ -1,12 +1,11 @@
 package com.bunbusoft.ayakashi.service;
 
-import com.bunbusoft.ayakashi.service.dto.FilterJewelDTO;
-import com.bunbusoft.ayakashi.service.dto.object.JewelFormDTO;
+import com.bunbusoft.ayakashi.service.dto.object.FilterDTO;
+import com.bunbusoft.ayakashi.service.dto.object.FilterWrapperDTO;
+import com.bunbusoft.ayakashi.service.dto.object.SearchFormDTO;
 import com.bunbusoft.ayakashi.service.dto.paged.PageResultDTO;
-import com.bunbusoft.ayakashi.service.dto.paged.PageableCustom;
 import com.bunbusoft.ayakashi.utils.JpaUtil;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,12 +25,12 @@ public class BaseService {
     @PersistenceContext
     private final EntityManager em;
 
-    public <T> PageResultDTO<T> createNativeSql(final String query, final String countQuery, JewelFormDTO data, Class<T> mapping) {
+    public <T> PageResultDTO<T> createNativeSql(final String query, final String countQuery, SearchFormDTO data, Class<T> mapping) {
         StringBuilder sql = new StringBuilder(query);
         StringBuilder count = new StringBuilder(StringUtils.hasLength(countQuery) ? countQuery : "");
         HashMap<String, Object> params = new HashMap<>();
         var lst = data.getFilter();
-        for (FilterJewelDTO filter : lst) {
+        for (FilterDTO filter : lst) {
             sql.append(String.format(" AND (%s %s :%s) ", filter.getField(), filter.getCondition(), filter.getField()));
             count.append(String.format(" AND (%s %s :%s) ", filter.getField(), filter.getCondition(), filter.getField()));
             params.put(filter.getField(), filter.getKeyword());
@@ -58,5 +57,14 @@ public class BaseService {
         List<T> result = select.getResultList();
         long totalPage = total % pageable.getPageSize() > 0 ? total / pageable.getPageSize() + 1 : total / pageable.getPageSize();
         return new PageResultDTO<T>(pageable, totalPage, total, result);
+    }
+
+    public String createWhlClause(StringBuilder query, final FilterWrapperDTO searchForm, HashMap<String, Object> params){
+        var lst = searchForm.getFilterList();
+        for (FilterDTO filter : lst) {
+            query.append(String.format(" AND (%s %s :%s) ", filter.getField(), filter.getCondition(), filter.getField()));
+            params.put(filter.getField(), filter.getKeyword());
+        }
+        return query.toString();
     }
 }

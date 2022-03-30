@@ -2,9 +2,12 @@ package com.bunbusoft.ayakashi.service.impl;
 
 import com.bunbusoft.ayakashi.commons.Constants;
 import com.bunbusoft.ayakashi.domain.Platforms;
+import com.bunbusoft.ayakashi.domain.entity.JewelResultEntity;
 import com.bunbusoft.ayakashi.repository.PlatformsRepository;
+import com.bunbusoft.ayakashi.service.BaseService;
 import com.bunbusoft.ayakashi.service.PlatformsService;
 import com.bunbusoft.ayakashi.service.dto.object.*;
+import com.bunbusoft.ayakashi.service.dto.paged.PageResultDTO;
 import com.bunbusoft.ayakashi.service.dto.paged.PageableCustom;
 import com.bunbusoft.ayakashi.utils.DataUtil;
 import com.bunbusoft.ayakashi.utils.JpaUtil;
@@ -29,39 +32,38 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PlatformsServiceImpl implements PlatformsService {
+public class PlatformsServiceImpl extends BaseService implements PlatformsService {
     private PlatformsRepository platformsRepository;
-
-    public PlatformsServiceImpl(PlatformsRepository platformsRepository) {
+    @PersistenceContext
+    EntityManager em;
+    public PlatformsServiceImpl(PlatformsRepository platformsRepository, EntityManager em) {
+        super(em);
         this.platformsRepository = platformsRepository;
     }
-
     @Autowired
     ModelMapper modelMapper;
 
-    @PersistenceContext
-    EntityManager em;
+    private static final String SEARCH_SQL = "SELECT pl.id, pl.platform_token, pl.name, pl.platform_type, \n" +
+            "IF(platform_type = 0, 'ios', 'android') platform_type_name, \n" +
+            "required_version FROM platforms pl WHERE 1=1 ";
+
+    private static final String COUNT_SEARCH_SQL = "select count(pl.id) \n" +
+            "FROM platforms pl WHERE 1=1  ";
 
     @Override
-    public Page<ClientssDTO> searchPlatform(FilterDTOWrapper searchForm, int pageNumber) {
+    public PageResultDTO<ClientssDTO> searchPlatform(SearchFormDTO filter) {
+        return super.createNativeSql(SEARCH_SQL, COUNT_SEARCH_SQL, filter, ClientssDTO.class);
+    }
+
+    @Override
+    public Page<ClientssDTO> searchPlatform(FilterWrapperDTO searchForm, int pageNumber) {
         PageableCustom pageable = new PageableCustom(pageNumber, Constants.numberPerPage, null);
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder("SELECT id, platform_token, name, platform_type, IF(platform_type = 0, 'ios', 'android') platform_type_name, " +
-                                                "required_version FROM platforms WHERE 1=1 ");
-//        if(!DataUtil.isNullOrEmpty(searchForm.getPlatformToken())){
-//            sql.append("AND platform_token = :platformToken ");
-//            params.put("platformToken", searchForm.getPlatformToken());
-//        }
-//
-//        if(!DataUtil.isNullOrEmpty(searchForm.getName())){
-//            sql.append("AND name = :name ");
-//            params.put("name", searchForm.getName());
-//        }
-//
-//        if(!DataUtil.isNullOrEmpty(searchForm.getName())){
-//            sql.append("AND IF(platform_type = 0, 'ios', 'android') = :platformType ");
-//            params.put("platformType", searchForm.getPlatformTypeName());
-//        }
+                "required_version FROM platforms WHERE 1=1 ");
+        if(!( DataUtil.isNullOrEmpty(searchForm) || DataUtil.isNullOrEmpty(searchForm.getFilterList().get(0).getField()))) {
+            super.createWhlClause(sql, searchForm, params);
+        }
         String sqlCount = "SELECT COUNT(id) FROM ( " + sql + " ) T";
         Query queryCount = em.createNativeQuery(sqlCount);
         JpaUtil.setQueryParams(queryCount, params);
@@ -95,7 +97,7 @@ public class PlatformsServiceImpl implements PlatformsService {
             newClient.setCreatedAt(new Date());
             newClient.setUpdateAt(new Date());
             platformsRepository.save(newClient);
-            return ":redirect/pages/platform-manager/search-platform?add-success";
+            return ":redirect/pages/platform-manager/search-platform?addSuccess";
         }else{
             Optional<Platforms>  oldClients = platformsRepository.findById(form.getId());
             if(oldClients.isPresent()) {
@@ -109,7 +111,7 @@ public class PlatformsServiceImpl implements PlatformsService {
                 newClient.setUpdateAt(new Date());
                 platformsRepository.save(newClient);
             }
-            return ":redirect/pages/platform-manager/search-form?edit-success";
+            return ":redirect/pages/platform-manager/search-form?editSuccess";
         }
     }
 }

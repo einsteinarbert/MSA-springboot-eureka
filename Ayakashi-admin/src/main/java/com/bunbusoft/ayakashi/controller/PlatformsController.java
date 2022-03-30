@@ -1,16 +1,20 @@
 package com.bunbusoft.ayakashi.controller;
 
 import com.bunbusoft.ayakashi.domain.Platforms;
+import com.bunbusoft.ayakashi.domain.entity.JewelResultEntity;
 import com.bunbusoft.ayakashi.repository.PlatformsRepository;
+import com.bunbusoft.ayakashi.securities.FieldMatch;
 import com.bunbusoft.ayakashi.service.PlatformsService;
-import com.bunbusoft.ayakashi.service.dto.object.ClientsDTO;
-import com.bunbusoft.ayakashi.service.dto.object.FilterDTOWrapper;
-import com.bunbusoft.ayakashi.service.dto.object.FilterPlatformDTO;
-import com.bunbusoft.ayakashi.service.dto.object.NewPlatform;
+import com.bunbusoft.ayakashi.service.dto.object.*;
+import com.bunbusoft.ayakashi.service.dto.paged.PageResultDTO;
 import com.bunbusoft.ayakashi.utils.DataUtil;
-import com.bunbusoft.ayakashi.view.JewelState;
+import com.bunbusoft.ayakashi.utils.ViewUtils;
+import com.bunbusoft.ayakashi.view.RowFilter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,16 +24,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.logging.Filter;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "pages/platform-manager")
 @Slf4j
-@Scope("request")
 public class PlatformsController {
     private PlatformsService platformsService;
     private PlatformsRepository platformsRepository;
@@ -44,39 +43,38 @@ public class PlatformsController {
         return new NewPlatform();
     }
 
-    @ModelAttribute("filterPlatformDTO")
-    public FilterPlatformDTO filterPlatformDTO() {
-        return new FilterPlatformDTO();
+//    @ModelAttribute("rowFilter")
+//    public List<RowFilter> inIntScreen() {
+//        Map<String, String> fieldMap = new HashMap<>();
+//        fieldMap.put("pl.id", "ID");
+//        fieldMap.put("pl.platform_token", "プラットホームID");
+//        fieldMap.put("pl.name", "プラットホーム名");
+//        fieldMap.put("pl.type", "種別");
+//        return ViewUtils.getFormCondition(fieldMap);
+//    }
+    @ModelAttribute("filterWrapper")
+    public FilterWrapperDTO filterDTOWrapper() {
+        return new FilterWrapperDTO();
     }
 
-    @ModelAttribute("filterDTOWrapper")
-    public FilterDTOWrapper filterDTOWrapper() {
-        return new FilterDTOWrapper();
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    @FieldMatch(first = "rowFilter", second = "", message = "")
+    static class FormFilter {
+        private List<RowFilter> rowFilter;
     }
 
-    @PostMapping("/search-platform")
-    public String searchClient(@ModelAttribute("filterDTOWrapper")@Valid FilterDTOWrapper searchForm,
-                               @RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber, Model model){
-        //Lan dau build thi cho no 1 gia tri
-        ArrayList<FilterPlatformDTO> arr = new ArrayList<>();
-        if(DataUtil.isNullOrEmpty(searchForm.getClientList())){
-            FilterPlatformDTO attr = new FilterPlatformDTO(null, null, null);
-            arr.add(attr);
-            searchForm.setClientList(arr);
-        }
-        model.addAttribute("filterPlatformDTO", searchForm);
-        model.addAttribute("data", platformsService.searchPlatform(searchForm, pageNumber));
-        model.addAttribute("currentPage", pageNumber);
-        return "pages/platforms-manager/search-form";
-    }
+    /**
+     * get view
+     * @return jewel-manager.html
+     */
+//    @RequestMapping( path = {"/search-platform"})
+//    public String displayPlatformScreen(Model model) {
+//        return "pages/platforms-manager/search-form"; // view
+//    }
 
-    @GetMapping("/search-platform")
-    public String searchPlatform(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber, Model model){
-        model.addAttribute("filterPlatformDTO", new ArrayList<FilterDTOWrapper>());
-        model.addAttribute("data", platformsService.searchPlatform(null, pageNumber));
-        model.addAttribute("currentPage", pageNumber);
-        return "pages/platforms-manager/search-form";
-    }
 
     @GetMapping("/add-platform")
     public String displayAddClientPage(){
@@ -103,4 +101,45 @@ public class PlatformsController {
         }
         return platformsService.createOrUpdatePlatform(form, model);
     }
+
+    @GetMapping("/search-platform")
+    public String searchPlatform(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber, Model model){
+        //Lan dau build khoi tao gia tri la rong
+        FilterWrapperDTO searchForm = new FilterWrapperDTO();
+        ArrayList<FilterDTO> arr = new ArrayList<>();
+//        if(DataUtil.isNullOrEmpty(searchForm.getFilterList())){
+//            FilterDTO attr = new FilterDTO(null, null, null);
+//            arr.add(attr);
+//            searchForm.setFilterList(arr);
+//        }
+        FilterDTO attr = new FilterDTO("ID", ">=", "1");
+        FilterDTO attr2 = new FilterDTO("platform_token", ">=", "1");
+        arr.add(attr);
+        arr.add(attr2);
+        searchForm.setFilterList(arr);
+
+//        model.addAttribute("fieldSelect", )
+        model.addAttribute("filterWrapper", searchForm);
+        model.addAttribute("data", platformsService.searchPlatform(null, pageNumber));
+        model.addAttribute("currentPage", pageNumber);
+        return "pages/platforms-manager/search-form";
+    }
+
+    @PostMapping("/search-platform")
+    public String searchClient(@ModelAttribute FilterWrapperDTO filterWrapper,
+                               @RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber, Model model){
+        //Khi user xoá search thì khoi tao lai gia tri
+        ArrayList<FilterDTO> arr = new ArrayList<>();
+        if(DataUtil.isNullOrEmpty(filterWrapper.getFilterList())){
+            FilterDTO attr = new FilterDTO(null, null, null);
+            arr.add(attr);
+            filterWrapper.setFilterList(arr);
+        }
+//        model.addAttribute("fieldSelect", )
+        model.addAttribute("filterWrapper", filterWrapper);
+        model.addAttribute("data", platformsService.searchPlatform(filterWrapper, pageNumber));
+        model.addAttribute("currentPage", pageNumber);
+        return "pages/platforms-manager/search-form";
+    }
+
 }
