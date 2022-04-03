@@ -23,6 +23,10 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
@@ -66,6 +70,25 @@
             <artifactId>junit-platform-launcher</artifactId>
             <version>1.8.2</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.eventuate.common/eventuate-common-json-mapper -->
+        <dependency>
+            <groupId>io.eventuate.common</groupId>
+            <artifactId>eventuate-common-json-mapper</artifactId>
+            <version>0.14.0.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.1.210</version>
         </dependency>
     </dependencies>
 

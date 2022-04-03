@@ -1,4 +1,4 @@
-package io.github.eureka.image;
+package io.github.eureka.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
