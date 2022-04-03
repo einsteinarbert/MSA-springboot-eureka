@@ -1,7 +1,7 @@
 package io.github.eureka.api.config;
 
 
-import io.github.eureka.api.entity.dto.ActionUserDTO;
+import io.github.eureka.api.model.dto.ActionUserDTO;
 import org.springframework.core.NamedThreadLocal;
 
 public class ActionUserHolder {

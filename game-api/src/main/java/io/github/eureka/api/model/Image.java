@@ -1,4 +1,4 @@
-package io.github.eureka.api.entity;
+package io.github.eureka.api.model;
 
 public class Image {
     private Integer id;

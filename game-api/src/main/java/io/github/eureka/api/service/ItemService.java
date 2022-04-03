@@ -1,6 +1,6 @@
 package io.github.eureka.api.service;
 
-import io.github.eureka.api.entity.dto.SaleInfoDTO;
+import io.github.eureka.api.model.dto.SaleInfoDTO;
 
 /**
  * Project: MSA-springboot-eureka.<br/>

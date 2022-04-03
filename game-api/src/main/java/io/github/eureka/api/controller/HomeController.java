@@ -1,6 +1,6 @@
 package io.github.eureka.api.controller;
 
-import io.github.eureka.api.entity.dto.SaleInfoDTO;
+import io.github.eureka.api.model.dto.SaleInfoDTO;
 import io.github.eureka.api.service.ItemService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
@@ -33,9 +33,7 @@ public class HomeController extends BaseController {
 	 * @return pong
 	 */
 	@GetMapping("/ping")
-	public String ping(HttpServletRequest request) {
-		setUserInfo(request);
-
+	public String ping() {
 		return "pong";
 	}
 

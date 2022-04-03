@@ -3,7 +3,13 @@ spring:
         name: game-api-service
 server:
     port: '8200'
-
+springdoc:
+    api-docs:
+        path: /api-docs
+    swagger-ui:
+        path: /docs
+        operationsSorter: method
+        disable-swagger-default-url: true
     jpa:
         properties:
             hibernate:

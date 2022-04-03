@@ -1,4 +1,4 @@
-package io.github.eureka.api.entity.dto;
+package io.github.eureka.api.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,14 +12,15 @@ import java.io.Serializable;
  * Des: <br/>
  * User: HieuTT<br/>
  * Date: 03/04/2022<br/>
- * Time: 13:30<br/>
+ * Time: 17:15<br/>
  */
-@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SaleInfoDTO implements Serializable {
-    private Long userId;
-    private Integer platformType;
-    private ProductInfoDTO productInfo;
+@Data
+public class BaseMsgDTO<T> implements Serializable {
+    private int code;
+    private String reason;
+    private String message;
+    private T data;
 }

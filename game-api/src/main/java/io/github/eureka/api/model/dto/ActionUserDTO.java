@@ -1,4 +1,4 @@
-package io.github.eureka.api.entity.dto;
+package io.github.eureka.api.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

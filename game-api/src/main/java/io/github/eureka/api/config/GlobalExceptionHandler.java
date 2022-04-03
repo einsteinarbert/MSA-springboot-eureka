@@ -1,5 +1,6 @@
 package io.github.eureka.api.config;
 
+import io.github.eureka.api.model.dto.BaseMsgDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +23,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-
     public static final String TRACE = "trace";
 
     @Value("${reflectoring.trace:false}")
@@ -43,7 +43,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Object> handleItemNotFoundException(
             IllegalArgumentException iex,
             WebRequest _request
@@ -51,8 +50,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         //Body omitted as it's similar to the method of same name
         // in ProductController example...
         //.....
-        log.error("ERROR ERROR: {}", iex.getMessage());
-        return ResponseEntity.badRequest().body(iex.getMessage());
+        log.error("ExceptionHandler", iex);
+        return ResponseEntity.ok().body(new BaseMsgDTO<>(HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(), iex.getMessage(), ""));
     }
 
     @ExceptionHandler(RuntimeException.class)

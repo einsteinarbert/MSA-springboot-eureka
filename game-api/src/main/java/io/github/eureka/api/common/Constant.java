@@ -1,7 +1,5 @@
 package io.github.eureka.api.common;
 
-import lombok.Data;
-
 /**
  * Project: MSA-springboot-eureka.<br/>
  * Des: <br/>
@@ -10,11 +8,11 @@ import lombok.Data;
  * Time: 13:34<br/>
  */
 public interface Constant {
-    enum Platform {
+    enum PlatformType {
         ALL(0), ANDROID(1), IOS(2);
         int type;
 
-        Platform(int i) {
+        PlatformType(int i) {
             this.type = i;
         }
 
