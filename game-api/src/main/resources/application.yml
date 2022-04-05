@@ -5,8 +5,6 @@ spring:
         properties:
             hibernate:
                 dialect: org.hibernate.dialect.MySQL5Dialect
-        hibernate:
-            naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
         show-sql: 'true'
     datasource:
         type: com.zaxxer.hikari.HikariDataSource

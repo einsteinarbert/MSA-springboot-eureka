@@ -3,6 +3,7 @@ package io.github.eureka.api.service.impl;
 import io.github.eureka.api.model.Users;
 import io.github.eureka.api.repo.UsersRepository;
 import io.github.eureka.api.service.UsersService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -10,12 +11,9 @@ import java.sql.Date;
 import java.util.Calendar;
 
 @Service
+@AllArgsConstructor
 public class UsersServiceImpl implements UsersService {
     private final UsersRepository usersRepository;
-
-    public UsersServiceImpl(UsersRepository usersRepository) {
-        this.usersRepository = usersRepository;
-    }
 
     @Override
     public Users createUser(Users users) {
@@ -31,7 +29,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public Users getUserById(Long id) {
-        return usersRepository.getById(id);
+        return usersRepository.findById(id).orElse(null);
     }
 
     @Override

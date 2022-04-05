@@ -59,11 +59,11 @@ public class ItemServiceImpl implements ItemService {
         ActionUserDTO userDTO = ActionUserHolder.getActionUser();
         Assert.notNull(userDTO, MsgUtil.getMessage("user.info.null"));
         Assert.notNull(saleInfo.getUserId(), MsgUtil.getMessage("sale.trans.info.null"));
-        Users user = usersRepository.findById(saleInfo.getUserId()).orElseThrow (
+        Users user = usersRepository.findByIdAndStatusIn(saleInfo.getUserId(), Arrays.asList(0, 1)).orElseThrow (
                 () -> new IllegalArgumentException(MsgUtil.getMessage("user.info.null"))
         );
         Assert.isTrue(user.getUsername().equals(userDTO.getSub()),
-                MsgUtil.getMessage("Username is not valid: {}", user.getUsername()));
+                MsgUtil.getMessage("user.invalid", user.getUsername()));
         Assert.isTrue(Arrays.stream(Constant.PlatformType.values()).anyMatch(platformType ->
                 platformType.getType() == saleInfo.getPlatformType()), MsgUtil.getMessage("sale.trans.info.platform.invalid"));
         // find user wallet

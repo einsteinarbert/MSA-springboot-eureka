@@ -1,5 +1,6 @@
 package io.github.eureka.api.controller;
 
+import io.github.eureka.api.model.Users;
 import io.github.eureka.api.model.dto.SaleInfoDTO;
 import io.github.eureka.api.service.ItemService;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 
 @AllArgsConstructor
@@ -30,11 +33,14 @@ public class HomeController extends BaseController {
 
 	/**
 	 * Api for test auth
-	 * @return pong
+	 * @return Test EM di
 	 */
+	@PersistenceContext
+	private final EntityManager em;
 	@GetMapping("/ping")
-	public String ping() {
-		return "pong";
+	public ResponseEntity<?> ping() {
+		Users usr = (Users) em.createNativeQuery("select * from users limit 1", Users.class).getSingleResult();
+		return ResponseEntity.ok(usr);
 	}
 
 	@PostMapping("buy-item")
