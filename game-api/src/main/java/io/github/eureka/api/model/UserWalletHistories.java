@@ -5,7 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -24,11 +24,12 @@ public class UserWalletHistories {
     private int supplyNumber;
     private int number;
     private String message;
+    private String transNumber;
     private Integer historyType;
     private String generatableType;
     private Long generatableId;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private Date createdAt;
+    private Date updatedAt;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -122,21 +123,21 @@ public class UserWalletHistories {
 
     @Basic
     @Column(name = "created_at", nullable = true)
-    public Timestamp getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
     @Basic
     @Column(name = "updated_at", nullable = true)
-    public Timestamp getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -151,5 +152,15 @@ public class UserWalletHistories {
     @Override
     public int hashCode() {
         return Objects.hash(id, userId, walletId, supplyNumber, number, message, historyType, generatableType, generatableId, createdAt, updatedAt);
+    }
+
+    @Basic
+    @Column(name = "trans_number")
+    public String getTransNumber() {
+        return transNumber;
+    }
+
+    public void setTransNumber(String transNumber) {
+        this.transNumber = transNumber;
     }
 }

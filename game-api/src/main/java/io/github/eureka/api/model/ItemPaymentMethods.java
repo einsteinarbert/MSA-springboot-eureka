@@ -16,8 +16,8 @@ import java.util.Objects;
  * Time: 18:17<br/>
  */
 @Entity
-@Table(name = "item_paymenth_methods")
-public class ItemPaymenthMethods {
+@Table(name = "item_payment_methods")
+public class ItemPaymentMethods {
     private long id;
     private long itemProductId;
     private long paymentMethodId;
@@ -100,7 +100,7 @@ public class ItemPaymenthMethods {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ItemPaymenthMethods that = (ItemPaymenthMethods) o;
+        ItemPaymentMethods that = (ItemPaymentMethods) o;
         return id == that.id && itemProductId == that.itemProductId && paymentMethodId == that.paymentMethodId && number == that.number && price == that.price && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
     }
 
