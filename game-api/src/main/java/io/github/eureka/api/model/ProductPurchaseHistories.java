@@ -5,8 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.sql.Timestamp;
-import java.util.Objects;
+import java.util.Date;
 
 /**
  * Project: MSA-springboot-eureka.<br/>
@@ -23,13 +22,14 @@ public class ProductPurchaseHistories {
     private long productId;
     private String productType;
     private long receiptId;
-    private int paymentMethodId;
-    private Long price;
+    private long paymentMethodId;
+    private Integer price;
     private Integer currency;
     private Integer number;
     private Integer bonusNumber;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private Date createdAt;
+    private Date updatedAt;
+    private String transNumber;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -83,21 +83,21 @@ public class ProductPurchaseHistories {
 
     @Basic
     @Column(name = "payment_method_id", nullable = false)
-    public int getPaymentMethodId() {
+    public long getPaymentMethodId() {
         return paymentMethodId;
     }
 
-    public void setPaymentMethodId(int paymentMethodId) {
+    public void setPaymentMethodId(long paymentMethodId) {
         this.paymentMethodId = paymentMethodId;
     }
 
     @Basic
     @Column(name = "price", nullable = true)
-    public Long getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
@@ -133,34 +133,30 @@ public class ProductPurchaseHistories {
 
     @Basic
     @Column(name = "created_at", nullable = true)
-    public Timestamp getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
     @Basic
     @Column(name = "updated_at", nullable = true)
-    public Timestamp getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProductPurchaseHistories that = (ProductPurchaseHistories) o;
-        return id == that.id && userId == that.userId && productId == that.productId && receiptId == that.receiptId && paymentMethodId == that.paymentMethodId && Objects.equals(productType, that.productType) && Objects.equals(price, that.price) && Objects.equals(currency, that.currency) && Objects.equals(number, that.number) && Objects.equals(bonusNumber, that.bonusNumber) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
+    @Column(name = "trans_number")
+    public String getTransNumber() {
+        return transNumber;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, userId, productId, productType, receiptId, paymentMethodId, price, currency, number, bonusNumber, createdAt, updatedAt);
+    public void setTransNumber(String transNumber) {
+        this.transNumber = transNumber;
     }
 }

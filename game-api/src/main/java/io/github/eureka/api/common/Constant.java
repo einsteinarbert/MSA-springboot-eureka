@@ -20,4 +20,28 @@ public interface Constant {
             return type;
         }
     }
+    enum UserHistoryType {
+        BUY(0), USE(1), BONUS(2), GIFT(3), RETURN(4);
+        int type;
+        UserHistoryType(int i) {
+            type = i;
+        }
+        public int getType() {return type;}
+    }
+    enum WalletType {
+        JEWEL(0), COIN(1);
+        int type;
+        WalletType(int i) {
+            type = i;
+        }
+        public int getType() {return type;}
+    }
+    enum JewelType {
+        BUY(0), BONUS(1);
+        int type;
+        JewelType(int i) {
+            type = i;
+        }
+        public int getType() {return type;}
+    }
 }

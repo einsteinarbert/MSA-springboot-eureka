@@ -1,5 +1,6 @@
 package io.github.eureka.api.model.dto;
 
+import io.github.eureka.api.model.entity.ProductPriceEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductInfoDTO {
-    private List<Long> items;
+    private List<ProductPriceEntity> itemIds;
     private Integer payType; // payment_type
 }
