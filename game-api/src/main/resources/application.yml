@@ -1,27 +1,17 @@
 spring:
     application:
         name: game-api-service
-server:
-    port: '8200'
-springdoc:
-    api-docs:
-        path: /api-docs
-    swagger-ui:
-        path: /docs
-        operationsSorter: method
-        disable-swagger-default-url: true
     jpa:
         properties:
             hibernate:
                 dialect: org.hibernate.dialect.MySQL5Dialect
         hibernate:
             naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
-            ddl-auto: update
         show-sql: 'true'
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:mysql://125.212.225.166:3306?zeroDateTimeBehavior=convertToNull
-        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mariadb://125.212.225.166:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+        driverClassName: org.mariadb.jdbc.Driver
         username: db_cluster
         password: bccs3_maria
         hikari:
@@ -35,3 +25,14 @@ springdoc:
 
 reflectoring:
     trace: true
+
+springdoc:
+    api-docs:
+        path: /api-docs
+    swagger-ui:
+        path: /docs
+        operationsSorter: method
+        disable-swagger-default-url: true
+
+server:
+    port: '8200'
