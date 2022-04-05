@@ -21,32 +21,34 @@
                 <div class="card-body">
                     <form class="forms-sample form-inline" id="search_form" th:object="${filterWrapper}"
                           th:action="@{/pages/platform-manager/search-platform}" method="post">
-                        <div class="col">
-                            <div class="row m-left-10x form-group-filter" id="form_condition_root" th:each="item, stat : ${filterWrapper.filterList}">
-                                <div class="form-group row pb-2 select-w-312x">
-                                    <select th:field="${filterWrapper.filterList[__${stat.index}__].field}" class="form-control input-filter" id="field">
-                                        <option value="" >Choose Item</option>
-                                        <option value="ID" >ID</option>
-                                        <option value="platform_token" >platform Token</option>
-                                        <option value="name" >platform Name</option>
-                                        <option value="platform_type" >platform Type</option>
-                                    </select>
-                                </div>
-                                <div class="form-group row pb-2 select-w-312x" >
-                                    <select th:field="${filterWrapper.filterList[__${stat.index}__].condition}"  class="form-control input-filter" id="condition">
-                                        <option value="">Choose Item</option>
-                                        <option value="=">=</option>
-                                        <option value="contain">contain</option>
-                                        <option value=">=" >&gt;=</option>
-                                        <option value="<=">&lt;=</option>
-                                        <option value="<>" >&lt;&gt;</option>
-                                    </select>
-                                </div>
-                                <div class="form-group row pb-2 m-left-2 select-w-312x" >
-                                    <input th:field="${filterWrapper.filterList[__${stat.index}__].keyword}"  type="text" th:value="${item.keyword}" class="input-w-312x input-filter" id="value">
-                                </div>
-                                <div class="form-group row pb-2">
-                                    <button type="button" class="btn btn-dark m-left-btn-30x btn_remove" id="__${stat.index}__ == 0 ? 'btn_clear' : ''">削除</button>
+                        <div class="col group-filter-parent">
+                            <div id="form_condition_root">
+                                <div class="row m-left-10x form-group-filter" th:each="item, stat : ${filterWrapper.filterList}">
+                                    <div class="form-group row pb-2 select-w-312x">
+                                        <select th:field="${filterWrapper.filterList[__${stat.index}__].field}" th:data-index="${stat.index}" class="form-control input-filter" id="field">
+                                            <option value="" >Choose Item</option>
+                                            <option value="ID" >ID</option>
+                                            <option value="platform_token" >platform Token</option>
+                                            <option value="name" >platform Name</option>
+                                            <option value="platform_type" >platform Type</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group row pb-2 select-w-312x" >
+                                        <select th:field="${filterWrapper.filterList[__${stat.index}__].condition}" th:data-index="${stat.index}"  class="form-control input-filter" id="condition">
+                                            <option value="">Choose Item</option>
+                                            <option value="=">=</option>
+                                            <option value="contain">contain</option>
+                                            <option value=">=" >&gt;=</option>
+                                            <option value="<=">&lt;=</option>
+                                            <option value="<>" >&lt;&gt;</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group row pb-2 m-left-2 select-w-312x" >
+                                        <input th:field="${filterWrapper.filterList[__${stat.index}__].keyword}" th:data-index="${stat.index}"  type="text" th:value="${item.keyword}" class="input-w-312x input-filter" id="keyword">
+                                    </div>
+                                    <div class="form-group row pb-2">
+                                        <button type="button" class="btn btn-dark m-left-btn-30x btn_remove" id="btn_clear">削除</button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row m-left-10x" id="button-group">
@@ -54,7 +56,7 @@
                                     <button type="button" class="btn btn-dark" th:onclick="'addConditions()'">検索条件を追加</button>
                                 </div>
                                 <div class="form-group row pb-2">
-                                    <button type="button" class="btn btn-dark m-left-2" id="btn_clear_all">クリア</button>
+                                    <button type="submit" class="btn btn-dark m-left-2" id="btn_clear_all">クリア</button>
                                 </div>
                                 <div class="form-group row pb-2">
                                     <button type="submit" class="btn btn-dark m-left-2" id="btn_search">検索</button>

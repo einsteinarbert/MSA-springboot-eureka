@@ -10,6 +10,7 @@
         <div class="row" th:object="${rowFilter}">
             <div class="col">
 <!--                start loop -->
+
                 <div class="row m-left-10x form-group-filter" th:each="item : ${rowFilter}" id="form_condition_root">
                     <div class="form-group row pb-2 select-w-312x" th:with="data=${item.selectors[0]}">
                         <section  th:object="${data}" th:replace="common/select-css::select_fragment"></section>

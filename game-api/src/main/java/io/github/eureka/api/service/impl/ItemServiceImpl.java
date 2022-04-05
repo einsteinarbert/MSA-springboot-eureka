@@ -33,7 +33,9 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
     @PersistenceContext
     private final EntityManager em;
+
     private final UsersRepository usersRepository;
+
 
     @Override
     @Transactional
@@ -58,9 +60,9 @@ public class ItemServiceImpl implements ItemService {
                 .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                 .getResultList();
         Assert.isTrue(!CollectionUtils.isEmpty(userWallets), MsgUtil.getMessage("sale.trans.info.wallet.empty"));
-        UserWallets userWallet = userWallets.stream().filter(obj -> obj.get)
-        Long totalAmount =
-        Assert.isTrue(userWallet.getNumber() > 0, MsgUtil.getMessage("sale.trans.info.balance.not.enough", userWallet.getNumber()));
+//        UserWallets userWallet = userWallets.stream().filter(obj -> obj.get)
+//        Long totalAmount =
+//        Assert.isTrue(userWallet.getNumber() > 0, MsgUtil.getMessage("sale.trans.info.balance.not.enough", userWallet.getNumber()));
         return false;
     }
 }

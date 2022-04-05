@@ -1,139 +1,62 @@
-let table = null;
 $(document).ready(function () {
-
     init();
 });
-
-/**
- * remote one row
- * @param isChild true => remove parent too
- * @param ele: element
- */
-const remove = function(ele, isChild=true) {
-    if (isChild) {
-        ele.parentNode.parentNode.remove(); // remove row on click button
-    } else {
-        ele.remove();
-    }
-}
 
 /**
  * clone new search condition
  */
 function addConditions() {
-    let parent = document.getElementById("form_condition_root").parentNode;
-    let ele = document.getElementById("form_condition_root").cloneNode(true);
-    ele.setAttribute("id", '');
-    ele.setAttribute('class', ele.getAttribute('class') + " " + 'form-condition');
-    ele.getElementsByTagName("button")[0].setAttribute("onclick", "remove(this)");
-    ele.getElementsByTagName("button")[0].setAttribute("id", '');
-    parent.insertBefore(ele, document.getElementById("button-group").previousSibling); // insert new row
-}
-
-function init() {
-    if (document.location.href.includes('/pages/platform-manager/search-platform')) {
-        /**
-         * reset default state
-         */
-        $('#btn_clear').click(function (e) {
-            let parent = e.currentTarget.parentNode.parentNode;
-            for (let select of parent.getElementsByTagName("select")) {
-                select.value = 0;
-            }
-        });
-
-        /**
-         * Clear all added row
-         */
-        $('#btn_clear_all').click(function (e) {
-            for (let el of $(".form-condition")) {
-                remove(el, false);
-            }
-            $('#btn_clear').trigger(e);
-        });
-
-        /**
-         * search action
-         */
-        $('#btn_search_platform').click(function () {
-            console.log("Clicked");
-            search(1);
-        });
-
-        // DATA TABLE TRUNK
-        $('select[name="data_table_length"]').change((function (){
-            search(1);
-        }));
-        search(1);
-    }
-
-}
-
-
-function search(nextPage, size) {
-    let data = getFilterSearch(nextPage, size);
-    post("/pages/platform-manager/search-platform", data,
-        function (res) {
-            renderDataTable(res, $('.container-table'));
-        },
-        function (a, _b, _c) {
-            console.error(a)
-        }
-    );
-}
-
-function getFilterSearch(nextPage, size) {
-    let filter = [];
-    for (let ele of $('.form-group-filter')) {
-        let valid = true;
-        for (let select of ele.getElementsByClassName('input-filter')) {
-            if (select.value === '0') {
-                valid = false;
-                break;
-            }
-        }
-        if (valid) {
-            let selects = ele.getElementsByClassName('input-filter');
-            filter.push({
-                "field": selects[0].value,
-                "condition": selects[1].getElementsByTagName("option")[selects[1].value].text,
-                "keyword": selects[2].value,
-            });
-        }
-    }
-    // ajax
-    return {
-        "filter": filter,
-        "currentPage": nextPage,
-        "pageSize": size == null ? 10 : size,
-        "sortField": "jp.id",
-        "isASC": true
-    };
-}
-
-function renderDataTable(response, selector) {
-    datatable({
-        selector: selector,
-        columns: [
-            "id",
-            "platformToken",
-            "name",
-            "platformTypeName",
-            "requiredVersion"
-        ],
-        pagination: true,
-        totalRecord: response.totalElements,
-        pageSize: response.pageable.pageSize,
-        totalPages: response.totalPages,
-        currentPage: response.pageable.pageNumber,
-        data: response.content,
-        pageListLen: 6,
-        pageSizeList: [10, 15, 50, 100, 150, 500],
-        showPageSize: false,
-        jumpFunc: function (to, pageSize) {
-            console.log("Go to page: " + to);
-            console.log("Size: " + pageSize);
-            search(to, pageSize);
+    let newIndex = $("#form_condition_root #keyword").last().data("index") + 1;
+    $("#form_condition_root").append(`<div class="row m-left-10x form-group-filter">
+                                    <div class="form-group row pb-2 select-w-312x">
+                                        <select name="filterList[${newIndex}].field" data-index = "${newIndex}" class="form-control input-filter" id="field">
+                                            <option value="" >Choose Item</option>
+                                            <option value="ID" >ID</option>
+                                            <option value="platform_token" >platform Token</option>
+                                            <option value="name" >platform Name</option>
+                                            <option value="platform_type" >platform Type</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group row pb-2 select-w-312x" >
+                                        <select name="filterList[${newIndex}].condition" data-index = "${newIndex}"  class="form-control input-filter" id="condition">
+                                            <option value="">Choose Item</option>
+                                            <option value="=">=</option>
+                                            <option value="contain">contain</option>
+                                            <option value=">=" >&gt;=</option>
+                                            <option value="<=">&lt;=</option>
+                                            <option value="<>" >&lt;&gt;</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group row pb-2 m-left-2 select-w-312x" >
+                                        <input name="filterList[${newIndex}].keyword" data-index = "${newIndex}" type="text"  class="input-w-312x input-filter" id="keyword">
+                                    </div>
+                                    <div class="form-group row pb-2">
+                                        <button type="button" class="btn btn-dark m-left-btn-30x btn_remove" id="btn_clear">削除</button>
+                                    </div>
+                                </div>
+                            </div>`);
+    $("#form_condition_root").on("click", "#btn_clear", function(){
+        if($('#form_condition_root .form-group-filter').length != 1) {
+            $(this).parent().parent().remove();
         }
     });
 }
+
+function init() {
+
+    $("#btn_clear").click(function () {
+        if($('#form_condition_root .form-group-filter').length != 1) {
+            $(this).parent().parent().remove();
+        }
+    });
+    /**
+     * Clear all added row
+     */
+    $("#btn_clear_all").click(function () {
+        $('#form_condition_root .form-group-filter').not(':first').remove();
+        $("#field").val('');
+        $("#condition").val('');
+        $("#keyword").val('');
+    });
+}
+

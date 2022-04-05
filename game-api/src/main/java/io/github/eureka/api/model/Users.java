@@ -1,9 +1,6 @@
 package io.github.eureka.api.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -16,6 +13,7 @@ import java.util.Objects;
  * Time: 18:17<br/>
  */
 @Entity
+@Table(name="users")
 public class Users {
     private long id;
     private String username;
