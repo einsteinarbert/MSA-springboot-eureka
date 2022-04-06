@@ -10,5 +10,5 @@ import io.github.eureka.api.model.dto.SaleInfoDTO;
  * Time: 13:28<br/>
  */
 public interface ItemService {
-    boolean buyItem(SaleInfoDTO saleInfo);
+    boolean buyProduct(SaleInfoDTO saleInfo);
 }

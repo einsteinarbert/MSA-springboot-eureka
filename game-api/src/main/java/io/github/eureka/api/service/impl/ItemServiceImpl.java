@@ -55,7 +55,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public boolean buyItem(SaleInfoDTO saleInfo) {
+    public boolean buyProduct(SaleInfoDTO saleInfo) {
         ActionUserDTO userDTO = ActionUserHolder.getActionUser();
         Assert.notNull(userDTO, MsgUtil.getMessage("user.info.null"));
         Users user = usersRepository.findByUsernameAndStatusIn(userDTO.getSub(), Arrays.asList(0, 1)).orElseThrow (
@@ -138,8 +138,10 @@ public class ItemServiceImpl implements ItemService {
                 Assert.isTrue(index > -1,
                         MsgUtil.getMessage("sale.trans.info.balance.not.enough", price.getNumber()));
                 // withdraw
+                Date now = new Date();
                 UserWallets wallet = isBonus ? bonusCoin.get(index) : buyCoin.get(index);
                 wallet.setNumber(wallet.getNumber() - price.getNumber());
+                wallet.setUpdatedAt(now);
                 wallet = userWalletsRepository.save(wallet);
                 if (isBonus) {
                     bonusCoin.set(index, wallet);
@@ -147,14 +149,13 @@ public class ItemServiceImpl implements ItemService {
                     buyCoin.set(index, wallet);
                 }
                 ProductPurchaseHistories itemLog = new ProductPurchaseHistories();
-                Date now = new Date();
                 itemLog.setCreatedAt(now);
                 itemLog.setUserId(wallet.getUserId());
                 itemLog.setPaymentMethodId(saleInfo.getPayType());
                 itemLog.setPrice(totalAmount);
                 itemLog.setTransNumber(transNumber);
                 itemLog.setPrice(price.getPrice());
-                itemLog.setPaymentMethodId(price.getPaymentMethodId());
+                itemLog.setPaymentMethodId( .getPaymentMethodId());
                 itemLog.setNumber(price.getNumber());
                 itemLog.setCurrency(null); // cash pay only
                 itemLog.setProductId(price.getProductId());
