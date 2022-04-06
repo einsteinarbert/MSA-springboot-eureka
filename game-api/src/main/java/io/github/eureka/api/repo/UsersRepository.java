@@ -14,5 +14,5 @@ import java.util.Optional;
  * Time: 18:19<br/>
  */
 public interface UsersRepository extends JpaRepository<Users, Long> {
-    Optional<Users> findByIdAndStatusIn(Long aLong, List<Integer> statusLst);
+    Optional<Users> findByUsernameAndStatusIn(String userName, List<Integer> statusLst);
 }

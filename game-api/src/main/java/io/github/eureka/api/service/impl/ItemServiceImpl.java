@@ -58,8 +58,7 @@ public class ItemServiceImpl implements ItemService {
     public boolean buyItem(SaleInfoDTO saleInfo) {
         ActionUserDTO userDTO = ActionUserHolder.getActionUser();
         Assert.notNull(userDTO, MsgUtil.getMessage("user.info.null"));
-        Assert.notNull(saleInfo.getUserId(), MsgUtil.getMessage("sale.trans.info.null"));
-        Users user = usersRepository.findByIdAndStatusIn(saleInfo.getUserId(), Arrays.asList(0, 1)).orElseThrow (
+        Users user = usersRepository.findByUsernameAndStatusIn(userDTO.getSub(), Arrays.asList(0, 1)).orElseThrow (
                 () -> new IllegalArgumentException(MsgUtil.getMessage("user.info.null"))
         );
         Assert.isTrue(user.getUsername().equals(userDTO.getSub()),
@@ -67,15 +66,15 @@ public class ItemServiceImpl implements ItemService {
         // find user wallet
         List<UserWalletEntity> userWallets = em.createNativeQuery(UserWalletEntity.SQL, UserWalletEntity.class)
                 .setParameter("user_id", user.getId())
-                .setParameter("pay_type", saleInfo.getProductInfo().getPayType())
+                .setParameter("pay_type", saleInfo.getPayType())
                 .getResultList();
         Assert.isTrue(!CollectionUtils.isEmpty(userWallets), MsgUtil.getMessage("sale.trans.info.wallet.empty"));
-        validateTotalAmount(userWallets, saleInfo);
+        validateTotalAmount(userWallets, saleInfo, user);
         return true;
     }
 
-    private void validateTotalAmount(List<UserWalletEntity> listWallet, SaleInfoDTO saleInfo) {
-        List<ProductPriceEntity> ids = saleInfo.getProductInfo().getProductIds();
+    private void validateTotalAmount(List<UserWalletEntity> listWallet, SaleInfoDTO saleInfo, Users user) {
+        List<ProductPriceEntity> ids = saleInfo.getProductIds();
         List<ProductPriceEntity> priceInfoLst = new ArrayList<>(ids.size());
         int totalAmount = 0;
         for (ProductPriceEntity id : ids) {
@@ -102,7 +101,7 @@ public class ItemServiceImpl implements ItemService {
                     MsgUtil.getMessage("sale.trans.info.balance.not.enough", totalAmount));
 
             // create transaction and save audit log
-            String transNumber = getTransNumber(saleInfo.getUserId());
+            String transNumber = getTransNumber(user.getId());
             List<UserWallets> bonusCoin = new ArrayList<>();
             List<UserWallets> buyCoin = new ArrayList<>();
             // split bonus and purchase wallet
@@ -151,7 +150,7 @@ public class ItemServiceImpl implements ItemService {
                 Date now = new Date();
                 itemLog.setCreatedAt(now);
                 itemLog.setUserId(wallet.getUserId());
-                itemLog.setPaymentMethodId(saleInfo.getProductInfo().getPayType());
+                itemLog.setPaymentMethodId(saleInfo.getPayType());
                 itemLog.setPrice(totalAmount);
                 itemLog.setTransNumber(transNumber);
                 itemLog.setPrice(price.getPrice());
@@ -174,7 +173,7 @@ public class ItemServiceImpl implements ItemService {
                 log.setTransNumber(transNumber);
                 log.setGeneratableType(price.getProductType());
                 log.setMessage(MsgUtil.getMessage("sale.trans.info.message", price.getName(), price.getNumber(),
-                        Constant.WalletType.getName(saleInfo.getProductInfo().getPayType()), totalAmount));
+                        Constant.WalletType.getName(saleInfo.getPayType()), totalAmount));
                 log.setUserId(wallet.getUserId());
                 log.setWalletId(wallet.getWalletId());
                 userWalletHistoriesRepository.save(log);
