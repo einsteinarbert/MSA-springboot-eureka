@@ -43,7 +43,7 @@ public class HomeController extends BaseController {
 		return ResponseEntity.ok(usr);
 	}
 
-	@PostMapping("buy-item")
+	@PostMapping("buy-product")
 	public ResponseEntity<?> buyItems(HttpServletRequest request, @RequestBody SaleInfoDTO info) {
 		setUserInfo(request);
 		itemService.buyItem(info);

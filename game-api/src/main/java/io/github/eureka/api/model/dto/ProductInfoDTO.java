@@ -20,6 +20,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductInfoDTO {
-    private List<ProductPriceEntity> itemIds;
+    private List<ProductPriceEntity> productIds;
     private Integer payType; // payment_type
 }

@@ -20,6 +20,5 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class SaleInfoDTO implements Serializable {
     private Long userId;
-    private Integer platformType;
     private ProductInfoDTO productInfo;
 }

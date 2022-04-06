@@ -35,6 +35,12 @@ public interface Constant {
             type = i;
         }
         public int getType() {return type;}
+        public static String getName(int i) {
+            for(WalletType e : WalletType.values()){
+                if(e.type == i) return e.name();
+            }
+            return null;
+        }
     }
     enum JewelType {
         BUY(0), BONUS(1);

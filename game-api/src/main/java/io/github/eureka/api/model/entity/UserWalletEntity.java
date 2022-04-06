@@ -28,7 +28,6 @@ public class UserWalletEntity {
             "     wallet_payment_methods wpm,\n" +
             "     payment_methods pm\n" +
             "where uw.user_id = :user_id\n" +
-            "  and w.platform_type = :platform_type\n" +
             "  and w.id = uw.id\n" +
             "  and wpm.id = w.wallet_type\n" +
             "  and pm.id = wpm.payment_method_id\n" +

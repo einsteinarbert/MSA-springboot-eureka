@@ -11,22 +11,22 @@ import javax.persistence.Id;
  * Project: MSA-springboot-eureka.<br/>
  * Des: <br/>
  * User: HieuTT<br/>
- * Date: 04/04/2022<br/>
- * Time: 11:34<br/>
+ * Date: 06/04/2022<br/>
+ * Time: 15:58<br/>
  */
 @Entity
 public class ProductPriceEntity {
     @JsonIgnoreProperties
     public static final String SQL =
             "select ip.product_id, ip.item_id, p.name, p.product_type,\n" +
-            "       ipm.payment_method_id, ipm.number, ipm.price\n" +
-            "from item_products ip,\n" +
-            "     products p,\n" +
-            "     item_payment_methods ipm\n" +
-            "where ip.item_id = :item_id\n" +
-            "  and p.id = ip.product_id\n" +
-            "  and ipm.number = :number\n" +
-            "  and ip.id = ipm.item_product_id";
+                    "       ipm.payment_method_id, ipm.number, ipm.price\n" +
+                    "from item_products ip,\n" +
+                    "     products p,\n" +
+                    "     item_payment_methods ipm\n" +
+                    "where ip.product_id = p.id\n" +
+                    "  and p.id = :product_id\n" +
+                    "  and ipm.number = :number\n" +
+                    "  and ip.id = ipm.item_product_id";
     private long productId;
     private long itemId;
     private String name;
@@ -36,6 +36,7 @@ public class ProductPriceEntity {
     private int price;
 
     @Id
+    @Basic
     @Column(name = "product_id", nullable = false)
     public long getProductId() {
         return productId;
@@ -105,4 +106,4 @@ public class ProductPriceEntity {
         this.price = price;
     }
 
-  }
+}
