@@ -155,7 +155,7 @@ public class ItemServiceImpl implements ItemService {
                 itemLog.setPrice(totalAmount);
                 itemLog.setTransNumber(transNumber);
                 itemLog.setPrice(price.getPrice());
-                itemLog.setPaymentMethodId( .getPaymentMethodId());
+                itemLog.setPaymentMethodId(price.getPaymentMethodId());
                 itemLog.setNumber(price.getNumber());
                 itemLog.setCurrency(null); // cash pay only
                 itemLog.setProductId(price.getProductId());
