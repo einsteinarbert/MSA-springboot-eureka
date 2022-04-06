@@ -1,5 +1,6 @@
 package io.github.eureka.api.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Data
 public class BaseMsgDTO<T> implements Serializable {
+    @JsonIgnore
+    public static final String OK = "success";
+    @JsonIgnore
+    public static final String NG = "failure";
     private int code;
     private String reason;
     private String message;

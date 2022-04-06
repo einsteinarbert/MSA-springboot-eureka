@@ -1,5 +1,6 @@
 package io.github.eureka.api.service;
 
+import io.github.eureka.api.model.dto.PurchaseDTO;
 import io.github.eureka.api.model.dto.SaleInfoDTO;
 
 /**
@@ -11,4 +12,5 @@ import io.github.eureka.api.model.dto.SaleInfoDTO;
  */
 public interface ItemService {
     boolean buyProduct(SaleInfoDTO saleInfo);
+    boolean purchase(PurchaseDTO saleInfo);
 }

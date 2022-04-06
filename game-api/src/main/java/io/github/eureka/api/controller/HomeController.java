@@ -1,6 +1,8 @@
 package io.github.eureka.api.controller;
 
 import io.github.eureka.api.model.Users;
+import io.github.eureka.api.model.dto.BaseMsgDTO;
+import io.github.eureka.api.model.dto.PurchaseDTO;
 import io.github.eureka.api.model.dto.SaleInfoDTO;
 import io.github.eureka.api.service.ItemService;
 import lombok.AllArgsConstructor;
@@ -33,7 +35,6 @@ public class HomeController extends BaseController {
 
 	/**
 	 * Api for test auth
-	 * @return Test EM di
 	 */
 	@PersistenceContext
 	private final EntityManager em;
@@ -44,9 +45,18 @@ public class HomeController extends BaseController {
 	}
 
 	@PostMapping("buy-product")
-	public ResponseEntity<?> buyProduct(HttpServletRequest request, @RequestBody SaleInfoDTO info) {
+	public BaseMsgDTO<String> buyProduct(HttpServletRequest request, @RequestBody SaleInfoDTO info) {
 		setUserInfo(request);
-		itemService.buyProduct(info);
-		return ResponseEntity.ok().build();
+		boolean res = itemService.buyProduct(info);
+		String result = res ? BaseMsgDTO.OK : BaseMsgDTO.NG;
+		return BaseMsgDTO.<String>builder().data(result).build();
+	}
+
+	@PostMapping("purchase-product")
+	public BaseMsgDTO<String> byCashBuy(HttpServletRequest request, @RequestBody PurchaseDTO info) {
+		setUserInfo(request);
+		var res = itemService.purchase(info);
+		String result = res ? BaseMsgDTO.OK : BaseMsgDTO.NG;
+		return BaseMsgDTO.<String>builder().data(result).build();
 	}
 }

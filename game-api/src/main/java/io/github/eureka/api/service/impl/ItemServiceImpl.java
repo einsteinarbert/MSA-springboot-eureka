@@ -8,6 +8,7 @@ import io.github.eureka.api.model.UserWalletHistories;
 import io.github.eureka.api.model.UserWallets;
 import io.github.eureka.api.model.Users;
 import io.github.eureka.api.model.dto.ActionUserDTO;
+import io.github.eureka.api.model.dto.PurchaseDTO;
 import io.github.eureka.api.model.dto.SaleInfoDTO;
 import io.github.eureka.api.model.entity.ProductPriceEntity;
 import io.github.eureka.api.model.entity.UserWalletEntity;
@@ -57,12 +58,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public boolean buyProduct(SaleInfoDTO saleInfo) {
         ActionUserDTO userDTO = ActionUserHolder.getActionUser();
-        Assert.notNull(userDTO, MsgUtil.getMessage("user.info.null"));
-        Users user = usersRepository.findByUsernameAndStatusIn(userDTO.getSub(), Arrays.asList(0, 1)).orElseThrow (
-                () -> new IllegalArgumentException(MsgUtil.getMessage("user.info.null"))
-        );
-        Assert.isTrue(user.getUsername().equals(userDTO.getSub()),
-                MsgUtil.getMessage("user.invalid", user.getUsername()));
+        Users user = validateUser(userDTO);
         // find user wallet
         List<UserWalletEntity> userWallets = em.createNativeQuery(UserWalletEntity.SQL, UserWalletEntity.class)
                 .setParameter("user_id", user.getId())
@@ -71,6 +67,24 @@ public class ItemServiceImpl implements ItemService {
         Assert.isTrue(!CollectionUtils.isEmpty(userWallets), MsgUtil.getMessage("sale.trans.info.wallet.empty"));
         validateTotalAmount(userWallets, saleInfo, user);
         return true;
+    }
+
+    @Override
+    public boolean purchase(PurchaseDTO saleInfo) {
+        ActionUserDTO userDTO = ActionUserHolder.getActionUser();
+        Users user = validateUser(userDTO);
+        // TODO tobe ko tin iu
+        return false;
+    }
+
+    private Users validateUser(ActionUserDTO userDTO) {
+        Assert.notNull(userDTO, MsgUtil.getMessage("user.info.null"));
+        Users user = usersRepository.findByUsernameAndStatusIn(userDTO.getSub(), Arrays.asList(0, 1)).orElseThrow (
+                () -> new IllegalArgumentException(MsgUtil.getMessage("user.info.null"))
+        );
+        Assert.isTrue(user.getUsername().equals(userDTO.getSub()),
+                MsgUtil.getMessage("user.invalid", user.getUsername()));
+        return user;
     }
 
     private void validateTotalAmount(List<UserWalletEntity> listWallet, SaleInfoDTO saleInfo, Users user) {
