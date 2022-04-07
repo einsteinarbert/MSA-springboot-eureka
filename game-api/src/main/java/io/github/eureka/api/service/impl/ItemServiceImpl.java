@@ -8,6 +8,7 @@ import io.github.eureka.api.model.UserWalletHistories;
 import io.github.eureka.api.model.UserWallets;
 import io.github.eureka.api.model.Users;
 import io.github.eureka.api.model.dto.ActionUserDTO;
+import io.github.eureka.api.model.dto.PurchaseDTO;
 import io.github.eureka.api.model.dto.SaleInfoDTO;
 import io.github.eureka.api.model.entity.ProductPriceEntity;
 import io.github.eureka.api.model.entity.UserWalletEntity;
@@ -55,36 +56,45 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public boolean buyItem(SaleInfoDTO saleInfo) {
+    public boolean buyProduct(SaleInfoDTO saleInfo) {
         ActionUserDTO userDTO = ActionUserHolder.getActionUser();
+        Users user = validateUser(userDTO);
+        // find user wallet
+        List<UserWalletEntity> userWallets = em.createNativeQuery(UserWalletEntity.SQL, UserWalletEntity.class)
+                .setParameter("user_id", user.getId())
+                .setParameter("pay_type", saleInfo.getPayType())
+                .getResultList();
+        Assert.isTrue(!CollectionUtils.isEmpty(userWallets), MsgUtil.getMessage("sale.trans.info.wallet.empty"));
+        validateTotalAmount(userWallets, saleInfo, user);
+        return true;
+    }
+
+    @Override
+    public boolean purchase(PurchaseDTO saleInfo) {
+        ActionUserDTO userDTO = ActionUserHolder.getActionUser();
+        Users user = validateUser(userDTO);
+        // TODO tobe ko tin iu
+        return false;
+    }
+
+    private Users validateUser(ActionUserDTO userDTO) {
         Assert.notNull(userDTO, MsgUtil.getMessage("user.info.null"));
-        Assert.notNull(saleInfo.getUserId(), MsgUtil.getMessage("sale.trans.info.null"));
-        Users user = usersRepository.findByIdAndStatusIn(saleInfo.getUserId(), Arrays.asList(0, 1)).orElseThrow (
+        Users user = usersRepository.findByUsernameAndStatusIn(userDTO.getSub(), Arrays.asList(0, 1)).orElseThrow (
                 () -> new IllegalArgumentException(MsgUtil.getMessage("user.info.null"))
         );
         Assert.isTrue(user.getUsername().equals(userDTO.getSub()),
                 MsgUtil.getMessage("user.invalid", user.getUsername()));
-        Assert.isTrue(Arrays.stream(Constant.PlatformType.values()).anyMatch(platformType ->
-                platformType.getType() == saleInfo.getPlatformType()), MsgUtil.getMessage("sale.trans.info.platform.invalid"));
-        // find user wallet
-        List<UserWalletEntity> userWallets = em.createNativeQuery(UserWalletEntity.SQL, UserWalletEntity.class)
-                .setParameter("user_id", user.getId())
-                .setParameter("platform_type", saleInfo.getPlatformType())
-                .setParameter("pay_type", saleInfo.getProductInfo().getPayType())
-                .getResultList();
-        Assert.isTrue(!CollectionUtils.isEmpty(userWallets), MsgUtil.getMessage("sale.trans.info.wallet.empty"));
-        validateTotalAmount(userWallets, saleInfo);
-        return true;
+        return user;
     }
 
-    private void validateTotalAmount(List<UserWalletEntity> listWallet, SaleInfoDTO saleInfo) {
-        List<ProductPriceEntity> ids = saleInfo.getProductInfo().getItemIds();
+    private void validateTotalAmount(List<UserWalletEntity> listWallet, SaleInfoDTO saleInfo, Users user) {
+        List<ProductPriceEntity> ids = saleInfo.getProductIds();
         List<ProductPriceEntity> priceInfoLst = new ArrayList<>(ids.size());
         int totalAmount = 0;
         for (ProductPriceEntity id : ids) {
             ProductPriceEntity priceInfo = (ProductPriceEntity) em.createNativeQuery(ProductPriceEntity.SQL,
                             ProductPriceEntity.class)
-                    .setParameter("item_id", id.getItemId())
+                    .setParameter("product_id", id.getProductId())
                     .setParameter("number", id.getNumber())
                     .getSingleResult();
             priceInfoLst.add(priceInfo);
@@ -105,7 +115,7 @@ public class ItemServiceImpl implements ItemService {
                     MsgUtil.getMessage("sale.trans.info.balance.not.enough", totalAmount));
 
             // create transaction and save audit log
-            String transNumber = getTransNumber(saleInfo.getUserId());
+            String transNumber = getTransNumber(user.getId());
             List<UserWallets> bonusCoin = new ArrayList<>();
             List<UserWallets> buyCoin = new ArrayList<>();
             // split bonus and purchase wallet
@@ -142,8 +152,10 @@ public class ItemServiceImpl implements ItemService {
                 Assert.isTrue(index > -1,
                         MsgUtil.getMessage("sale.trans.info.balance.not.enough", price.getNumber()));
                 // withdraw
+                Date now = new Date();
                 UserWallets wallet = isBonus ? bonusCoin.get(index) : buyCoin.get(index);
                 wallet.setNumber(wallet.getNumber() - price.getNumber());
+                wallet.setUpdatedAt(now);
                 wallet = userWalletsRepository.save(wallet);
                 if (isBonus) {
                     bonusCoin.set(index, wallet);
@@ -151,10 +163,9 @@ public class ItemServiceImpl implements ItemService {
                     buyCoin.set(index, wallet);
                 }
                 ProductPurchaseHistories itemLog = new ProductPurchaseHistories();
-                Date now = new Date();
                 itemLog.setCreatedAt(now);
                 itemLog.setUserId(wallet.getUserId());
-                itemLog.setPaymentMethodId(saleInfo.getProductInfo().getPayType());
+                itemLog.setPaymentMethodId(saleInfo.getPayType());
                 itemLog.setPrice(totalAmount);
                 itemLog.setTransNumber(transNumber);
                 itemLog.setPrice(price.getPrice());
@@ -167,13 +178,17 @@ public class ItemServiceImpl implements ItemService {
 
                 UserWalletHistories log = new UserWalletHistories();
                 log.setHistoryType(Constant.UserHistoryType.USE.getType());
-                log.setNumber(totalAmount);
+                if (isBonus) {
+                    log.setSupplyNumber(totalAmount);
+                } else {
+                    log.setNumber(totalAmount);
+                }
                 log.setGeneratableId(itemLog.getId());
                 log.setCreatedAt(now);
                 log.setTransNumber(transNumber);
                 log.setGeneratableType(price.getProductType());
-                log.setMessage("??");
-                log.setSupplyNumber(-1);
+                log.setMessage(MsgUtil.getMessage("sale.trans.info.message", price.getName(), price.getNumber(),
+                        Constant.WalletType.getName(saleInfo.getPayType()), totalAmount));
                 log.setUserId(wallet.getUserId());
                 log.setWalletId(wallet.getWalletId());
                 userWalletHistoriesRepository.save(log);

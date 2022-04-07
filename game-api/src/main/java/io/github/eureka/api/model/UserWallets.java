@@ -5,8 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.sql.Timestamp;
-import java.util.Objects;
+import java.util.Date;
 
 /**
  * Project: MSA-springboot-eureka.<br/>
@@ -22,8 +21,8 @@ public class UserWallets {
     private long walletId;
     private long userId;
     private long number;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private Date createdAt;
+    private Date updatedAt;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -67,34 +66,22 @@ public class UserWallets {
 
     @Basic
     @Column(name = "created_at", nullable = true)
-    public Timestamp getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
     @Basic
     @Column(name = "updated_at", nullable = true)
-    public Timestamp getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserWallets that = (UserWallets) o;
-        return id == that.id && walletId == that.walletId && userId == that.userId && number == that.number && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, walletId, userId, number, createdAt, updatedAt);
-    }
 }

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,13 +14,14 @@ import java.util.List;
  * Des: <br/>
  * User: HieuTT<br/>
  * Date: 03/04/2022<br/>
- * Time: 13:37<br/>
+ * Time: 13:30<br/>
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductInfoDTO {
-    private List<ProductPriceEntity> itemIds;
+public class PurchaseDTO implements Serializable {
+    private List<ProductPriceEntity> productIds;
     private Integer payType; // payment_type
+    private Integer platformType;
 }
