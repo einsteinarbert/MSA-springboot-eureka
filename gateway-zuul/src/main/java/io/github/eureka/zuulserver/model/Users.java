@@ -1,11 +1,10 @@
-package io.github.eureka.api.model;
+package io.github.eureka.zuulserver.model;
 
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.ZoneId;
 import java.util.Objects;
 
 /**
@@ -79,16 +78,6 @@ public class Users {
     public void setAge(Integer age) {
         this.age = age;
     }
-    public void setAge(Date currentDate, Date birthday) {
-        LocalDate currDate = currentDate.toLocalDate();
-        LocalDate birthDate = birthday.toLocalDate();
-        if ((birthDate != null) && (currDate != null)) {
-            this.age = Period.between(birthDate, currDate).getYears();
-        } else {
-            this.age = 0;
-        }
-    }
-
     @Basic
     @Column(name = "encrypted_password", nullable = true, length = 255)
     public String getEncryptedPassword() {

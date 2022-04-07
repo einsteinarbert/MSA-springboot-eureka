@@ -44,4 +44,9 @@ public interface Constant {
         }
         public int getType() {return type;}
     }
+    interface STATUS {
+        Integer ANONYMOUS = 0;
+        Integer REGITERED = 1;
+        Integer DEACTIVE = 2;
+    }
 }

@@ -29,11 +29,11 @@ public final class MsgUtil {
     }
 
     public static String getMessage(String code) {
-        return getMessage(code, null, LocaleContextHolder.getLocale());
+        return getMessage(code, null, Locale.US);
     }
 
     public static String getMessage(String code, Object... args) {
-        return getMessage(code, args, LocaleContextHolder.getLocale());
+        return getMessage(code, args, Locale.US);
     }
 
     private MsgUtil() {

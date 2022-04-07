@@ -1,7 +1,10 @@
 package io.github.eureka.zuulserver.service;
 
 import io.github.eureka.zuulserver.model.User;
+import io.github.eureka.zuulserver.model.Users;
 import io.github.eureka.zuulserver.model.security.Role;
+import io.github.eureka.zuulserver.repository.UsersRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -15,23 +18,11 @@ import java.util.Map;
  * 
  */
 @Service
+@AllArgsConstructor
 public class UserService {
-
-    private Map<String, User> data;
-
-    @PostConstruct
-    public void init() {
-        data = new HashMap<>();
-
-        //username:passwowrd -> user:user
-        data.put("user", new User("user", "SRfptuBEzhKHTCkPs2FPSxoKCRhTtbC4PT3XjUyNlJ0=", true, List.of(Role.ROLE_USER)));
-
-        //username:passwowrd -> admin:admin
-        data.put("admin", new User("admin", "must insert password encoded here for test", true, List.of(Role.ROLE_ADMIN)));
-    }
-
-    public Mono<User> findByUsername(String username) {
-        Mono<User>  res = Mono.justOrEmpty(data.get(username));
+    private UsersRepository usersRepository;
+    public Mono<Users> findByUsername(String username) {
+        Mono<Users>  res = Mono.justOrEmpty(usersRepository.findByUsername(username));
         return res;
     }
 }

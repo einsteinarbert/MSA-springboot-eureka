@@ -1,6 +1,7 @@
 package io.github.eureka.zuulserver.security;
 
 import io.github.eureka.zuulserver.model.User;
+import io.github.eureka.zuulserver.model.Users;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -46,9 +47,9 @@ public class JWTUtil {
         return expiration.before(new Date());
     }
 
-    public String generateToken(User user) {
+    public String generateToken(Users user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", user.getRoles());
+        claims.put("role", "USER");
         return doGenerateToken(claims, user.getUsername());
     }
 
