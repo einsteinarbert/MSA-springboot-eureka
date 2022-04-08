@@ -3,6 +3,7 @@ package io.github.eureka.api.service.impl;
 import io.github.eureka.api.common.Constant;
 import io.github.eureka.api.common.MsgUtil;
 import io.github.eureka.api.config.ActionUserHolder;
+import io.github.eureka.api.model.JewelProducts;
 import io.github.eureka.api.model.ProductPurchaseHistories;
 import io.github.eureka.api.model.UserWalletHistories;
 import io.github.eureka.api.model.UserWallets;
@@ -10,15 +11,19 @@ import io.github.eureka.api.model.Users;
 import io.github.eureka.api.model.dto.ActionUserDTO;
 import io.github.eureka.api.model.dto.PurchaseDTO;
 import io.github.eureka.api.model.dto.SaleInfoDTO;
+import io.github.eureka.api.model.dto.google.SubscriptionPurchaseDTO;
 import io.github.eureka.api.model.entity.ProductPriceEntity;
 import io.github.eureka.api.model.entity.UserWalletEntity;
+import io.github.eureka.api.repo.JewelProductsRepository;
 import io.github.eureka.api.repo.ProductPurchaseHistoriesRepository;
 import io.github.eureka.api.repo.UserWalletHistoriesRepository;
 import io.github.eureka.api.repo.UserWalletsRepository;
 import io.github.eureka.api.repo.UsersRepository;
+import io.github.eureka.api.service.CommonService;
 import io.github.eureka.api.service.ItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -26,10 +31,12 @@ import org.springframework.util.CollectionUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static io.github.eureka.api.common.HelpUtil.getTransNumber;
@@ -47,11 +54,13 @@ import static io.github.eureka.api.common.HelpUtil.getTransNumber;
 public class ItemServiceImpl implements ItemService {
     @PersistenceContext
     private final EntityManager em;
-
+    private final CommonService commonService;
     private final UsersRepository usersRepository;
     private final UserWalletsRepository userWalletsRepository;
+    private final JewelProductsRepository jewelProductsRepository;
     private final UserWalletHistoriesRepository userWalletHistoriesRepository;
     private final ProductPurchaseHistoriesRepository productPurchaseHistoriesRepository;
+
 
 
     @Override
@@ -70,11 +79,57 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public boolean purchase(PurchaseDTO saleInfo) {
+    public boolean purchase(PurchaseDTO saleInfo) throws JSONException, IOException, IllegalAccessException {
         ActionUserDTO userDTO = ActionUserHolder.getActionUser();
         Users user = validateUser(userDTO);
-        // TODO tobe ko tin iu
-        return false;
+        ProductPriceEntity productPriceInfo = (ProductPriceEntity) em.createNativeQuery(ProductPriceEntity.SQL,
+                        ProductPriceEntity.class)
+                .setParameter("product_id", saleInfo.getProductId())
+                .setParameter("number", saleInfo.getNumber())
+                .getSingleResult();
+        Assert.notNull(productPriceInfo, MsgUtil.getMessage("product.purchase.not.found"));
+        String itemTable = productPriceInfo.getProductType();
+        String token = "";
+        int bonusNum = 0;
+        int purchaseNum = 0;
+        long walletId = -1L;
+        long walletBonusId = -1L;
+        if ("jewel_products".equalsIgnoreCase(itemTable)) {
+            Optional<JewelProducts> productsOptional = jewelProductsRepository.findByProductIdAndJewelProductToken(saleInfo.getProductId(),
+                    saleInfo.getTokenProduct());
+            Assert.isTrue(productsOptional.isPresent(), MsgUtil.getMessage("product.purchase.not.found"));
+            var product = productsOptional.get();
+            token = product.getJewelProductToken();
+            bonusNum = product.getBonusNumber();
+            purchaseNum = product.getNumber();
+            walletId = product.getBonusWalletId();
+            walletBonusId = product.getBonusWalletId();
+        } else if ("package_products".equalsIgnoreCase(itemTable)) {
+            // TODO
+        }
+        Object verify = commonService.verifyInAppPurchase(saleInfo);
+        Date now = new Date();
+        String transNumber = getTransNumber(user.getId());
+        if (Constant.PlatformType.ANDROID.getType() == saleInfo.getPlatformType()) {
+            SubscriptionPurchaseDTO subscript = (SubscriptionPurchaseDTO) verify;
+            validatePurchaseInfoAndroid(subscript);
+            // TODO: write out to user wallet, user item and write out log
+
+        } else if(Constant.PlatformType.IOS.getType() == saleInfo.getPlatformType()) {
+            // TODO IOS
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    private void validatePurchaseInfoAndroid(SubscriptionPurchaseDTO subscript) {
+        Assert.notNull(subscript.getPaymentState(), MsgUtil.getMessage("payment.state.error"));
+        Assert.isTrue(subscript.getPaymentState().equals(Constant.PayStateAndroid.PAYMENT_RECEIVED.getValue()),
+                MsgUtil.getMessage("payment.state.invalid", MsgUtil.getMessage(
+                        Arrays.stream(Constant.PayStateAndroid.values()).filter(obj ->
+                                obj.getValue() == subscript.getPaymentState()).collect(Collectors.toList()).get(0).getText()
+                )));
     }
 
     private Users validateUser(ActionUserDTO userDTO) {

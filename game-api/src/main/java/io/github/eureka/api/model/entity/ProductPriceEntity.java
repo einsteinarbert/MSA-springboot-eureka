@@ -34,6 +34,7 @@ public class ProductPriceEntity {
     private long paymentMethodId;
     private int number;
     private int price;
+    private String token;
 
     @Id
     @Basic

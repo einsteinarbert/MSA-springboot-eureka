@@ -1,13 +1,11 @@
 package io.github.eureka.api.model.dto;
 
-import io.github.eureka.api.model.entity.ProductPriceEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Project: MSA-springboot-eureka.<br/>
@@ -21,7 +19,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PurchaseDTO implements Serializable {
-    private List<ProductPriceEntity> productIds;
-    private Integer payType; // payment_type
+    private String packageName;
+    private String subscriptionId;
+    private String tokenProduct;
     private Integer platformType;
+    private Long productId;
+    private Integer number;
 }
