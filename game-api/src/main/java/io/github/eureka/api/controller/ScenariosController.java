@@ -5,6 +5,7 @@ import io.github.eureka.api.model.dto.ScenariosDTO;
 import io.github.eureka.api.service.ScenariosService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +20,11 @@ public class ScenariosController {
     @GetMapping("/users/scenarios")
     public BaseMsgDTO<List<ScenariosDTO>> getListScenario(){
         return scenariosService.getListScenarios();
+    }
+    
+    @GetMapping("/api/scenario-detail/{id}")
+    public BaseMsgDTO<List<ScenariosDTO>> getListScenario(@PathVariable Long id){
+        return scenariosService.findScenarioById(id);
     }
 
 

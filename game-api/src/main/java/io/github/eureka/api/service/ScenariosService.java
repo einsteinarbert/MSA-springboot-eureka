@@ -6,5 +6,7 @@ import io.github.eureka.api.model.dto.ScenariosDTO;
 import java.util.List;
 
 public interface ScenariosService {
-    BaseMsgDTO<List<ScenariosDTO>> getListScenarios();
+    List<ScenariosDTO> getListScenarios();
+
+    BaseMsgDTO<List<ScenariosDTO>> findScenarioById(Long id);
 }
