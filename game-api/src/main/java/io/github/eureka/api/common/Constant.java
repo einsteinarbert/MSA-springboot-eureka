@@ -64,6 +64,22 @@ public interface Constant {
             this.value = value;
         }
     }
+
+    // ISO 4217
+    @Getter
+    enum CurrencyCode {
+        JPT(0), USD(1), VND(2);
+        int value;
+        CurrencyCode(int i) {
+            value = i;
+        }
+        public static int getValue(String code) {
+            for(CurrencyCode e : CurrencyCode.values()){
+                if(e.name().equals(code)) return e.getValue();
+            }
+            return -1;
+        }
+    }
     interface STATUS {
         Integer ANONYMOUS = 0;
         Integer REGITERED = 1;

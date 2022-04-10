@@ -30,6 +30,7 @@ public class ProductPurchaseHistories {
     private Date createdAt;
     private Date updatedAt;
     private String transNumber;
+    private Double amount;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -158,5 +159,15 @@ public class ProductPurchaseHistories {
 
     public void setTransNumber(String transNumber) {
         this.transNumber = transNumber;
+    }
+
+    @Basic
+    @Column(name = "amount")
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 }

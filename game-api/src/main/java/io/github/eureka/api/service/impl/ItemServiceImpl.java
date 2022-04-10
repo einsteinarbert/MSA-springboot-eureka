@@ -27,6 +27,7 @@ import org.json.JSONException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -39,6 +40,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static io.github.eureka.api.common.Constant.WalletType.JEWEL;
 import static io.github.eureka.api.common.HelpUtil.getTransNumber;
 
 /**
@@ -113,7 +115,68 @@ public class ItemServiceImpl implements ItemService {
         if (Constant.PlatformType.ANDROID.getType() == saleInfo.getPlatformType()) {
             SubscriptionPurchaseDTO subscript = (SubscriptionPurchaseDTO) verify;
             validatePurchaseInfoAndroid(subscript);
-            // TODO: write out to user wallet, user item and write out log
+            // locking table and create transaction
+            if ("jewel_products".equalsIgnoreCase(itemTable)) {
+                UserWallets purchaseWallet = userWalletsRepository.findByUserIdAndWalletIdWithLock(user.getId(), walletId).orElse(null);
+                UserWallets bonusWallet = userWalletsRepository.findByUserIdAndWalletIdWithLock(user.getId(), walletBonusId).orElse(null);
+
+                if (null != purchaseWallet) {
+                    purchaseWallet.setNumber(purchaseWallet.getNumber() + purchaseNum);
+                    purchaseWallet.setUpdatedAt(now);
+                    purchaseWallet = userWalletsRepository.save(purchaseWallet);
+
+                    if (bonusWallet != null && bonusNum > 0) {
+                        bonusWallet.setNumber(bonusWallet.getNumber() + bonusNum);
+                        bonusWallet.setUpdatedAt(now);
+                        bonusWallet = userWalletsRepository.save(bonusWallet);
+                    }
+                    ProductPurchaseHistories itemLog = new ProductPurchaseHistories();
+                    itemLog.setCreatedAt(now);
+                    itemLog.setUserId(purchaseWallet.getUserId());
+                    itemLog.setPaymentMethodId(-1); // -1 = cash
+                    itemLog.setTransNumber(transNumber);
+                    itemLog.setNumber(purchaseNum);
+                    itemLog.setCurrency(Constant.CurrencyCode.getValue(subscript.getPriceCurrencyCode()));
+                    itemLog.setProductId(saleInfo.getProductId());
+                    itemLog.setProductType(productPriceInfo.getProductType());
+                    itemLog.setAmount(Double.parseDouble(
+                            StringUtils.hasLength(subscript.getPriceAmountMicros()) ?
+                                    subscript.getPriceAmountMicros() : "0")/1000000);
+                    itemLog = productPurchaseHistoriesRepository.save(itemLog);
+
+                    UserWalletHistories log = new UserWalletHistories();
+                    log.setHistoryType(Constant.UserHistoryType.USE.getType());
+                    log.setNumber(purchaseNum);
+                    log.setGeneratableId(itemLog.getId());
+                    log.setCreatedAt(now);
+                    log.setTransNumber(transNumber);
+                    log.setGeneratableType(itemTable);
+                    log.setMessage(MsgUtil.getMessage("sale.trans.info.message", productPriceInfo.getName(),
+                            purchaseNum,
+                            JEWEL.name(), itemLog.getAmount()));
+                    log.setUserId(purchaseWallet.getUserId());
+                    log.setWalletId(purchaseWallet.getWalletId());
+                    userWalletHistoriesRepository.save(log);
+                    if (bonusWallet != null) {
+                        UserWalletHistories log1 = new UserWalletHistories();
+                        log1.setHistoryType(Constant.UserHistoryType.BONUS.getType());
+                        log1.setNumber(bonusNum);
+                        log1.setGeneratableId(itemLog.getId());
+                        log1.setCreatedAt(now);
+                        log1.setTransNumber(transNumber);
+                        log1.setGeneratableType(itemTable);
+                        log1.setMessage(MsgUtil.getMessage("sale.trans.info.message.bonus", productPriceInfo.getName(),
+                                bonusNum,
+                                JEWEL.name(), itemLog.getAmount()));
+                        log1.setUserId(purchaseWallet.getUserId());
+                        log1.setWalletId(purchaseWallet.getWalletId());
+                        userWalletHistoriesRepository.save(log1);
+                    }
+
+                } else throw new IllegalAccessException(MsgUtil.getMessage("sale.trans.info.wallet.lock.error"));
+            } else if ("package_products".equalsIgnoreCase(itemTable)) {
+                // TODO
+            }
 
         } else if(Constant.PlatformType.IOS.getType() == saleInfo.getPlatformType()) {
             // TODO IOS
@@ -130,6 +193,7 @@ public class ItemServiceImpl implements ItemService {
                         Arrays.stream(Constant.PayStateAndroid.values()).filter(obj ->
                                 obj.getValue() == subscript.getPaymentState()).collect(Collectors.toList()).get(0).getText()
                 )));
+        // TODO other validate success here
     }
 
     private Users validateUser(ActionUserDTO userDTO) {
@@ -158,7 +222,7 @@ public class ItemServiceImpl implements ItemService {
 
         try {
             // locking wallet and validate totalAmount
-            List<UserWallets> userWallets = userWalletsRepository.findAllByIdWithLock(listWallet.parallelStream()
+            List<UserWallets> userWallets = userWalletsRepository.findAllByUserIdWithLock(listWallet.parallelStream()
                             .map(UserWalletEntity::getUserId).collect(Collectors.toList())
             );
             Assert.isTrue(!CollectionUtils.isEmpty(userWallets), MsgUtil.getMessage("sale.trans.info.wallet.lock.error"));
@@ -220,10 +284,8 @@ public class ItemServiceImpl implements ItemService {
                 ProductPurchaseHistories itemLog = new ProductPurchaseHistories();
                 itemLog.setCreatedAt(now);
                 itemLog.setUserId(wallet.getUserId());
-                itemLog.setPaymentMethodId(saleInfo.getPayType());
                 itemLog.setPrice(totalAmount);
                 itemLog.setTransNumber(transNumber);
-                itemLog.setPrice(price.getPrice());
                 itemLog.setPaymentMethodId(price.getPaymentMethodId());
                 itemLog.setNumber(price.getNumber());
                 itemLog.setCurrency(null); // cash pay only
