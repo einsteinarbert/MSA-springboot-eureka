@@ -12,6 +12,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
@@ -22,6 +23,7 @@ import java.io.IOException;
  * Date: 07/04/2022<br/>
  * Time: 17:04<br/>
  */
+ @Service
 public class CommonServiceImpl implements CommonService {
     OkHttpClient client = new OkHttpClient();
     @Override

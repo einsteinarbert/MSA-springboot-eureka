@@ -6,6 +6,7 @@ import io.github.eureka.api.model.dto.PurchaseDTO;
 import io.github.eureka.api.model.dto.SaleInfoDTO;
 import io.github.eureka.api.service.ItemService;
 import lombok.AllArgsConstructor;
+import org.json.JSONException;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @AllArgsConstructor
 @RestController
@@ -53,7 +55,7 @@ public class HomeController extends BaseController {
 	}
 
 	@PostMapping("purchase-product")
-	public BaseMsgDTO<String> byCashBuy(HttpServletRequest request, @RequestBody PurchaseDTO info) {
+	public BaseMsgDTO<String> byCashBuy(HttpServletRequest request, @RequestBody PurchaseDTO info) throws JSONException, IOException, IllegalAccessException {
 		setUserInfo(request);
 		var res = itemService.purchase(info);
 		String result = res ? BaseMsgDTO.OK : BaseMsgDTO.NG;
