@@ -28,4 +28,13 @@ public class BaseMsgDTO<T> implements Serializable {
     private String reason;
     private String message;
     private T data;
+
+    public BaseMsgDTO(T data) {
+        this.code = 200;
+        this.message = "OK";
+        this.data = data;
+    }
+    public static <T> BaseMsgDTO<T> success(T data) {
+        return new BaseMsgDTO<>(data);
+    }
 }
