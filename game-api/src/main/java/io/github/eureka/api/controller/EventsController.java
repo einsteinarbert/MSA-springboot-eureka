@@ -10,6 +10,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class EventsController {
-	GetMapping("/get-events")
-	public BaseMsgDTO<Events>
 }
