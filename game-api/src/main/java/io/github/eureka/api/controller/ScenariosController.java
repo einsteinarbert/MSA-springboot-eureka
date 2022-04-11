@@ -17,14 +17,14 @@ import java.util.List;
 public class ScenariosController {
     private final ScenariosService scenariosService;
 
-    @GetMapping("/users/scenarios")
+    @GetMapping("/scenarios")
     public BaseMsgDTO<List<ScenariosDTO>> getListScenario(){
-        return scenariosService.getListScenarios();
+        return BaseMsgDTO.success(scenariosService.getListScenarios());
     }
     
-    @GetMapping("/api/scenario-detail/{id}")
-    public BaseMsgDTO<List<ScenariosDTO>> getListScenario(@PathVariable Long id){
-        return scenariosService.findScenarioById(id);
+    @GetMapping("/scenario-detail/{id}")
+    public BaseMsgDTO<ScenariosDTO> getListScenario(@PathVariable Long id){
+        return BaseMsgDTO.success(scenariosService.findScenarioById(id));
     }
 
 

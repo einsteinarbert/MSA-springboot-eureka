@@ -8,5 +8,5 @@ import java.util.List;
 public interface ScenariosService {
     List<ScenariosDTO> getListScenarios();
 
-    BaseMsgDTO<List<ScenariosDTO>> findScenarioById(Long id);
+    ScenariosDTO findScenarioById(Long id);
 }

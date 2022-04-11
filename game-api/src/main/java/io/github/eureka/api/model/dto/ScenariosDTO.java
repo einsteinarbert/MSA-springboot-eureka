@@ -2,7 +2,7 @@ package io.github.eureka.api.model.dto;
 
 import java.sql.Timestamp;
 
-public class ScenariosDTO extends BaseMsgDTO{
+public class ScenariosDTO {
     private Long id;
     private String scenarioToken;
     private String name;

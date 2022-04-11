@@ -82,7 +82,7 @@ public class Scenarios {
     }
 
     @Basic
-    @Column(name = "scenatio_type", nullable = true)
+    @Column(name = "scenario_type", nullable = true)
     public String getScenarioType() {
         return scenarioType;
     }
