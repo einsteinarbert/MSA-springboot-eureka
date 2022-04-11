@@ -19,9 +19,15 @@ import java.util.List;
 @RequestMapping("/api")
 public class GachaController {
 	private final GachaTicketsService gachaTicketsService;
-	@GetMapping("users/gacha-list")
-	public BaseMsgDTO<List<GachaTicketsDTO>> getTicket(@PathVariable Long id){
-		BaseMsgDTO<GachaTicketsDTO> tickets = gachaTicketsService.getAllGachaForSpin(id);
-		return tickets;
+	
+	@GetMapping("/gacha-list")
+	public BaseMsgDTO<List<GachaTicketsDTO>> getTicket(){
+		List<GachaTicketsDTO> tickets = gachaTicketsService.getAllGachaForSpin();
+		return BaseMsgDTO.success(tickets);
+	}
+	@GetMapping("/gacha/{id}")
+	public BaseMsgDTO<GachaTicketsDTO> getDetailGachaTicket(@PathVariable Long id){
+		GachaTicketsDTO tickets = gachaTicketsService.getGachaTicketById(id);
+		return BaseMsgDTO.success(tickets);
 	}
 }
