@@ -19,10 +19,10 @@ import java.util.Objects;
 @Entity
 @Table(name = "gacha_tickets")
 public class GachaTickets {
-    private long id;
-    private long itemId;
+    private Long id;
+    private Long itemId;
     private String name;
-    private int gachaTicketType;
+    private Integer gachaTicketType;
     private String thumbnail;
     private String icon;
     private Date startDate;
@@ -32,21 +32,21 @@ public class GachaTickets {
 
     @Id
     @Column(name = "id", nullable = false)
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     @Basic
     @Column(name = "item_id", nullable = false)
-    public long getItemId() {
+    public Long getItemId() {
         return itemId;
     }
 
-    public void setItemId(long itemId) {
+    public void setItemId(Long itemId) {
         this.itemId = itemId;
     }
 
@@ -62,11 +62,11 @@ public class GachaTickets {
 
     @Basic
     @Column(name = "gacha_ticket_type", nullable = false)
-    public int getGachaTicketType() {
+    public Integer getGachaTicketType() {
         return gachaTicketType;
     }
 
-    public void setGachaTicketType(int gachaTicketType) {
+    public void setGachaTicketType(Integer gachaTicketType) {
         this.gachaTicketType = gachaTicketType;
     }
 
