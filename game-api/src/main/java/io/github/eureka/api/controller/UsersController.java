@@ -2,11 +2,14 @@ package io.github.eureka.api.controller;
 
 import io.github.eureka.api.common.DataUtil;
 import io.github.eureka.api.model.Users;
+import io.github.eureka.api.model.dto.BaseMsgDTO;
 import io.github.eureka.api.model.dto.ChangePasswordDTO;
 import io.github.eureka.api.service.UsersService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -24,21 +27,29 @@ public class UsersController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/users/change-password")
+
+    @PostMapping("/users/update")
+    public ResponseEntity<?> updateUser(@RequestBody Users users){
+        usersService.updateUser(users);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/change-password")
     public ResponseEntity<?> updateUserPassword(@RequestBody ChangePasswordDTO users){
         usersService.updateUserPassword(users);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("users/get/{id}")
-    public ResponseEntity<?> getOneUser(@PathVariable Long id){
+    @GetMapping("/user-info/{id}")
+    public BaseMsgDTO<?> getOneUser(@PathVariable Long id){
         Users users = usersService.getUserById(id);
-        return ResponseEntity.ok(users);
+        return BaseMsgDTO.success(users);
     }
 
-    @GetMapping("users/get")
-    public ResponseEntity<?> getAllUser(){
-        return ResponseEntity.ok().build();
+    @GetMapping("/list-user")
+    public BaseMsgDTO<?> getAllUser(){
+        List<Users> users = usersService.getAllUser();
+        return BaseMsgDTO.success(users);
     }
 
 

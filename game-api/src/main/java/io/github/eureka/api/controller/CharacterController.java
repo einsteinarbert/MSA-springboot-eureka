@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class CharacterController {
-//    private final CharactersService charactersService;
-//    @GetMapping("characters/{userId}")
-//    public ResponseEntity<?> getCharacterOfUser(@RequestParam Long userId){
-//        Characters characters = charactersService.getCharacterByUser(userId);
-//        return ResponseEntity.ok(characters);
-//    }
+    private final CharactersService charactersService;
+    @GetMapping("characters/{userId}")
+    public ResponseEntity<?> getCharacterOfUser(@RequestParam Long userId){
+        Characters characters = charactersService.getCharacterByUser(userId);
+        return ResponseEntity.ok(characters);
+    }
 }

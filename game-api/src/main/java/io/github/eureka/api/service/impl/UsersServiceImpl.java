@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -76,5 +77,10 @@ public class UsersServiceImpl implements UsersService {
         Assert.notNull(existingId, MsgUtil.getMessage("user.info.null"));
         existingId.setEncryptedPassword(passwordEncoder.encode(users.getPassword()));
         usersRepository.save(existingId);
+    }
+
+    @Override
+    public List<Users> getAllUser() {
+        return usersRepository.findAllByStatusIn(Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
     }
 }
