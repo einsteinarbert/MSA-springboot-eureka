@@ -3,7 +3,7 @@ package io.github.eureka.api.model.dto;
 import java.sql.Date;
 import java.sql.Timestamp;
 
-public class GachaTicketsDTO {
+public class GachasDTO {
 	private Long id;
 	private Long itemId;
 	private String name;
@@ -15,7 +15,7 @@ public class GachaTicketsDTO {
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
 
-	public GachaTicketsDTO(Long id, Long itemId, String name, Integer gachaTicketType, String thumbnail, String icon, Date startDate, Date endDate, Timestamp createdAt, Timestamp updatedAt) {
+	public GachasDTO(Long id, Long itemId, String name, Integer gachaTicketType, String thumbnail, String icon, Date startDate, Date endDate, Timestamp createdAt, Timestamp updatedAt) {
 		this.id = id;
 		this.itemId = itemId;
 		this.name = name;
@@ -28,7 +28,7 @@ public class GachaTicketsDTO {
 		this.updatedAt = updatedAt;
 	}
 
-	public GachaTicketsDTO() {
+	public GachasDTO() {
 	}
 
 	public Long getId() {

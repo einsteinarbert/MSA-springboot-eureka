@@ -17,12 +17,12 @@ import java.util.Objects;
  * Time: 18:17<br/>
  */
 @Entity
-@Table(name = "gacha_tickets")
-public class GachaTickets {
+@Table(name = "gachas")
+public class Gachas {
     private Long id;
     private Long itemId;
     private String name;
-    private Integer gachaTicketType;
+    private Integer gachaType;
     private String thumbnail;
     private String icon;
     private Date startDate;
@@ -61,13 +61,13 @@ public class GachaTickets {
     }
 
     @Basic
-    @Column(name = "gacha_ticket_type", nullable = false)
-    public Integer getGachaTicketType() {
-        return gachaTicketType;
+    @Column(name = "gacha_type", nullable = false)
+    public Integer getGachaType() {
+        return gachaType;
     }
 
-    public void setGachaTicketType(Integer gachaTicketType) {
-        this.gachaTicketType = gachaTicketType;
+    public void setGachaType(Integer gachaType) {
+        this.gachaType = gachaType;
     }
 
     @Basic
@@ -134,12 +134,12 @@ public class GachaTickets {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GachaTickets that = (GachaTickets) o;
-        return id == that.id && itemId == that.itemId && gachaTicketType == that.gachaTicketType && Objects.equals(name, that.name) && Objects.equals(thumbnail, that.thumbnail) && Objects.equals(icon, that.icon) && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
+        Gachas that = (Gachas) o;
+        return id == that.id && itemId == that.itemId && gachaType == that.gachaType && Objects.equals(name, that.name) && Objects.equals(thumbnail, that.thumbnail) && Objects.equals(icon, that.icon) && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, itemId, name, gachaTicketType, thumbnail, icon, startDate, endDate, createdAt, updatedAt);
+        return Objects.hash(id, itemId, name, gachaType, thumbnail, icon, startDate, endDate, createdAt, updatedAt);
     }
 }

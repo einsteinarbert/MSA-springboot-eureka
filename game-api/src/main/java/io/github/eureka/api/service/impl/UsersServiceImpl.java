@@ -76,6 +76,7 @@ public class UsersServiceImpl implements UsersService {
         Users existingId = usersRepository.getById(users.getId());
         Assert.notNull(existingId, MsgUtil.getMessage("user.info.null"));
         existingId.setEncryptedPassword(passwordEncoder.encode(users.getPassword()));
+        existingId.setStatus(Constant.STATUS.REGITERED);
         usersRepository.save(existingId);
     }
 
