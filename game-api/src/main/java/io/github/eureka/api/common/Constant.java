@@ -80,6 +80,22 @@ public interface Constant {
             return -1;
         }
     }
+    @Getter
+    enum TransactionType {
+        WALLET_LOG(0), USER_ITEM_LOG(1);
+        int value;
+        TransactionType(int i) {
+            value = i;
+        }
+        public static int getValue(String code) {
+            for(CurrencyCode e : CurrencyCode.values()){
+                if(e.name().equals(code)) return e.getValue();
+            }
+            return -1;
+        }
+    }
+
+
     interface STATUS {
         Integer ANONYMOUS = 0;
         Integer REGITERED = 1;

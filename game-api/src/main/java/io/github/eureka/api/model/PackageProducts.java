@@ -29,6 +29,7 @@ public class PackageProducts {
     private String icon;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private Integer transType;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -140,16 +141,13 @@ public class PackageProducts {
         this.updatedAt = updatedAt;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PackageProducts that = (PackageProducts) o;
-        return id == that.id && productId == that.productId && platformType == that.platformType && packageId == that.packageId && number == that.number && limit == that.limit && Objects.equals(packageProductToken, that.packageProductToken) && Objects.equals(thumbnail, that.thumbnail) && Objects.equals(icon, that.icon) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
+    @Basic
+    @Column(name = "trans_type")
+    public Integer getTransType() {
+        return transType;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, productId, platformType, packageId, packageProductToken, number, limit, thumbnail, icon, createdAt, updatedAt);
+    public void setTransType(Integer transType) {
+        this.transType = transType;
     }
 }

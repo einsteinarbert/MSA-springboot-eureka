@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Timestamp;
-import java.util.Objects;
 
 /**
  * Project: MSA-springboot-eureka.<br/>
@@ -29,6 +28,7 @@ public class JewelProducts {
     private String icon;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private Integer transType;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -140,16 +140,13 @@ public class JewelProducts {
         this.updatedAt = updatedAt;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        JewelProducts that = (JewelProducts) o;
-        return id == that.id && productId == that.productId && number == that.number && walletId == that.walletId && bonusNumber == that.bonusNumber && bonusWalletId == that.bonusWalletId && Objects.equals(jewelProductToken, that.jewelProductToken) && Objects.equals(thumbnail, that.thumbnail) && Objects.equals(icon, that.icon) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
+    @Basic
+    @Column(name = "trans_type")
+    public Integer getTransType() {
+        return transType;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, productId, jewelProductToken, number, walletId, bonusNumber, bonusWalletId, thumbnail, icon, createdAt, updatedAt);
+    public void setTransType(Integer transType) {
+        this.transType = transType;
     }
 }

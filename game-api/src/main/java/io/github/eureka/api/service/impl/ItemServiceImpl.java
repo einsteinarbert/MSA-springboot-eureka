@@ -4,6 +4,7 @@ import io.github.eureka.api.common.Constant;
 import io.github.eureka.api.common.MsgUtil;
 import io.github.eureka.api.config.ActionUserHolder;
 import io.github.eureka.api.model.JewelProducts;
+import io.github.eureka.api.model.PackageProducts;
 import io.github.eureka.api.model.ProductPurchaseHistories;
 import io.github.eureka.api.model.UserWalletHistories;
 import io.github.eureka.api.model.UserWallets;
@@ -15,6 +16,7 @@ import io.github.eureka.api.model.dto.google.SubscriptionPurchaseDTO;
 import io.github.eureka.api.model.entity.ProductPriceEntity;
 import io.github.eureka.api.model.entity.UserWalletEntity;
 import io.github.eureka.api.repo.JewelProductsRepository;
+import io.github.eureka.api.repo.PackageProductRepository;
 import io.github.eureka.api.repo.ProductPurchaseHistoriesRepository;
 import io.github.eureka.api.repo.UserWalletHistoriesRepository;
 import io.github.eureka.api.repo.UserWalletsRepository;
@@ -60,6 +62,7 @@ public class ItemServiceImpl implements ItemService {
     private final UsersRepository usersRepository;
     private final UserWalletsRepository userWalletsRepository;
     private final JewelProductsRepository jewelProductsRepository;
+    private final PackageProductRepository packageProductRepository;
     private final UserWalletHistoriesRepository userWalletHistoriesRepository;
     private final ProductPurchaseHistoriesRepository productPurchaseHistoriesRepository;
 
@@ -90,6 +93,14 @@ public class ItemServiceImpl implements ItemService {
                 .setParameter("number", saleInfo.getNumber())
                 .getSingleResult();
         Assert.notNull(productPriceInfo, MsgUtil.getMessage("product.purchase.not.found"));
+
+
+
+
+        return true;
+    }
+
+    private boolean createAndroidTransaction(PurchaseDTO saleInfo, ProductPriceEntity productPriceInfo, Users user) throws JSONException, IOException, IllegalAccessException {
         String itemTable = productPriceInfo.getProductType();
         String token = "";
         int bonusNum = 0;
@@ -107,7 +118,15 @@ public class ItemServiceImpl implements ItemService {
             walletId = product.getBonusWalletId();
             walletBonusId = product.getBonusWalletId();
         } else if ("package_products".equalsIgnoreCase(itemTable)) {
-            // TODO
+            Optional<PackageProducts> productsOptional = packageProductRepository.findByProductIdAndPackageProductToken(saleInfo.getProductId(),
+                    saleInfo.getTokenProduct());
+            Assert.isTrue(productsOptional.isPresent(), MsgUtil.getMessage("product.purchase.not.found"));
+            var product = productsOptional.get();
+            token = product.getPackageProductToken();
+            bonusNum = product.getBonusNumber();
+            purchaseNum = product.getNumber();
+            walletId = product.getBonusWalletId();
+            walletBonusId = product.getBonusWalletId();
         }
         Object verify = commonService.verifyInAppPurchase(saleInfo);
         Date now = new Date();
@@ -136,6 +155,9 @@ public class ItemServiceImpl implements ItemService {
                     itemLog.setPaymentMethodId(-1); // -1 = cash
                     itemLog.setTransNumber(transNumber);
                     itemLog.setNumber(purchaseNum);
+                    itemLog.setBonusNumber(bonusNum);
+                    itemLog.setProductId(productPriceInfo.getProductId());
+                    itemLog.setReceiptId(Long.parseLong(subscript.getOrderId()));
                     itemLog.setCurrency(Constant.CurrencyCode.getValue(subscript.getPriceCurrencyCode()));
                     itemLog.setProductId(saleInfo.getProductId());
                     itemLog.setProductType(productPriceInfo.getProductType());
@@ -156,6 +178,8 @@ public class ItemServiceImpl implements ItemService {
                             JEWEL.name(), itemLog.getAmount()));
                     log.setUserId(purchaseWallet.getUserId());
                     log.setWalletId(purchaseWallet.getWalletId());
+                    log.setGeneratableType("jewel_products");
+                    log.setGeneratableId(itemLog.getId());
                     userWalletHistoriesRepository.save(log);
                     if (bonusWallet != null) {
                         UserWalletHistories log1 = new UserWalletHistories();
@@ -170,6 +194,8 @@ public class ItemServiceImpl implements ItemService {
                                 JEWEL.name(), itemLog.getAmount()));
                         log1.setUserId(purchaseWallet.getUserId());
                         log1.setWalletId(purchaseWallet.getWalletId());
+                        log1.setGeneratableType("jewel_products");
+                        log1.setGeneratableId(itemLog.getId());
                         userWalletHistoriesRepository.save(log1);
                     }
 
