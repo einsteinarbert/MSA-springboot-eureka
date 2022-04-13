@@ -1,7 +1,7 @@
 package io.github.eureka.api.controller;
 
 import io.github.eureka.api.model.dto.BaseMsgDTO;
-import io.github.eureka.api.model.dto.GachaCharactersDTO;
+import io.github.eureka.api.model.dto.GachaResultDTO;
 import io.github.eureka.api.model.dto.GachasDTO;
 import io.github.eureka.api.model.dto.SpinGachaDTO;
 import io.github.eureka.api.service.GachasService;
@@ -28,8 +28,8 @@ public class GachaController {
 	}
 	
 	@PostMapping("/gacha-result")
-	public BaseMsgDTO<GachaCharactersDTO> spinGacha(@RequestBody SpinGachaDTO spinGachaDTO) {
-		GachaCharactersDTO resultSpin = gachasService.spinGacha(spinGachaDTO);
+	public BaseMsgDTO<GachaResultDTO> spinGacha(@RequestBody SpinGachaDTO spinGachaDTO) {
+		GachaResultDTO resultSpin = gachasService.spinGacha(spinGachaDTO);
 		return BaseMsgDTO.success(resultSpin);
 	}
 }

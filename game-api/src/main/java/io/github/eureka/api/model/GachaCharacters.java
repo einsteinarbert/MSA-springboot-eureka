@@ -1,5 +1,8 @@
 package io.github.eureka.api.model;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +21,8 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "gacha_characters")
+@AllArgsConstructor
+@NoArgsConstructor
 public class GachaCharacters {
     private Long id;
     private Long gachaId;

@@ -18,40 +18,60 @@ import java.util.Objects;
 @Entity
 @Table(name = "user_items")
 public class UserItems {
-    private long id;
-    private long userId;
-    private long itemId;
+    private Long id;
+    private Long userId;
+    private Long itemId;
+    private Long number;
+    private Integer limit;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
     @Id
     @Column(name = "id", nullable = false)
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     @Basic
     @Column(name = "user_id", nullable = false)
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
     @Basic
     @Column(name = "item_id", nullable = false)
-    public long getItemId() {
+    public Long getItemId() {
         return itemId;
     }
 
-    public void setItemId(long itemId) {
+    public void setItemId(Long itemId) {
         this.itemId = itemId;
+    }
+    @Basic
+    @Column(name = "number", nullable = false)
+    public Long getNumber() {
+        return number;
+    }
+
+    public void setNumber(Long number) {
+        this.number = number;
+    }
+    @Basic
+    @Column(name = "limit_number", nullable = true)
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 
     @Basic

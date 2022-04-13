@@ -7,16 +7,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 @Repository
 public interface GachasRepository extends JpaRepository<Gachas, Long> {
 	@Query(
-	value = "select * from user_items where id = :userItemId and user_id = :userId", nativeQuery = true
+	value = "select u from UserItems u where u.id = :userItemId and u.userId = :userId"
 	)
 	UserItems getGachaByUserItem(Long userId, Long userItemId);
-	@Query(value = "select gtc.* from user_items ui inner join items i ON ui.item_id = i.id and i.item_type = 'GACHATICKET'\n" +
-			"    inner join gachas gt on i.id = gt.item_id\n" +
-			"inner join gacha_characters gtc on gt.id = gtc.gacha_id;", nativeQuery = true)
+	@Query(value = "select gtc from UserItems ui inner join Items i ON ui.itemId = i.id and i.itemType = 'COIN_GACHA'\n" +
+			"    inner join Gachas gt on i.id = gt.itemId\n" +
+			"inner join GachaCharacters gtc on gt.id = gtc.gachaId")
 	List<GachaCharacters> listGachaById(Long userItemId);
 }

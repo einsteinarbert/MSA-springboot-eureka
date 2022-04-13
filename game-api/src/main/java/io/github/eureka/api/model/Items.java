@@ -16,18 +16,18 @@ import java.util.Objects;
  */
 @Entity
 public class Items {
-    private long id;
+    private Long id;
     private String itemType;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
     @Id
     @Column(name = "id", nullable = false)
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

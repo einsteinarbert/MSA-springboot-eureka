@@ -1,6 +1,6 @@
 package io.github.eureka.api.service;
 
-import io.github.eureka.api.model.dto.GachaCharactersDTO;
+import io.github.eureka.api.model.dto.GachaResultDTO;
 import io.github.eureka.api.model.dto.GachasDTO;
 import io.github.eureka.api.model.dto.SpinGachaDTO;
 
@@ -11,5 +11,5 @@ public interface GachasService {
 
 	GachasDTO getGachaTicketById(Long id);
 
-	GachaCharactersDTO spinGacha(SpinGachaDTO spinGachaDTO);
+	GachaResultDTO spinGacha(SpinGachaDTO spinGachaDTO);
 }

@@ -1,5 +1,8 @@
 package io.github.eureka.api.model;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,13 +19,15 @@ import java.util.Objects;
  * Time: 18:17<br/>
  */
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Characters {
-    private long id;
-    private long itemId;
+    private Long id;
+    private Long itemId;
     private String characterToken;
-    private int name;
-    private long skillId;
-    private long growthTypeId;
+    private String name;
+    private Long skillId;
+    private Long growthTypeId;
     private String situation;
     private Integer genderType;
     private Integer getRoute;
@@ -35,24 +40,27 @@ public class Characters {
     private Date endDate;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    
+    public Characters(Characters characters){
+        characters = characters;}
 
     @Id
     @Column(name = "id", nullable = false)
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     @Basic
     @Column(name = "item_id", nullable = false)
-    public long getItemId() {
+    public Long getItemId() {
         return itemId;
     }
 
-    public void setItemId(long itemId) {
+    public void setItemId(Long itemId) {
         this.itemId = itemId;
     }
 
@@ -68,31 +76,31 @@ public class Characters {
 
     @Basic
     @Column(name = "name", nullable = false)
-    public int getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(int name) {
+    public void setName(String name) {
         this.name = name;
     }
 
     @Basic
     @Column(name = "skill_id", nullable = false)
-    public long getSkillId() {
+    public Long getSkillId() {
         return skillId;
     }
 
-    public void setSkillId(long skillId) {
+    public void setSkillId(Long skillId) {
         this.skillId = skillId;
     }
 
     @Basic
     @Column(name = "growth_type_id", nullable = false)
-    public long getGrowthTypeId() {
+    public Long getGrowthTypeId() {
         return growthTypeId;
     }
 
-    public void setGrowthTypeId(long growthTypeId) {
+    public void setGrowthTypeId(Long growthTypeId) {
         this.growthTypeId = growthTypeId;
     }
 

@@ -2,13 +2,17 @@ package io.github.eureka.api.service.impl;
 
 import io.github.eureka.api.common.DataUtil;
 import io.github.eureka.api.common.MsgUtil;
+import io.github.eureka.api.model.Characters;
 import io.github.eureka.api.model.GachaCharacters;
 import io.github.eureka.api.model.Gachas;
 import io.github.eureka.api.model.UserItems;
-import io.github.eureka.api.model.dto.GachaCharactersDTO;
+import io.github.eureka.api.model.dto.CharacterDTO;
+import io.github.eureka.api.model.dto.GachaResultDTO;
 import io.github.eureka.api.model.dto.GachasDTO;
 import io.github.eureka.api.model.dto.SpinGachaDTO;
+import io.github.eureka.api.repo.CharactersRepository;
 import io.github.eureka.api.repo.GachasRepository;
+import io.github.eureka.api.repo.UserItemsRepository;
 import io.github.eureka.api.service.BaseService;
 import io.github.eureka.api.service.GachasService;
 import lombok.AllArgsConstructor;
@@ -22,7 +26,9 @@ import java.util.Random;
 @Service
 public class GachasServiceImpl extends BaseService implements GachasService {
 	private final GachasRepository gachasRepository;
-	
+	private final CharactersRepository charactersRepository;
+	private final UserItemsRepository userItemsRepository;
+
 	@Override
 	public List<GachasDTO> getAllGachaForSpin() {
 		return super.mapList(gachasRepository.findAll(), GachasDTO.class);
@@ -38,12 +44,18 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 	}
 
 	@Override
-	public GachaCharactersDTO spinGacha(SpinGachaDTO spinGachaDTO) {
+	public GachaResultDTO spinGacha(SpinGachaDTO spinGachaDTO) {
 		UserItems userItems = gachasRepository.getGachaByUserItem(spinGachaDTO.getUserId(), spinGachaDTO.getUserItemId());
 		Assert.notNull(userItems, MsgUtil.getMessage("item.gacha.notexist"));
 		List<GachaCharacters> lstGacha = gachasRepository.listGachaById(spinGachaDTO.getUserItemId());
+		GachaResultDTO gachaResultDTO;
 		GachaCharacters resultSpin = this.randomGacha(lstGacha);
-		return super.map(resultSpin, GachaCharactersDTO.class);
+		gachaResultDTO = super.map(resultSpin, GachaResultDTO.class);
+		Characters resultGachaCharacter = charactersRepository.findById(gachaResultDTO.getCharacterId()).get();
+		gachaResultDTO.setCharacters(resultGachaCharacter);
+		userItems.setNumber(userItems.getNumber() - 1L);
+		userItemsRepository.save(userItems);
+		return gachaResultDTO;
 	}
 
 	private GachaCharacters randomGacha(List<GachaCharacters> lstGacha) {
@@ -55,8 +67,8 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 		}
 		Double rnd = (random.nextDouble() * (sumOfWeigh));
 		for(int i=0; i<lstGacha.size(); i++){
-			if(rnd < lstGacha.get(i).getProbability())
-				resultSpin =  lstGacha.get(i);
+			if(rnd <= lstGacha.get(i).getProbability())
+				return lstGacha.get(i);
 			rnd -= lstGacha.get(i).getProbability();
 		}
 		return resultSpin;
