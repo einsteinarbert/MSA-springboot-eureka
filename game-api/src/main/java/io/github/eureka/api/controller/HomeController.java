@@ -64,7 +64,11 @@ public class HomeController extends BaseController {
 	}
 
 	@GetMapping("list-products")
-	public BaseMsgDTO<?> getListProducts(@RequestParam(name = "productId", required = false) Long productId) {
-		return BaseMsgDTO.builder().data(itemService.getListProducts(productId)).build();
+	public BaseMsgDTO<?> getListProducts(
+			@RequestParam(name = "productId", required = false) Long productId,
+			@RequestParam(name = "productType", required = false) String productType,
+			@RequestParam(name = "itemType", required = false) String itemType
+	) {
+		return BaseMsgDTO.builder().data(itemService.getListProducts(productId, productType, itemType)).build();
 	}
 }

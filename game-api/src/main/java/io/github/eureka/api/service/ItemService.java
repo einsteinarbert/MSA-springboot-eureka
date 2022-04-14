@@ -1,8 +1,9 @@
 package io.github.eureka.api.service;
 
+import io.github.eureka.api.model.dto.ProductListDTO;
 import io.github.eureka.api.model.dto.PurchaseDTO;
 import io.github.eureka.api.model.dto.SaleInfoDTO;
-import io.github.eureka.api.model.entity.ProductInfoDTO;
+import io.github.eureka.api.model.entity.ProductInfoEntity;
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -21,8 +22,10 @@ public interface ItemService {
 
     /**
      * get list saleable product
-     * @param prodId: optional
+     * @param prodId : optional
+     * @param productType product table name like: jewel_products
+     * @param itemType itemType like: heart, background
      * @return list
      */
-    List<ProductInfoDTO> getListProducts (Long prodId);
+    ProductListDTO getListProducts (Long prodId, String productType, String itemType);
 }

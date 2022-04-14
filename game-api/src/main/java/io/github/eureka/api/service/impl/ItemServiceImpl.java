@@ -9,10 +9,11 @@ import io.github.eureka.api.model.UserWalletHistories;
 import io.github.eureka.api.model.UserWallets;
 import io.github.eureka.api.model.Users;
 import io.github.eureka.api.model.dto.ActionUserDTO;
+import io.github.eureka.api.model.dto.ProductListDTO;
 import io.github.eureka.api.model.dto.PurchaseDTO;
 import io.github.eureka.api.model.dto.SaleInfoDTO;
 import io.github.eureka.api.model.dto.google.SubscriptionPurchaseDTO;
-import io.github.eureka.api.model.entity.ProductInfoDTO;
+import io.github.eureka.api.model.entity.ProductInfoEntity;
 import io.github.eureka.api.model.entity.ProductPriceEntity;
 import io.github.eureka.api.model.entity.UserWalletEntity;
 import io.github.eureka.api.repo.JewelProductsRepository;
@@ -28,9 +29,11 @@ import org.json.JSONException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -128,17 +131,49 @@ public class ItemServiceImpl implements ItemService {
      * get list saleable product
      *
      * @param prodId : optional
+     * @param productType string optional
+     * @param itemType string optional
      * @return list
      */
     @Override
-    public List<ProductInfoDTO> getListProducts(Long prodId) {
-        String sql = ProductInfoDTO.SQL;
+    public ProductListDTO getListProducts(Long prodId, String productType, String itemType) {
+        String sql = ProductInfoEntity.SQL;
         if (null != prodId) {
             sql += " and p.id = :id";
-            return em.createNativeQuery(sql, ProductInfoDTO.class)
-                    .setParameter("id", prodId).getResultList();
         }
-        return em.createNativeQuery(sql, ProductInfoDTO.class).getResultList();
+        if (StringUtils.hasLength(productType)) {
+            sql += " and p.product_type = :productType";
+        }
+        if (StringUtils.hasLength(itemType)) {
+            sql += " and ip.item_type = :itemType";
+        }
+        Query query = em.createNativeQuery(sql, ProductInfoEntity.class);
+        if (null != prodId) {
+            query = query.setParameter("id", prodId);
+        }
+        if (StringUtils.hasLength(productType)) {
+            query = query.setParameter("productType", productType);
+        }
+        if (StringUtils.hasLength(itemType)) {
+            query = query.setParameter("itemType", itemType);
+        }
+        List<ProductInfoEntity> infoEntityList = query.getResultList();
+        ProductListDTO result = ProductListDTO.builder().listProduct(infoEntityList).build();
+        if (StringUtils.hasLength(productType)) {
+            Query q1 = em.createNativeQuery("Select * from " + productType +" where product_id in :id");
+            List<Long> ids = infoEntityList.parallelStream().map(
+                    ProductInfoEntity::getProductId
+            ).collect(Collectors.toList());
+            result.setProductsDetail(q1.setParameter("id", ids).getResultList());
+        }
+        if (StringUtils.hasLength(productType)) {
+            Query q2 = em.createNativeQuery("Select * from " + itemType +" where item_id in :id");
+            List<Long> ids = infoEntityList.parallelStream().map(
+                    ProductInfoEntity::getItemId
+            ).collect(Collectors.toList());
+            result.setItemsDetail(q2.setParameter("id", ids).getResultList());
+        }
+        return result;
     }
 
     private void validatePurchaseInfoAndroid(SubscriptionPurchaseDTO subscript) {
