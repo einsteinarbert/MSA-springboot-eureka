@@ -24,8 +24,8 @@ public class BaseMsgDTO<T> implements Serializable {
     public static final String OK = "success";
     @JsonIgnore
     public static final String NG = "failure";
-    private int code;
-    private String reason;
+    private int code = 200;
+    private String status = OK;
     private String message;
     private T data;
 
