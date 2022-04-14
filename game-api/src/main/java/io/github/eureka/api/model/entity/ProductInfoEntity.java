@@ -15,7 +15,7 @@ import java.sql.Date;
  * Date: 13/04/2022<br/>
  */
 @Entity
-public class ProductInfoDTO {
+public class ProductInfoEntity {
     @JsonIgnoreProperties
     public static final String SQL =
             "select p.product_type, " +
