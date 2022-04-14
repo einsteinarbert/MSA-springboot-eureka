@@ -12,6 +12,7 @@ import io.github.eureka.api.model.dto.ActionUserDTO;
 import io.github.eureka.api.model.dto.PurchaseDTO;
 import io.github.eureka.api.model.dto.SaleInfoDTO;
 import io.github.eureka.api.model.dto.google.SubscriptionPurchaseDTO;
+import io.github.eureka.api.model.entity.ProductInfoDTO;
 import io.github.eureka.api.model.entity.ProductPriceEntity;
 import io.github.eureka.api.model.entity.UserWalletEntity;
 import io.github.eureka.api.repo.JewelProductsRepository;
@@ -121,6 +122,23 @@ public class ItemServiceImpl implements ItemService {
             return false;
         }
         return true;
+    }
+
+    /**
+     * get list saleable product
+     *
+     * @param prodId : optional
+     * @return list
+     */
+    @Override
+    public List<ProductInfoDTO> getListProducts(Long prodId) {
+        String sql = ProductInfoDTO.SQL;
+        if (null != prodId) {
+            sql += " and p.id = :id";
+            return em.createNativeQuery(sql, ProductInfoDTO.class)
+                    .setParameter("id", prodId).getResultList();
+        }
+        return em.createNativeQuery(sql, ProductInfoDTO.class).getResultList();
     }
 
     private void validatePurchaseInfoAndroid(SubscriptionPurchaseDTO subscript) {
