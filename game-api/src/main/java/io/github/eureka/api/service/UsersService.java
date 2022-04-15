@@ -2,6 +2,7 @@ package io.github.eureka.api.service;
 
 import io.github.eureka.api.model.Users;
 import io.github.eureka.api.model.dto.ChangePasswordDTO;
+import io.github.eureka.api.model.dto.UserDataEntity;
 
 import java.util.List;
 
@@ -12,4 +13,6 @@ public interface UsersService {
     void updateUserPassword(ChangePasswordDTO users);
 
 	List<Users> getAllUser();
+
+	UserDataEntity getDataUserInMyPage(Long userId);
 }

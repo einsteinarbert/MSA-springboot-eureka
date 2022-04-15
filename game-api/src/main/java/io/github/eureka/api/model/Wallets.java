@@ -18,10 +18,8 @@ import java.util.Objects;
 public class Wallets {
     private long id;
     private String walletName;
-    private int walletType;
-    private int jewelType;
-    private int limit;
-    private Integer platformType;
+    private String walletType;
+    private Integer limit;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
@@ -47,42 +45,22 @@ public class Wallets {
 
     @Basic
     @Column(name = "wallet_type", nullable = false)
-    public int getWalletType() {
+    public String getWalletType() {
         return walletType;
     }
 
-    public void setWalletType(int walletType) {
+    public void setWalletType(String walletType) {
         this.walletType = walletType;
     }
 
     @Basic
-    @Column(name = "jewel_type", nullable = false)
-    public int getJewelType() {
-        return jewelType;
-    }
-
-    public void setJewelType(int jewelType) {
-        this.jewelType = jewelType;
-    }
-
-    @Basic
     @Column(name = "limit", nullable = false)
-    public int getLimit() {
+    public Integer getLimit() {
         return limit;
     }
 
-    public void setLimit(int limit) {
+    public void setLimit(Integer limit) {
         this.limit = limit;
-    }
-
-    @Basic
-    @Column(name = "platform_type", nullable = true)
-    public Integer getPlatformType() {
-        return platformType;
-    }
-
-    public void setPlatformType(Integer platformType) {
-        this.platformType = platformType;
     }
 
     @Basic
@@ -110,11 +88,11 @@ public class Wallets {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Wallets wallets = (Wallets) o;
-        return id == wallets.id && walletType == wallets.walletType && jewelType == wallets.jewelType && limit == wallets.limit && Objects.equals(walletName, wallets.walletName) && Objects.equals(platformType, wallets.platformType) && Objects.equals(createdAt, wallets.createdAt) && Objects.equals(updatedAt, wallets.updatedAt);
+        return id == wallets.id && walletType == wallets.walletType && limit == wallets.limit && Objects.equals(walletName, wallets.walletName) && Objects.equals(createdAt, wallets.createdAt) && Objects.equals(updatedAt, wallets.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, walletName, walletType, jewelType, limit, platformType, createdAt, updatedAt);
+        return Objects.hash(id, walletName, walletType, limit, createdAt, updatedAt);
     }
 }
