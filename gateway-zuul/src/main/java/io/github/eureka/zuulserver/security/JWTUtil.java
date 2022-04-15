@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -49,7 +50,7 @@ public class JWTUtil {
 
     public String generateToken(Users user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", "USER");
+        claims.put("role", List.of("USER"));
         return doGenerateToken(claims, user.getUsername());
     }
 

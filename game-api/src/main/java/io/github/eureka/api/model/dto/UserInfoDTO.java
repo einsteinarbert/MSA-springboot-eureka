@@ -21,7 +21,7 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserInfoDTO extends ActionUserDTO{
+public class UserInfoDTO extends ActionUserDTO {
     private String token;
     private String resetToken;
 }

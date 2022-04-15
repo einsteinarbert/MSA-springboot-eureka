@@ -1,13 +1,6 @@
 spring:
     application:
         name: gateway-zuul
-    cloud:
-        gateway:
-            routes:
-                - id: game-api-route
-                  uri: http://localhost:8200
-                  predicates:
-                      - Path=/api/**
     jpa:
         properties:
             hibernate:
@@ -15,10 +8,10 @@ spring:
         show-sql: 'true'
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:mariadb://125.212.225.166:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+        url: jdbc:mariadb://52.199.126.208:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
         driverClassName: org.mariadb.jdbc.Driver
-        username: db_cluster
-        password: bccs3_maria
+        username: root
+        password: lukyluke
         hikari:
             pool-name: maria-db-pool
             maximum-pool-size: 10
@@ -27,6 +20,13 @@ spring:
     cache:
         ehcache:
             config: classpath:ehcache.xml
+    cloud:
+        gateway:
+            routes:
+                - id: game-api-route
+                  uri: http://localhost:8200
+                  predicates:
+                      - Path=/api/**
 
 server:
     port: '8761'
@@ -36,4 +36,3 @@ jwt:
     ext: 28800
     iteration: 33
     keylength: 256
-

@@ -1,7 +1,6 @@
 package io.github.eureka.api.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +16,6 @@ import java.util.List;
  * Time: 11:28<br/>
  */
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActionUserDTO implements Serializable {
