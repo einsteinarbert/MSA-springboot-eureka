@@ -1,5 +1,6 @@
 package io.github.eureka.api.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.github.eureka.api.model.Background;
 import io.github.eureka.api.model.Characters;
 
@@ -25,9 +26,7 @@ public class UserDataEntity {
 	private Long heart;
 	private Long heart30;
 	private Long heart60;
-	
-	private Background background;
-	private Characters characters;
+
 
 	@Id
 	@Basic
@@ -149,21 +148,5 @@ public class UserDataEntity {
 	public void setHeart60(Long heart60) {
 		this.heart60 = heart60;
 	}
-	
-	@Transient
-	public Background getBackground() {
-		return background;
-	}
 
-	public void setBackground(Background background) {
-		this.background = background;
-	}
-	@Transient
-	public Characters getCharacters() {
-		return characters;
-	}
-
-	public void setCharacters(Characters characters) {
-		this.characters = characters;
-	}
 }
