@@ -4,6 +4,7 @@ import io.github.eureka.api.common.DataUtil;
 import io.github.eureka.api.model.Users;
 import io.github.eureka.api.model.dto.BaseMsgDTO;
 import io.github.eureka.api.model.dto.ChangePasswordDTO;
+import io.github.eureka.api.model.dto.UserDataEntity;
 import io.github.eureka.api.service.UsersService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,12 @@ public class UsersController {
     public BaseMsgDTO<?> getAllUser(){
         List<Users> users = usersService.getAllUser();
         return BaseMsgDTO.success(users);
+    }
+    
+    @GetMapping("/user-data/{userId}")
+    public BaseMsgDTO<?> getUserDataInMyPage(@PathVariable Long userId){
+        UserDataEntity userDataEntity = usersService.getDataUserInMyPage(userId);
+        return BaseMsgDTO.success(userDataEntity);
     }
 
 

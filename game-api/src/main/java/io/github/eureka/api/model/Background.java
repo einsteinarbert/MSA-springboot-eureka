@@ -1,5 +1,8 @@
 package io.github.eureka.api.model;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +19,8 @@ import java.util.Objects;
  * Time: 18:17<br/>
  */
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Background {
     private long id;
     private long itemId;
