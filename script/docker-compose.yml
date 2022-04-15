@@ -6,6 +6,7 @@ services:
         ports:
             - "8761:8761"
         environment:
+            SPRING_PROFILES_ACTIVE: "prod"
             SPRING_APPLICATION_NAME: gateway-service
             SERVER_PORT: 8761
             ZUUL_HOST_CONNECT-TIMEOUT-MILLIS: 130000
@@ -18,6 +19,7 @@ services:
         ports:
             - "8200:8080"
         environment:
+            SPRING_PROFILES_ACTIVE: "prod"
             SPRING_APPLICATION_NAME: game-api-service
             SERVER_PORT: 8080
             ZUUL_HOST_CONNECT-TIMEOUT-MILLIS: 130000
