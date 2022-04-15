@@ -6,7 +6,7 @@ services:
         ports:
             - "8761:8761"
         environment:
-            SPRING_DATASOURCE_URL: jdbc:mariadb://127.0.0.1:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+            SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
             SPRING_DATASOURCE_PASSWORD: lukyluke
             SPRING_DATASOURCE_USERNAME: root
             SPRING_PROFILES_ACTIVE: "prod"
@@ -17,12 +17,14 @@ services:
             HYSTRIX_COMMAND_DEFAULT_EXECUTION_ISOLATION_THREAD-TIMEOUTINMILLISECONDS: 120000
         deploy:
             replicas: 1
-    game-api:
+        depends_on:
+            - db
+    game-api-service:
         image: game-api:1.0
         ports:
             - "8200:8080"
         environment:
-            SPRING_DATASOURCE_URL: jdbc:mariadb://127.0.0.1:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+            SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
             SPRING_DATASOURCE_PASSWORD: lukyluke
             SPRING_DATASOURCE_USERNAME: root
             SPRING_PROFILES_ACTIVE: "prod"
@@ -33,13 +35,15 @@ services:
             HYSTRIX_COMMAND_DEFAULT_EXECUTION_ISOLATION_THREAD-TIMEOUTINMILLISECONDS: 120000
         deploy:
             replicas: 1
+        depends_on:
+            - db
 
     admin-service:
         image: admin-service:1.0
         ports:
             - "8000:8080"
         environment:
-            SPRING_DATASOURCE_URL: jdbc:mariadb://127.0.0.1:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+            SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
             SPRING_DATASOURCE_PASSWORD: lukyluke
             SPRING_DATASOURCE_USERNAME: root
             SPRING_PROFILES_ACTIVE: "dev"
@@ -50,3 +54,13 @@ services:
             HYSTRIX_COMMAND_DEFAULT_EXECUTION_ISOLATION_THREAD-TIMEOUTINMILLISECONDS: 120000
         deploy:
             replicas: 1
+        depends_on:
+            - db
+    db:
+        image: mariadb:latest
+        restart: always
+        volumes:
+            - /home/ubuntu/deploy/volumes/mysql:/var/lib/mysql
+        environment:
+            MARIADB_ROOT_PASSWORD: lukyluke
+
