@@ -6,6 +6,9 @@ services:
         ports:
             - "8761:8761"
         environment:
+            SPRING_DATASOURCE_URL: jdbc:mariadb://localhost:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+            SPRING_DATASOURCE_PASSWORD: lukyluke
+            SPRING_DATASOURCE_USERNAME: root
             SPRING_PROFILES_ACTIVE: "prod"
             SPRING_APPLICATION_NAME: gateway-service
             SERVER_PORT: 8761
@@ -19,6 +22,9 @@ services:
         ports:
             - "8200:8080"
         environment:
+            SPRING_DATASOURCE_URL: jdbc:mariadb://localhost:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+            SPRING_DATASOURCE_PASSWORD: lukyluke
+            SPRING_DATASOURCE_USERNAME: root
             SPRING_PROFILES_ACTIVE: "prod"
             SPRING_APPLICATION_NAME: game-api-service
             SERVER_PORT: 8080
@@ -33,6 +39,9 @@ services:
         ports:
             - "8000:8080"
         environment:
+            SPRING_DATASOURCE_URL: jdbc:mariadb://localhost:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+            SPRING_DATASOURCE_PASSWORD: lukyluke
+            SPRING_DATASOURCE_USERNAME: root
             SPRING_PROFILES_ACTIVE: "dev"
             SPRING_APPLICATION_NAME: game-api-service
             SERVER_PORT: 8080
