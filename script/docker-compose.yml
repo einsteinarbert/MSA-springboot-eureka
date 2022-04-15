@@ -6,7 +6,7 @@ services:
         ports:
             - "8761:8761"
         environment:
-            SPRING_DATASOURCE_URL: jdbc:mariadb://localhost:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+            SPRING_DATASOURCE_URL: jdbc:mariadb://127.0.0.1:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
             SPRING_DATASOURCE_PASSWORD: lukyluke
             SPRING_DATASOURCE_USERNAME: root
             SPRING_PROFILES_ACTIVE: "prod"
@@ -22,7 +22,7 @@ services:
         ports:
             - "8200:8080"
         environment:
-            SPRING_DATASOURCE_URL: jdbc:mariadb://localhost:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+            SPRING_DATASOURCE_URL: jdbc:mariadb://127.0.0.1:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
             SPRING_DATASOURCE_PASSWORD: lukyluke
             SPRING_DATASOURCE_USERNAME: root
             SPRING_PROFILES_ACTIVE: "prod"
@@ -39,7 +39,7 @@ services:
         ports:
             - "8000:8080"
         environment:
-            SPRING_DATASOURCE_URL: jdbc:mariadb://localhost:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+            SPRING_DATASOURCE_URL: jdbc:mariadb://127.0.0.1:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
             SPRING_DATASOURCE_PASSWORD: lukyluke
             SPRING_DATASOURCE_USERNAME: root
             SPRING_PROFILES_ACTIVE: "dev"
