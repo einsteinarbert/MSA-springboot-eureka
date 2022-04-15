@@ -5,8 +5,7 @@ import io.github.eureka.api.common.MsgUtil;
 import io.github.eureka.api.model.Background;
 import io.github.eureka.api.model.Characters;
 import io.github.eureka.api.model.Users;
-import io.github.eureka.api.model.dto.ChangePasswordDTO;
-import io.github.eureka.api.model.dto.UserDataEntity;
+import io.github.eureka.api.model.dto.*;
 import io.github.eureka.api.repo.BackgroundRepository;
 import io.github.eureka.api.repo.CharactersRepository;
 import io.github.eureka.api.repo.UsersRepository;
@@ -115,15 +114,15 @@ public class UsersServiceImpl extends BaseService implements UsersService {
     }
 
     @Override
-    public UserDataEntity getDataUserInMyPage(Long userId) {
+    public UserDataDTO getDataUserInMyPage(Long userId) {
         UserDataEntity userDataEntity = (UserDataEntity) em.createNativeQuery(userDataSQL , UserDataEntity.class)
                 .setParameter("userId", userId)
                 .getSingleResult();
-        
-        Background background = backgroundRepository.getById(userDataEntity.getBackgroundId());
-        Characters characters = charactersRepository.getById(userDataEntity.getCharacterId());
-        userDataEntity.setBackground(background);
-        userDataEntity.setCharacters(characters);
-        return userDataEntity;
+        UserDataDTO userDataDTO = super.map(userDataEntity, UserDataDTO.class);
+        BackgroundDTO background = super.map(backgroundRepository.getById(userDataEntity.getBackgroundId()), BackgroundDTO.class);
+        CharacterDTO characters = super.map(charactersRepository.getById(userDataEntity.getCharacterId()), CharacterDTO.class);
+        userDataDTO.setBackground(background);
+        userDataDTO.setCharacters(characters);
+        return userDataDTO;
     }
 }
