@@ -1,9 +1,9 @@
 package io.github.eureka.zuulserver.security;
 
-import io.github.eureka.zuulserver.model.User;
 import io.github.eureka.zuulserver.model.Users;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,18 +21,30 @@ public class JWTUtil {
     @Value("${jwt.secret}")
     private String secret;
 
+    @Value("${jwt.refreshSecret}")
+    private String refreshSecret;
+
     @Value("${jwt.ext}")
     private String expirationTime;
 
+    @Value("${jwt.refreshExt}")
+    private String refreshExt;
+
     private Key key;
+    private Key refreshKey;
 
     @PostConstruct
     public void init() {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
+        this.refreshKey = Keys.hmacShaKeyFor(refreshSecret.getBytes());
     }
 
     public Claims getAllClaimsFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    }
+
+    public Claims getAllClaimsFromRefreshToken(String token) {
+        return Jwts.parserBuilder().setSigningKey(refreshKey).build().parseClaimsJws(token).getBody();
     }
 
     public String getUsernameFromToken(String token) {
@@ -43,8 +55,17 @@ public class JWTUtil {
         return getAllClaimsFromToken(token).getExpiration();
     }
 
+    public Date getExpirationDateFromRefreshToken(String token) {
+        return getAllClaimsFromRefreshToken(token).getExpiration();
+    }
+
     private Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
+        return expiration.before(new Date());
+    }
+
+    private Boolean isRefreshTokenExpired(String token) {
+        final Date expiration = getExpirationDateFromRefreshToken(token);
         return expiration.before(new Date());
     }
 
@@ -52,6 +73,23 @@ public class JWTUtil {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", List.of("USER"));
         return doGenerateToken(claims, user.getUsername());
+    }
+
+    public String generateRefreshToken(Users user) {
+        return doGenerateRefreshToken(user.getUsername());
+    }
+
+    private String doGenerateRefreshToken(String username) {
+        long expirationTimeLong = Long.parseLong(refreshExt); //in second
+        final Date createdDate = new Date();
+        final Date expirationDate = new Date(createdDate.getTime() + expirationTimeLong * 1000);
+
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(createdDate)
+                .setExpiration(expirationDate)
+                .signWith(refreshKey)
+                .compact();
     }
 
     private String doGenerateToken(Map<String, Object> claims, String username) {
@@ -70,6 +108,10 @@ public class JWTUtil {
 
     public Boolean validateToken(String token) {
         return !isTokenExpired(token);
+    }
+
+    public Boolean validateRefreshToken(String token) {
+        return !isRefreshTokenExpired(token);
     }
 
 }

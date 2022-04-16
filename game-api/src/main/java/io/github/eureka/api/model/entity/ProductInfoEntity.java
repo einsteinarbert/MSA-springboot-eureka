@@ -1,11 +1,12 @@
 package io.github.eureka.api.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.sql.Date;
 
 /**
@@ -16,7 +17,8 @@ import java.sql.Date;
  */
 @Entity
 public class ProductInfoEntity {
-    @JsonIgnoreProperties
+    @JsonInclude()
+    @Transient
     public static final String SQL =
             "select p.product_type, " +
                     "       p.id    as product_id, " +

@@ -1,11 +1,12 @@
 package io.github.eureka.api.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 /**
  * Project: MSA-springboot-eureka.<br/>
@@ -16,7 +17,8 @@ import javax.persistence.Id;
  */
 @Entity
 public class ProductPriceEntity {
-    @JsonIgnoreProperties
+    @JsonInclude()
+    @Transient
     public static final String SQL =
             "select ip.product_id, ip.item_id, p.name, p.product_type,\n" +
                     "       ipm.payment_method_id, ipm.number, ipm.price\n" +

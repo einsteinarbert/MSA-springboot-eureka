@@ -33,7 +33,14 @@ server:
 
 jwt:
     secret: ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave64ByteLength
-    ext: 28800
+    refreshSecret: TuAyTrongToiBungNangHa
+    ext: 172800
+    refreshExt: 345600
     iteration: 33
     keylength: 256
 
+feign:
+    address:
+        game-api:
+            name: game-api-service
+            url: http://game-api-service:8080

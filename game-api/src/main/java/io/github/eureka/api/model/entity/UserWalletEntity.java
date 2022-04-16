@@ -1,11 +1,12 @@
 package io.github.eureka.api.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.util.Date;
 import java.util.Objects;
 
@@ -18,7 +19,8 @@ import java.util.Objects;
  */
 @Entity
 public class UserWalletEntity {
-    @JsonIgnoreProperties
+    @JsonInclude()
+    @Transient
     public static final String SQL =
             "select uw.*, w.platform_type, wallet_type, jewel_type, wpm.payment_method_id,\n" +
             "       pm.payment_type,\n" +

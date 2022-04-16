@@ -1,10 +1,7 @@
 package io.github.eureka.zuulserver.model;
 
 import javax.persistence.*;
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.Period;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -24,10 +21,11 @@ public class Users {
     private Integer age;
     private String encryptedPassword;
     private String resetPasswordToken;
-    private Timestamp resetPasswordSentAt;
+    private String refreshToken;
+    private Date resetPasswordSentAt;
     private int status;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private Date createdAt;
+    private Date updatedAt;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -100,11 +98,11 @@ public class Users {
 
     @Basic
     @Column(name = "reset_password_sent_at", nullable = true)
-    public Timestamp getResetPasswordSentAt() {
+    public Date getResetPasswordSentAt() {
         return resetPasswordSentAt;
     }
 
-    public void setResetPasswordSentAt(Timestamp resetPasswordSentAt) {
+    public void setResetPasswordSentAt(Date resetPasswordSentAt) {
         this.resetPasswordSentAt = resetPasswordSentAt;
     }
 
@@ -120,21 +118,21 @@ public class Users {
 
     @Basic
     @Column(name = "created_at", nullable = true)
-    public Timestamp getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
     @Basic
     @Column(name = "updated_at", nullable = true)
-    public Timestamp getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -149,5 +147,14 @@ public class Users {
     @Override
     public int hashCode() {
         return Objects.hash(id, username, name, birthday, age, encryptedPassword, resetPasswordToken, resetPasswordSentAt, status, createdAt, updatedAt);
+    }
+
+    @Column(name = "refresh_token")
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

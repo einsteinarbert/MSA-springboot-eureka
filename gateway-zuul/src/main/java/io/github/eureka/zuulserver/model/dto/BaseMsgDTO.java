@@ -1,4 +1,4 @@
-package io.github.eureka.api.model.dto;
+package io.github.eureka.zuulserver.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
