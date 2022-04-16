@@ -58,12 +58,10 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         Assert.isTrue(existingUserName.isEmpty(), MsgUtil.getMessage("username.exist"));
         Optional<Users> existingName = usersRepository.findByNameAndStatusIn(users.getName(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
         Assert.isTrue(existingName.isEmpty(), MsgUtil.getMessage("name.exist"));
-        Date birthDay = new Date(Calendar.getInstance().getTimeInMillis());
-        users.setAge(0);
+        users.setAge(new Date(Calendar.getInstance().getTimeInMillis()), users.getBirthday());
         users.setStatus(Constant.STATUS.ANONYMOUS);
         users.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         users.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        users.setBirthday(birthDay);
         users = usersRepository.save(users);
         return users;
     }
