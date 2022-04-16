@@ -19,7 +19,8 @@ public class UserService {
     public Mono<Users> findByUsername(String username) {
         return Mono.justOrEmpty(usersRepository.findByUsernameAndStatus(username, 1));
     }
-    public Optional<Users> findByRefreshToken(String token) {
-        return usersRepository.findByRefreshTokenAndStatus(token, 1);
+    public Optional<Users> findByRefreshToken(String token, String... args) {
+        Integer status = (args.length == 1) ? Integer.parseInt(args[0]) : 1;
+        return usersRepository.findByRefreshTokenAndStatus(token, status);
     }
 }

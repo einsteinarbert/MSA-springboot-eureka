@@ -1,6 +1,8 @@
 package io.github.eureka.zuulserver.rest;
 
+import com.google.gson.Gson;
 import io.github.eureka.zuulserver.model.Users;
+import io.github.eureka.zuulserver.model.dto.BaseMsgDTO;
 import io.github.eureka.zuulserver.model.security.AuthRequest;
 import io.github.eureka.zuulserver.model.security.AuthResponse;
 import io.github.eureka.zuulserver.model.security.RefreshToken;
@@ -8,15 +10,18 @@ import io.github.eureka.zuulserver.repository.UsersRepository;
 import io.github.eureka.zuulserver.security.JWTUtil;
 import io.github.eureka.zuulserver.security.PBKDF2Encoder;
 import io.github.eureka.zuulserver.service.UserService;
+import io.github.eureka.zuulserver.service.feign.UserApiService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -28,6 +33,7 @@ public class AuthenticationREST {
     private final PBKDF2Encoder passwordEncoder;
     private final UserService userService;
     private final UsersRepository usersRepository;
+    private final UserApiService userApiService;
 
     @PostMapping("/auth/login")
     public Mono<ResponseEntity<AuthResponse>> login(@RequestBody AuthRequest ar) {
@@ -44,7 +50,7 @@ public class AuthenticationREST {
     }
 
     @PostMapping("/auth/refresh-token")
-    public ResponseEntity<AuthResponse> refreshToken(@RequestBody RefreshToken refreshToken) {
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshToken refreshToken) {
         try {
             boolean valid = jwtUtil.validateRefreshToken(refreshToken.getRefreshToken());
             Optional<Users> users = userService.findByRefreshToken(refreshToken.getRefreshToken());
@@ -58,7 +64,85 @@ public class AuthenticationREST {
             }
         } catch (Exception e) {
             log.error("Refresh token error", e);
+            return ResponseEntity.badRequest().body(
+                    BaseMsgDTO.builder()
+                            .code(400)
+                            .message(e.getMessage())
+                            .status(BaseMsgDTO.NG)
+                            .build());
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    /**
+     * Auto create new user for trial play game
+     *
+     * @param ar user info
+     * @return authentication token
+     */
+    @PostMapping("/auth/login-anonymous")
+    public Object loginAnonymous(@RequestBody AuthRequest ar) {
+
+        // has token
+        if (StringUtils.hasLength(ar.getRefreshToken())) {
+            boolean valid = jwtUtil.validateRefreshToken(ar.getRefreshToken());
+            if (valid) {
+                return refreshToken(new RefreshToken(ar.getRefreshToken(), 0));
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (StringUtils.hasLength(ar.getUsername())) {
+            Optional<Users> usr = usersRepository.findByUsernameAndStatusIn(ar.getUsername(), List.of(0, 1));
+            if (usr.isPresent()) {
+                Users users = usr.get();
+                // user registered will not able to login anonymous
+                if (users.getStatus() == 1) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                // generate new token
+                String refreshTokenNew = jwtUtil.generateRefreshToken(users);
+                users.setRefreshToken(refreshTokenNew);
+                usersRepository.save(users);
+                return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(users), refreshTokenNew));
+            } else {
+                try {
+                    Users newUsr = new Users();
+                    newUsr.setBirthday(ar.getBirthday());
+                    newUsr.setName(ar.getName());
+                    newUsr.setUsername(ar.getUsername());
+
+                    return userApiService.createNewUser(newUsr).filter(StringUtils::hasLength)
+                            .map(s -> {
+                                if (StringUtils.hasLength(s)) {
+                                    var base = new BaseMsgDTO<String>();
+                                    return new Gson().fromJson(s, base.getClass());
+                                } else {
+                                    // generate new token
+                                    var created = usersRepository.findByUsernameAndStatus(newUsr.getUsername(), 0);
+                                    if (created.getId() == null) {
+                                        return ResponseEntity.badRequest().body(
+                                                BaseMsgDTO.builder()
+                                                        .code(400)
+                                                        .message("Cannot create user")
+                                                        .status(BaseMsgDTO.NG)
+                                                        .build());
+                                    }
+                                    String refreshTokenNew = jwtUtil.generateRefreshToken(created);
+                                    created.setRefreshToken(refreshTokenNew);
+                                    usersRepository.save(created);
+                                    return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(created), refreshTokenNew));
+                                }
+                            });
+                } catch (Exception e) {
+                    log.error("Cannot call api create user", e);
+                    return ResponseEntity.badRequest().body(
+                            BaseMsgDTO.builder()
+                                    .code(400)
+                                    .message(e.getMessage())
+                                    .status(BaseMsgDTO.NG)
+                                    .build()
+                    );
+                }
+            }
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }

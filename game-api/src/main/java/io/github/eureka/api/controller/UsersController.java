@@ -21,9 +21,9 @@ public class UsersController {
 
     @PostMapping("/users/create")
     public ResponseEntity<?> createUser(@RequestBody Users users){
-        if(DataUtil.isNullOrEmpty(users.getId())) {
+        if(DataUtil.isNullOrEmpty(users.getId()) || users.getId() < 1) {
             usersService.createUser(users);
-        }else{
+        } else {
             usersService.updateUser(users);
         }
         return ResponseEntity.ok().build();

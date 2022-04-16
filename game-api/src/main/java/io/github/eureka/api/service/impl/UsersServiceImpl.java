@@ -55,9 +55,9 @@ public class UsersServiceImpl extends BaseService implements UsersService {
     @Override
     public Users createUser(Users users) {
         Optional<Users> existingUserName = usersRepository.findByUsernameAndStatusIn(users.getUsername(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
-        Assert.isNull(existingUserName, MsgUtil.getMessage("username.exist"));
+        Assert.isTrue(existingUserName.isEmpty(), MsgUtil.getMessage("username.exist"));
         Optional<Users> existingName = usersRepository.findByNameAndStatusIn(users.getName(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
-        Assert.isNull(existingName, MsgUtil.getMessage("name.exist"));
+        Assert.isTrue(existingName.isEmpty(), MsgUtil.getMessage("name.exist"));
         Date birthDay = new Date(Calendar.getInstance().getTimeInMillis());
         users.setAge(0);
         users.setStatus(Constant.STATUS.ANONYMOUS);

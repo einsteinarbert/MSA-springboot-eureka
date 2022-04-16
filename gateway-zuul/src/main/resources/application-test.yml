@@ -38,3 +38,9 @@ jwt:
     refreshExt: 345600
     iteration: 33
     keylength: 256
+
+feign:
+    address:
+        game-api:
+            name: game-api-service
+            url: http://localhost:8200

@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.Date;
+
 /**
  *
  * @author ard333
@@ -12,6 +14,8 @@ import lombok.ToString;
 @Data @NoArgsConstructor @AllArgsConstructor @ToString
 public class  AuthRequest {
     private String username;
-    private String password;
-
+    private String password; // optional when login anonymous
+    private String refreshToken; // optional
+    private Date birthday; // optional
+    private String name; // optional
 }

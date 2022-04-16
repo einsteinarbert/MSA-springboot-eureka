@@ -12,5 +12,5 @@ import lombok.ToString;
 @Data @NoArgsConstructor @AllArgsConstructor @ToString
 public class RefreshToken {
     private String refreshToken;
-
+    private Integer roleValid; // optional
 }
