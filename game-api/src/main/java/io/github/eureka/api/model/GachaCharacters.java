@@ -1,5 +1,6 @@
 package io.github.eureka.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "gacha_characters")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @AllArgsConstructor
 @NoArgsConstructor
 public class GachaCharacters {

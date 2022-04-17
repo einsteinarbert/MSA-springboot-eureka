@@ -1,5 +1,7 @@
 package io.github.eureka.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +18,7 @@ import java.util.Objects;
  * Time: 18:17<br/>
  */
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Platforms {
     private long id;
     private String platformToken;

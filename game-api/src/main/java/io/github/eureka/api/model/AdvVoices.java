@@ -1,5 +1,7 @@
 package io.github.eureka.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +19,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "adv_voices")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class AdvVoices {
     private long id;
     private String advVoiceToken;

@@ -1,11 +1,14 @@
 package io.github.eureka.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
 @Table(name="chapters")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Chapters {
 	private Long id;
 	private String name;

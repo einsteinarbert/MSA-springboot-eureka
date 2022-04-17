@@ -1,5 +1,7 @@
 package io.github.eureka.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +18,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "product_purchase_histories")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ProductPurchaseHistories {
     private long id;
     private long userId;

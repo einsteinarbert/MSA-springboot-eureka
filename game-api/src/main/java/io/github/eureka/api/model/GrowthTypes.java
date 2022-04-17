@@ -1,5 +1,7 @@
 package io.github.eureka.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +19,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "growth_types")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class GrowthTypes {
     private long id;
     private String growthTypeToken;

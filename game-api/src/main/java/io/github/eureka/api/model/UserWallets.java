@@ -1,5 +1,7 @@
 package io.github.eureka.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +18,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "user_wallets")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class UserWallets {
     private long id;
     private long walletId;
