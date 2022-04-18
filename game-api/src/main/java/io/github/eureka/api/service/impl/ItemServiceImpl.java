@@ -23,6 +23,7 @@ import io.github.eureka.api.repo.UserWalletsRepository;
 import io.github.eureka.api.repo.UsersRepository;
 import io.github.eureka.api.service.CommonService;
 import io.github.eureka.api.service.ItemService;
+import io.github.eureka.api.service.UsersService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
@@ -59,7 +60,6 @@ public class ItemServiceImpl implements ItemService {
     @PersistenceContext
     private final EntityManager em;
     private final CommonService commonService;
-    private final UsersRepository usersRepository;
     private final UserWalletsRepository userWalletsRepository;
     private final JewelProductsRepository jewelProductsRepository;
     private final UserWalletHistoriesRepository userWalletHistoriesRepository;
@@ -71,7 +71,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public boolean buyProduct(SaleInfoDTO saleInfo) {
         ActionUserDTO userDTO = ActionUserHolder.getActionUser();
-        Users user = validateUser(userDTO);
+        Users user = commonService.validateUser(userDTO);
         // find user wallet
         List<UserWalletEntity> userWallets = em.createNativeQuery(UserWalletEntity.SQL, UserWalletEntity.class)
                 .setParameter("user_id", user.getId())
@@ -85,7 +85,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public boolean purchase(PurchaseDTO saleInfo) throws JSONException, IOException, IllegalAccessException {
         ActionUserDTO userDTO = ActionUserHolder.getActionUser();
-        Users user = validateUser(userDTO);
+        Users user = commonService.validateUser(userDTO);
         ProductPriceEntity productPriceInfo = (ProductPriceEntity) em.createNativeQuery(ProductPriceEntity.SQL,
                         ProductPriceEntity.class)
                 .setParameter("product_id", saleInfo.getProductId())
@@ -183,16 +183,6 @@ public class ItemServiceImpl implements ItemService {
                         Arrays.stream(Constant.PayStateAndroid.values()).filter(obj ->
                                 obj.getValue() == subscript.getPaymentState()).collect(Collectors.toList()).get(0).getText()
                 )));
-    }
-
-    private Users validateUser(ActionUserDTO userDTO) {
-        Assert.notNull(userDTO, MsgUtil.getMessage("user.info.null"));
-        Users user = usersRepository.findByUsernameAndStatusIn(userDTO.getSub(), Arrays.asList(0, 1)).orElseThrow (
-                () -> new IllegalArgumentException(MsgUtil.getMessage("user.info.null"))
-        );
-        Assert.isTrue(user.getUsername().equals(userDTO.getSub()),
-                MsgUtil.getMessage("user.invalid", user.getUsername()));
-        return user;
     }
 
     private void validateTotalAmount(List<UserWalletEntity> listWallet, SaleInfoDTO saleInfo, Users user) {

@@ -2,15 +2,17 @@ package io.github.eureka.api.service.impl;
 
 import io.github.eureka.api.common.Constant;
 import io.github.eureka.api.common.MsgUtil;
-import io.github.eureka.api.model.Background;
-import io.github.eureka.api.model.Characters;
+import io.github.eureka.api.config.ActionUserHolder;
 import io.github.eureka.api.model.Users;
 import io.github.eureka.api.model.dto.*;
+import io.github.eureka.api.model.entity.UserDataEntity;
 import io.github.eureka.api.repo.BackgroundRepository;
 import io.github.eureka.api.repo.CharactersRepository;
 import io.github.eureka.api.repo.UsersRepository;
 import io.github.eureka.api.securities.PBKDF2Encoder;
 import io.github.eureka.api.service.BaseService;
+import io.github.eureka.api.service.CommonService;
+import io.github.eureka.api.service.ItemService;
 import io.github.eureka.api.service.UsersService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Arrays;
@@ -31,6 +34,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
     @PersistenceContext
     EntityManager em;
     private final UsersRepository usersRepository;
+    private final CommonService commonService;
     private final PBKDF2Encoder passwordEncoder;
     private CharactersRepository charactersRepository;
     private BackgroundRepository backgroundRepository;
@@ -122,5 +126,23 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         userDataDTO.setBackground(background);
         userDataDTO.setCharacters(characters);
         return userDataDTO;
+    }
+
+    @Override
+    public void saveSettingData(UserSettingDTO data) {
+        ActionUserDTO userDTO = ActionUserHolder.getActionUser();
+        Users user = commonService.validateUser(userDTO);
+        BigInteger count = (BigInteger) em.createNativeQuery("select count(ui.item_id) " +
+                "from products p, item_products ip, user_items ui\n" +
+                "where ui.user_id = :user_id\n" +
+                "and ui.item_id = ip.item_id\n" +
+                "and ip.product_id = p.id\n" +
+                "and ip.item_id in :ids")
+                .setParameter("user_id", user.getId())
+                .setParameter("ids", List.of(data.getCharacterId(), data.getBackgroundId())).getSingleResult();
+        Assert.isTrue(count.longValue() > 1, MsgUtil.getMessage("setting.invalid"));
+        user.setCharacterId(data.getCharacterId());
+        user.setBackgroundId(data.getBackgroundId());
+        usersRepository.save(user);
     }
 }
