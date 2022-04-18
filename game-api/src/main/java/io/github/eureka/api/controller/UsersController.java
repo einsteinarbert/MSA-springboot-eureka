@@ -5,18 +5,19 @@ import io.github.eureka.api.model.Users;
 import io.github.eureka.api.model.dto.BaseMsgDTO;
 import io.github.eureka.api.model.dto.ChangePasswordDTO;
 import io.github.eureka.api.model.dto.UserDataDTO;
-import io.github.eureka.api.model.dto.UserDataEntity;
+import io.github.eureka.api.model.dto.UserSettingDTO;
 import io.github.eureka.api.service.UsersService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api")
-public class UsersController {
+public class UsersController extends BaseController{
     private final UsersService usersService;
 
     @PostMapping("/users/create")
@@ -60,5 +61,11 @@ public class UsersController {
         return BaseMsgDTO.success(userDataEntity);
     }
 
+    @PostMapping("/user-setting")
+    public BaseMsgDTO<?> setting(HttpServletRequest request, @RequestBody UserSettingDTO data){
+        setUserInfo(request);
+        usersService.saveSettingData(data);
+        return BaseMsgDTO.success("");
+    }
 
 }

@@ -3,11 +3,9 @@ package io.github.eureka.api.service;
 import io.github.eureka.api.model.dto.ProductListDTO;
 import io.github.eureka.api.model.dto.PurchaseDTO;
 import io.github.eureka.api.model.dto.SaleInfoDTO;
-import io.github.eureka.api.model.entity.ProductInfoEntity;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Project: MSA-springboot-eureka.<br/>
