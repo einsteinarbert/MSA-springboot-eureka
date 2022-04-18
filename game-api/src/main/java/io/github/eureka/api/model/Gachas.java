@@ -26,6 +26,10 @@ public class Gachas {
     private Long itemId;
     private String name;
     private Integer gachaType;
+    private Long paymentMethodId;
+    private Integer price;
+    private Long paymentMethodId2;
+    private Integer price2;
     private String thumbnail;
     private String icon;
     private Date startDate;
@@ -91,6 +95,49 @@ public class Gachas {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+
+    @Basic
+    @Column(name = "payment_method_id", nullable = false)
+    public Long getPaymentMethodId() {
+        return paymentMethodId;
+    }
+
+    public void setPaymentMethodId(Long paymentMethodId) {
+        this.paymentMethodId = paymentMethodId;
+    }
+
+
+    @Basic
+    @Column(name = "payment_method_id2", nullable = false)
+    public Long getPaymentMethodId2() {
+        return paymentMethodId2;
+    }
+
+    public void setPaymentMethodId2(Long paymentMethodId2) {
+        this.paymentMethodId2 = paymentMethodId2;
+    }
+
+    @Basic
+    @Column(name = "price", nullable = false)
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+
+    @Basic
+    @Column(name = "price2", nullable = false)
+    public Integer getPrice2() {
+        return price2;
+    }
+
+    public void setPrice2(Integer price2) {
+        this.price2 = price2;
     }
 
     @Basic

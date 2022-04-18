@@ -1,6 +1,7 @@
 package io.github.eureka.api.model.dto;
 
 import io.github.eureka.api.model.Characters;
+import io.github.eureka.api.model.SpecialItems;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ public class GachaResultDTO {
 	private Long id;
 	private Long gachaId;
 	private Long characterId;
+	private Long itemId;
 	private Double probability;
 	private Integer skillLevel;
 	private String pickup;
@@ -21,6 +23,7 @@ public class GachaResultDTO {
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
 	private Characters characters;
+	private SpecialItems specialItems;
 
 	public Long getId() {
 		return id;
@@ -100,5 +103,21 @@ public class GachaResultDTO {
 
 	public void setCharacters(Characters characters) {
 		this.characters = characters;
+	}
+
+	public SpecialItems getSpecialItems() {
+		return specialItems;
+	}
+
+	public void setSpecialItems(SpecialItems specialItems) {
+		this.specialItems = specialItems;
+	}
+
+	public Long getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(Long itemId) {
+		this.itemId = itemId;
 	}
 }

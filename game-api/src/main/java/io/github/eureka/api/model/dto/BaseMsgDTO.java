@@ -1,6 +1,7 @@
 package io.github.eureka.api.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.github.eureka.api.common.MsgUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,7 +38,16 @@ public class BaseMsgDTO<T> implements Serializable {
         this.message = "OK";
         this.data = data;
     }
+
+    public BaseMsgDTO(T data, int code) {
+        this.code = code;
+        this.message = MsgUtil.getMessage(String.valueOf(code));
+        this.data = data;
+    }
     public static <T> BaseMsgDTO<T> success(T data) {
         return new BaseMsgDTO<>(data);
+    }
+    public static <T> BaseMsgDTO<T> success(T data, int code) {
+        return new BaseMsgDTO<>(data, code);
     }
 }

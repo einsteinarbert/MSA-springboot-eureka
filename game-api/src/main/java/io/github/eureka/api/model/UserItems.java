@@ -2,11 +2,7 @@ package io.github.eureka.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -28,9 +24,12 @@ public class UserItems {
     private Integer limit;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private String itemType;
+    private Integer level;
 
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
@@ -58,6 +57,17 @@ public class UserItems {
     public void setItemId(Long itemId) {
         this.itemId = itemId;
     }
+
+
+    @Basic
+    @Column(name = "item_type")
+    public String getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
     @Basic
     @Column(name = "number", nullable = false)
     public Long getNumber() {
@@ -75,6 +85,16 @@ public class UserItems {
 
     public void setLimit(Integer limit) {
         this.limit = limit;
+    }
+
+    @Basic
+    @Column(name = "level", nullable = true)
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 
     @Basic
@@ -96,6 +116,8 @@ public class UserItems {
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }
+    
+    
 
     @Override
     public boolean equals(Object o) {
