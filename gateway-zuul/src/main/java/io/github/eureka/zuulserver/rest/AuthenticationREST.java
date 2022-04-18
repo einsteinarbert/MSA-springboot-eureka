@@ -110,6 +110,7 @@ public class AuthenticationREST {
                     newUsr.setUsername(ar.getUsername());
 
                     return userApiService.createNewUser(newUsr).filter(StringUtils::hasLength)
+                            .defaultIfEmpty("")
                             .map(s -> {
                                 if (StringUtils.hasLength(s)) {
                                     var base = new BaseMsgDTO<String>();
@@ -128,7 +129,7 @@ public class AuthenticationREST {
                                     String refreshTokenNew = jwtUtil.generateRefreshToken(created);
                                     created.setRefreshToken(refreshTokenNew);
                                     usersRepository.save(created);
-                                    return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(created), refreshTokenNew));
+                                    return new BaseMsgDTO<>(new AuthResponse(jwtUtil.generateToken(created), refreshTokenNew));
                                 }
                             });
                 } catch (Exception e) {
