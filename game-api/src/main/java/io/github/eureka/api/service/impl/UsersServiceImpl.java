@@ -1,5 +1,6 @@
 package io.github.eureka.api.service.impl;
 
+import com.github.javafaker.Faker;
 import io.github.eureka.api.common.Constant;
 import io.github.eureka.api.common.MsgUtil;
 import io.github.eureka.api.config.ActionUserHolder;
@@ -57,25 +58,30 @@ public class UsersServiceImpl extends BaseService implements UsersService {
             "where u.id = :userId";
 
     @Override
-    public Users createUser(Users users) {
+    public Users createUser(CreateUserDTO users) {
+        //Auto gen username
         Optional<Users> existingUserName = usersRepository.findByUsernameAndStatusIn(users.getUsername(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
         Assert.isTrue(existingUserName.isEmpty(), MsgUtil.getMessage("username.exist"));
         Optional<Users> existingName = usersRepository.findByNameAndStatusIn(users.getName(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
         Assert.isTrue(existingName.isEmpty(), MsgUtil.getMessage("name.exist"));
-        users.setAge(new Date(Calendar.getInstance().getTimeInMillis()), users.getBirthday());
-        users.setStatus(Constant.STATUS.ANONYMOUS);
-        users.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        users.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        users = usersRepository.save(users);
-        return users;
+        Users newUser = new Users();
+        newUser.setUsername(users.getUsername());
+        newUser.setDeviceId(users.getDeviceId());
+        newUser.setBirthday(users.getBirthday());
+        newUser.setName(users.getName());
+        newUser.setAge(new Date(Calendar.getInstance().getTimeInMillis()), users.getBirthday());
+        newUser.setStatus(Constant.STATUS.ANONYMOUS);
+        newUser.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        newUser.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        newUser = usersRepository.save(newUser);
+        return newUser;
     }
 
     @Override
     public Users getUserById(Long id) {
-        Users user = usersRepository.findByIdAndStatusIn(id, Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED)).orElseThrow (
+        return usersRepository.findByIdAndStatusIn(id, Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED)).orElseThrow (
                 () -> new IllegalArgumentException(MsgUtil.getMessage("user.info.null"))
         );
-        return user;
     }
 
     @Override

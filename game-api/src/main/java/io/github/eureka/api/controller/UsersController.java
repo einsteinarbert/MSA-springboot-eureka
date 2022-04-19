@@ -1,11 +1,7 @@
 package io.github.eureka.api.controller;
 
-import io.github.eureka.api.common.DataUtil;
 import io.github.eureka.api.model.Users;
-import io.github.eureka.api.model.dto.BaseMsgDTO;
-import io.github.eureka.api.model.dto.ChangePasswordDTO;
-import io.github.eureka.api.model.dto.UserDataDTO;
-import io.github.eureka.api.model.dto.UserSettingDTO;
+import io.github.eureka.api.model.dto.*;
 import io.github.eureka.api.service.UsersService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +17,8 @@ public class UsersController extends BaseController{
     private final UsersService usersService;
 
     @PostMapping("/users/create")
-    public ResponseEntity<?> createUser(@RequestBody Users users){
-        if(DataUtil.isNullOrEmpty(users.getId()) || users.getId() < 1) {
+    public ResponseEntity<?> createUser(@RequestBody CreateUserDTO users){
             usersService.createUser(users);
-        } else {
-            usersService.updateUser(users);
-        }
         return ResponseEntity.ok().build();
     }
 
