@@ -1,9 +1,6 @@
 package io.github.eureka.zuulserver.common;
 
-import org.springframework.util.StringUtils;
-
 import java.util.Date;
-import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -17,12 +14,12 @@ public class Helper {
         Date now = new Date();
         Random r = new Random();
         int code = Integer.parseInt(String.valueOf(now.getTime()).substring(3))/100 * (r.nextInt(100) + 1);
-        return encodeString(6) + "_" +  code;
+        return encodeString() + "_" +  code;
     }
 
-    private static String encodeString(int input) {
+    private static String encodeString() {
         StringBuilder output = new StringBuilder();
-        for (int i = 0; i < input; i++) {
+        for (int i = 0; i < 6; i++) {
             output.append((char)(new Random().nextInt(25) + 97));
         }
         return output.toString();
