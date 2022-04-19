@@ -69,4 +69,14 @@ public interface Constant {
         Integer REGITERED = 1;
         Integer DEACTIVE = 2;
     }
+    
+    interface ITEMTYPE {
+        String GACHA = "GACHA";
+        String CHARACTER = "CHARACTER";
+        String HEART = "HEART";
+        String HEART30 = "HEART30";
+        String HEART60 = "HEART60";
+        String MEDAL = "MEDAL";
+        String PREMIUM_MEDAL = "PREMIUM_MEDAL";
+    }
 }

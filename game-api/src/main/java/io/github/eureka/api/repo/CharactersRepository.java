@@ -11,6 +11,6 @@ import java.util.List;
 
 @Repository
 public interface CharactersRepository extends JpaRepository<Characters, Long> {
-//    @Query(value = "select c from UserWallets c where c.id in ?1")
-//    List<CharactersUserDTO> findAllCharacterByUser(String userId);
+	Characters getCharactersByItemId (Long itemId);
+	
 }
