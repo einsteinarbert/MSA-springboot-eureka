@@ -33,7 +33,7 @@ server:
 
 jwt:
     secret: ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave64ByteLength
-    refreshSecret: TuAyTrongToiBungNangHa
+    refreshSecret: Con43249dfsdfsdfdkssasssdsa34324328safsaio#$*
     ext: 172800
     refreshExt: 345600
     iteration: 33

@@ -1,10 +1,11 @@
 package io.github.eureka.api.service;
 
 import io.github.eureka.api.model.Users;
+import io.github.eureka.api.model.dto.ActionUserDTO;
 import io.github.eureka.api.model.dto.ChangePasswordDTO;
 import io.github.eureka.api.model.dto.CreateUserDTO;
 import io.github.eureka.api.model.dto.UserDataDTO;
-import io.github.eureka.api.model.dto.UserDataEntity;
+import io.github.eureka.api.model.dto.UserSettingDTO;
 
 import java.util.List;
 
@@ -17,4 +18,5 @@ public interface UsersService {
 	List<Users> getAllUser();
 
 	UserDataDTO getDataUserInMyPage(Long userId);
+    void saveSettingData(UserSettingDTO data);
 }

@@ -16,11 +16,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,6 +77,11 @@ public class AuthenticationREST {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
+    @PostMapping("/auth/form/login-anonymous")
+    public Object loginAnonymousForm(@ModelAttribute AuthRequest ar) {
+        return loginAnonymous(ar);
+    }
+
     /**
      * Auto create new user for trial play game
      *
@@ -105,11 +113,12 @@ public class AuthenticationREST {
             } else {
                 try {
                     Users newUsr = new Users();
-                    newUsr.setBirthday(ar.getBirthday());
+                    newUsr.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(ar.getBirthday()));
                     newUsr.setName(ar.getName());
                     newUsr.setUsername(ar.getUsername());
 
                     return userApiService.createNewUser(newUsr).filter(StringUtils::hasLength)
+                            .defaultIfEmpty("")
                             .map(s -> {
                                 if (StringUtils.hasLength(s)) {
                                     var base = new BaseMsgDTO<String>();
@@ -128,7 +137,7 @@ public class AuthenticationREST {
                                     String refreshTokenNew = jwtUtil.generateRefreshToken(created);
                                     created.setRefreshToken(refreshTokenNew);
                                     usersRepository.save(created);
-                                    return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(created), refreshTokenNew));
+                                    return new BaseMsgDTO<>(new AuthResponse(jwtUtil.generateToken(created), refreshTokenNew));
                                 }
                             });
                 } catch (Exception e) {

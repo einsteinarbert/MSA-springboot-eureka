@@ -1,4 +1,4 @@
-package io.github.eureka.api.model.dto;
+package io.github.eureka.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.github.eureka.api.model.Background;

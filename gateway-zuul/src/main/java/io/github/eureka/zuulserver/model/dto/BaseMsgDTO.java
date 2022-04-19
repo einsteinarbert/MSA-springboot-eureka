@@ -33,8 +33,6 @@ public class BaseMsgDTO<T> implements Serializable {
     private T data;
 
     public BaseMsgDTO(T data) {
-        this.code = 200;
-        this.message = "OK";
         this.data = data;
     }
     public static <T> BaseMsgDTO<T> success(T data) {

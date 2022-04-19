@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -20,7 +21,7 @@ public class UserService {
         return Mono.justOrEmpty(usersRepository.findByUsernameAndStatus(username, 1));
     }
     public Optional<Users> findByRefreshToken(String token, String... args) {
-        Integer status = (args.length == 1) ? Integer.parseInt(args[0]) : 1;
-        return usersRepository.findByRefreshTokenAndStatus(token, status);
+        List<Integer> status = (args.length == 1) ? List.of(Integer.parseInt(args[0])) : List.of(0, 1);
+        return usersRepository.findByRefreshTokenAndStatusIn(token, status);
     }
 }

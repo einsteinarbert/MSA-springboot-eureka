@@ -1,5 +1,7 @@
 package io.github.eureka.api.service;
 
+import io.github.eureka.api.model.Users;
+import io.github.eureka.api.model.dto.ActionUserDTO;
 import io.github.eureka.api.model.dto.PurchaseDTO;
 import org.json.JSONException;
 
@@ -14,4 +16,5 @@ import java.io.IOException;
  */
 public interface CommonService {
     Object verifyInAppPurchase(PurchaseDTO transInfo) throws IllegalAccessException, IOException, JSONException;
+    Users validateUser(ActionUserDTO userDTO);
 }
