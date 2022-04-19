@@ -15,5 +15,5 @@ public interface GachasService {
 
 	GachaResultDTO spinGacha(SpinGachaDTO spinGachaDTO);
 
-	Boolean saveBonusGacha(UserItemsDTO userItemsDTO);
+	Boolean saveBonusGacha(UserItemsDTO userItemsDTO) throws IllegalAccessException;
 }
