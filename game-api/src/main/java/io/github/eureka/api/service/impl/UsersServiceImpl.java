@@ -59,13 +59,16 @@ public class UsersServiceImpl extends BaseService implements UsersService {
 
     @Override
     public Users createUser(CreateUserDTO users) {
+        Optional<Users> deviceIdExisting = usersRepository.findByDeviceIdAndStatusIn(users.getDeviceId(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
+        Assert.isTrue(deviceIdExisting.isEmpty(), MsgUtil.getMessage("device.exist"));
+        Optional<Users> existingName = usersRepository.findByNameAndStatusIn(users.getName(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
+        Assert.isTrue(existingName.isEmpty(), MsgUtil.getMessage("name.exist"));
         //Auto gen username
         Faker faker = new Faker();
         String username = faker.superhero().prefix()+faker.name().firstName()+faker.address().buildingNumber();
-        Optional<Users> existingUserName = usersRepository.findByUsernameAndStatusIn(username, Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
-        Assert.isTrue(existingUserName.isEmpty(), MsgUtil.getMessage("username.exist"));
-        Optional<Users> existingName = usersRepository.findByNameAndStatusIn(users.getName(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
-        Assert.isTrue(existingName.isEmpty(), MsgUtil.getMessage("name.exist"));
+        while(!usersRepository.findByUsernameAndStatusIn(username, Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED)).isEmpty()){
+            username = faker.superhero().prefix()+faker.name().firstName()+faker.address().buildingNumber();
+        }
         Users newUser = new Users();
         newUser.setUsername(username);
         newUser.setDeviceId(users.getDeviceId());
