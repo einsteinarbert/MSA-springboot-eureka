@@ -64,12 +64,6 @@ public class UsersServiceImpl extends BaseService implements UsersService {
 //        Assert.isTrue(deviceIdExisting.isEmpty(), MsgUtil.getMessage("device.exist"));
         Optional<Users> existingName = usersRepository.findByNameAndStatusIn(users.getName(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
         Assert.isTrue(existingName.isEmpty(), MsgUtil.getMessage("name.exist"));
-        //Auto gen username
-        Faker faker = new Faker();
-        String username = faker.superhero().prefix()+faker.name().firstName()+faker.address().buildingNumber();
-        while(!usersRepository.findByUsernameAndStatusIn(username, Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED)).isEmpty()){
-            username = faker.superhero().prefix()+faker.name().firstName()+faker.address().buildingNumber();
-        }
         Users newUser = new Users();
         newUser.setUsername(users.getUsername());
         newUser.setDeviceId(users.getDeviceId());
