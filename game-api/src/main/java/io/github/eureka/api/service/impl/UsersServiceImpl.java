@@ -59,8 +59,9 @@ public class UsersServiceImpl extends BaseService implements UsersService {
 
     @Override
     public Users createUser(CreateUserDTO users) {
-        Optional<Users> deviceIdExisting = usersRepository.findByDeviceIdAndStatusIn(users.getDeviceId(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
-        Assert.isTrue(deviceIdExisting.isEmpty(), MsgUtil.getMessage("device.exist"));
+    //Comment test
+//        Optional<Users> deviceIdExisting = usersRepository.findByDeviceIdAndStatusIn(users.getDeviceId(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
+//        Assert.isTrue(deviceIdExisting.isEmpty(), MsgUtil.getMessage("device.exist"));
         Optional<Users> existingName = usersRepository.findByNameAndStatusIn(users.getName(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
         Assert.isTrue(existingName.isEmpty(), MsgUtil.getMessage("name.exist"));
         //Auto gen username
