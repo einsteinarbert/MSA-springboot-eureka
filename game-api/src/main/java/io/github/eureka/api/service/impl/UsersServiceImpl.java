@@ -60,14 +60,12 @@ public class UsersServiceImpl extends BaseService implements UsersService {
     @Override
     public Users createUser(CreateUserDTO users) {
         //Auto gen username
-        Faker faker = new Faker();
-        String username = faker.superhero().prefix()+faker.name().firstName()+faker.address().buildingNumber();
-        Optional<Users> existingUserName = usersRepository.findByUsernameAndStatusIn(username, Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
+        Optional<Users> existingUserName = usersRepository.findByUsernameAndStatusIn(users.getUsername(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
         Assert.isTrue(existingUserName.isEmpty(), MsgUtil.getMessage("username.exist"));
         Optional<Users> existingName = usersRepository.findByNameAndStatusIn(users.getName(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
         Assert.isTrue(existingName.isEmpty(), MsgUtil.getMessage("name.exist"));
         Users newUser = new Users();
-        newUser.setUsername(username);
+        newUser.setUsername(users.getUsername());
         newUser.setDeviceId(users.getDeviceId());
         newUser.setBirthday(users.getBirthday());
         newUser.setName(users.getName());
@@ -81,10 +79,9 @@ public class UsersServiceImpl extends BaseService implements UsersService {
 
     @Override
     public Users getUserById(Long id) {
-        Users user = usersRepository.findByIdAndStatusIn(id, Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED)).orElseThrow (
+        return usersRepository.findByIdAndStatusIn(id, Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED)).orElseThrow (
                 () -> new IllegalArgumentException(MsgUtil.getMessage("user.info.null"))
         );
-        return user;
     }
 
     @Override

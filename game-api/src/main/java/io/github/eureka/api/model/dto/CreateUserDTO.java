@@ -15,4 +15,5 @@ public class CreateUserDTO {
 	String deviceId;
 	String name;
 	Date birthday;
+	String username;
 }

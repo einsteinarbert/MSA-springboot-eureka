@@ -1,8 +1,15 @@
 package io.github.eureka.zuulserver.model;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
-import java.util.Objects;
+import java.time.LocalDate;
+import java.time.Period;
 
 /**
  * Project: MSA-springboot-eureka.<br/>
@@ -21,14 +28,45 @@ public class Users {
     private Integer age;
     private String encryptedPassword;
     private String resetPasswordToken;
-    private String refreshToken;
     private Date resetPasswordSentAt;
     private int status;
     private Date createdAt;
     private Date updatedAt;
+    private String deviceId;
+    private String refreshToken;
+    private Long characterId;
+    private Long backgroundId;
+
+    @Column(name = "refresh_token")
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    @Column(name = "character_id")
+    public Long getCharacterId() {
+        return characterId;
+    }
+
+    public void setCharacterId(Long characterId) {
+        this.characterId = characterId;
+    }
+
+    @Column(name = "background_id")
+    public Long getBackgroundId() {
+        return backgroundId;
+    }
+
+    public void setBackgroundId(Long backgroundId) {
+        this.backgroundId = backgroundId;
+    }
 
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
@@ -76,6 +114,7 @@ public class Users {
     public void setAge(Integer age) {
         this.age = age;
     }
+
     @Basic
     @Column(name = "encrypted_password", nullable = true, length = 255)
     public String getEncryptedPassword() {
@@ -116,6 +155,17 @@ public class Users {
         this.status = status;
     }
 
+
+    @Basic
+    @Column(name = "device_id", nullable = false)
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
     @Basic
     @Column(name = "created_at", nullable = true)
     public Date getCreatedAt() {
@@ -134,27 +184,5 @@ public class Users {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Users users = (Users) o;
-        return id == users.id && status == users.status && Objects.equals(username, users.username) && Objects.equals(name, users.name) && Objects.equals(birthday, users.birthday) && Objects.equals(age, users.age) && Objects.equals(encryptedPassword, users.encryptedPassword) && Objects.equals(resetPasswordToken, users.resetPasswordToken) && Objects.equals(resetPasswordSentAt, users.resetPasswordSentAt) && Objects.equals(createdAt, users.createdAt) && Objects.equals(updatedAt, users.updatedAt);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, username, name, birthday, age, encryptedPassword, resetPasswordToken, resetPasswordSentAt, status, createdAt, updatedAt);
-    }
-
-    @Column(name = "refresh_token")
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
     }
 }
