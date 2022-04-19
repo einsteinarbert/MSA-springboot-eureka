@@ -1,6 +1,8 @@
 package io.github.eureka.zuulserver.rest;
 
 import com.google.gson.Gson;
+import io.github.eureka.zuulserver.common.Constant;
+import io.github.eureka.zuulserver.common.Helper;
 import io.github.eureka.zuulserver.model.Users;
 import io.github.eureka.zuulserver.model.dto.BaseMsgDTO;
 import io.github.eureka.zuulserver.model.security.AuthRequest;
@@ -22,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
@@ -90,7 +91,6 @@ public class AuthenticationREST {
      */
     @PostMapping("/auth/login-anonymous")
     public Object loginAnonymous(@RequestBody AuthRequest ar) {
-
         // has token
         if (StringUtils.hasLength(ar.getRefreshToken())) {
             boolean valid = jwtUtil.validateRefreshToken(ar.getRefreshToken());
@@ -99,59 +99,65 @@ public class AuthenticationREST {
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if (StringUtils.hasLength(ar.getUsername())) {
-            Optional<Users> usr = usersRepository.findByUsernameAndStatusIn(ar.getUsername(), List.of(0, 1));
-            if (usr.isPresent()) {
-                Users users = usr.get();
-                // user registered will not able to login anonymous
-                if (users.getStatus() == 1) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-                // generate new token
-                String refreshTokenNew = jwtUtil.generateRefreshToken(users);
-                users.setRefreshToken(refreshTokenNew);
-                usersRepository.save(users);
-                return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(users), refreshTokenNew));
-            } else {
-                try {
-                    Users newUsr = new Users();
-                    newUsr.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(ar.getBirthday()));
-                    newUsr.setName(ar.getName());
-                    newUsr.setUsername(ar.getUsername());
+        if(!StringUtils.hasLength(ar.getUsername())) {
+            ar.setUsername(Helper.generateUserName());
+        }
+        Optional<Users> usr = usersRepository.findByUsernameAndStatusIn(ar.getUsername(), List.of(0, 1));
+        if (usr.isPresent()) {
+            Users users = usr.get();
+            // user registered will not able to login anonymous
+            if (users.getStatus() == 1) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            // generate new token
+            String refreshTokenNew = jwtUtil.generateRefreshToken(users);
+            users.setRefreshToken(refreshTokenNew);
+            usersRepository.save(users);
+            return BaseMsgDTO.success(new AuthResponse(jwtUtil.generateToken(users), refreshTokenNew));
+        } else {
+            try {
+                Users newUsr = new Users();
+                newUsr.setBirthday(new SimpleDateFormat(Constant.DATE_FORMAT).parse(ar.getBirthday()));
+                newUsr.setName(ar.getName());
+                newUsr.setUsername(ar.getUsername());
+                newUsr.setDeviceId(ar.getDeviceId());
 
-                    return userApiService.createNewUser(newUsr).filter(StringUtils::hasLength)
-                            .defaultIfEmpty("")
-                            .map(s -> {
-                                if (StringUtils.hasLength(s)) {
-                                    var base = new BaseMsgDTO<String>();
+                return userApiService.createNewUser(newUsr).filter(StringUtils::hasLength)
+                        .defaultIfEmpty("")
+                        .map(s -> {
+                            if (StringUtils.hasLength(s)) {
+                                var base = new BaseMsgDTO<String>();
+                                try {
                                     return new Gson().fromJson(s, base.getClass());
-                                } else {
-                                    // generate new token
-                                    var created = usersRepository.findByUsernameAndStatus(newUsr.getUsername(), 0);
-                                    if (created.getId() == null) {
-                                        return ResponseEntity.badRequest().body(
-                                                BaseMsgDTO.builder()
-                                                        .code(400)
-                                                        .message("Cannot create user")
-                                                        .status(BaseMsgDTO.NG)
-                                                        .build());
-                                    }
-                                    String refreshTokenNew = jwtUtil.generateRefreshToken(created);
-                                    created.setRefreshToken(refreshTokenNew);
-                                    usersRepository.save(created);
-                                    return new BaseMsgDTO<>(new AuthResponse(jwtUtil.generateToken(created), refreshTokenNew));
+                                } catch (Exception e) {
+                                    return BaseMsgDTO.builder()
+                                            .code(HttpStatus.BAD_REQUEST.value())
+                                            .message(e.getMessage())
+                                            .status(BaseMsgDTO.NG)
+                                            .build();
                                 }
-                            });
-                } catch (Exception e) {
-                    log.error("Cannot call api create user", e);
-                    return ResponseEntity.badRequest().body(
-                            BaseMsgDTO.builder()
-                                    .code(400)
-                                    .message(e.getMessage())
-                                    .status(BaseMsgDTO.NG)
-                                    .build()
-                    );
-                }
+                            } else {
+                                // generate new token
+                                var created = usersRepository.findByUsernameAndStatus(newUsr.getUsername(), 0);
+                                if (created != null && created.getId() == null) {
+                                    return BaseMsgDTO.builder()
+                                            .code(400)
+                                            .message("Cannot create user")
+                                            .status(BaseMsgDTO.NG)
+                                            .build();
+                                }
+                                String refreshTokenNew = jwtUtil.generateRefreshToken(created);
+                                created.setRefreshToken(refreshTokenNew);
+                                usersRepository.save(created);
+                                return new BaseMsgDTO<>(new AuthResponse(jwtUtil.generateToken(created), refreshTokenNew));
+                            }
+                        });
+            } catch (Exception e) {
+                log.error("Cannot call api create user", e);
+                return BaseMsgDTO.builder()
+                        .code(HttpStatus.BAD_REQUEST.value())
+                        .message(e.getMessage())
+                        .status(BaseMsgDTO.NG)
+                        .build();
             }
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }

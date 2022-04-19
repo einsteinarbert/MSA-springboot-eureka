@@ -70,7 +70,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
             username = faker.superhero().prefix()+faker.name().firstName()+faker.address().buildingNumber();
         }
         Users newUser = new Users();
-        newUser.setUsername(username);
+        newUser.setUsername(users.getUsername());
         newUser.setDeviceId(users.getDeviceId());
         newUser.setBirthday(users.getBirthday());
         newUser.setName(users.getName());
@@ -84,10 +84,9 @@ public class UsersServiceImpl extends BaseService implements UsersService {
 
     @Override
     public Users getUserById(Long id) {
-        Users user = usersRepository.findByIdAndStatusIn(id, Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED)).orElseThrow (
+        return usersRepository.findByIdAndStatusIn(id, Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED)).orElseThrow (
                 () -> new IllegalArgumentException(MsgUtil.getMessage("user.info.null"))
         );
-        return user;
     }
 
     @Override
