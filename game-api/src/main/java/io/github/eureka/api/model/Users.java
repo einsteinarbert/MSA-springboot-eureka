@@ -32,6 +32,7 @@ public class Users {
     private int status;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private String deviceId;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -131,6 +132,17 @@ public class Users {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+
+    @Basic
+    @Column(name = "device_id", nullable = false)
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
     @Basic
