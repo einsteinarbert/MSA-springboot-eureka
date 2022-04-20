@@ -2,6 +2,7 @@ package io.github.eureka.api.service.impl;
 
 import com.github.javafaker.Faker;
 import io.github.eureka.api.common.Constant;
+import io.github.eureka.api.common.DataUtil;
 import io.github.eureka.api.common.MsgUtil;
 import io.github.eureka.api.config.ActionUserHolder;
 import io.github.eureka.api.model.Users;
@@ -180,8 +181,14 @@ public class UsersServiceImpl extends BaseService implements UsersService {
                 .setParameter("deviceId", deviceId)
                 .getSingleResult();
         UserDataDTO userDataDTO = super.map(userDataEntity, UserDataDTO.class);
-        BackgroundDTO background = super.map(backgroundRepository.getById(userDataEntity.getBackgroundId()), BackgroundDTO.class);
-        CharacterDTO characters = super.map(charactersRepository.getById(userDataEntity.getCharacterId()), CharacterDTO.class);
+        BackgroundDTO background = new BackgroundDTO();
+        CharacterDTO characters = new CharacterDTO();
+        if(!DataUtil.isNullOrEmpty(userDataEntity.getBackgroundId())) {
+            background = super.map(backgroundRepository.getById(userDataEntity.getBackgroundId()), BackgroundDTO.class);
+        }
+        if(!DataUtil.isNullOrEmpty(userDataDTO.getCharacterId())) {
+            characters = super.map(charactersRepository.getById(userDataEntity.getCharacterId()), CharacterDTO.class);
+        }
         userDataDTO.setBackground(background);
         userDataDTO.setCharacters(characters);
         return userDataDTO;
