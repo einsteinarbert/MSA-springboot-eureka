@@ -35,7 +35,7 @@ public class GachaController {
 	}
 
 	@PostMapping("/save-bonus-gacha")
-	public BaseMsgDTO<?> saveBonusGacha(@RequestBody UserItemsDTO userItemsDTO) {
+	public BaseMsgDTO<?> saveBonusGacha(@RequestBody UserItemsDTO userItemsDTO) throws IllegalAccessException {
 		Boolean isNextLevel = gachasService.saveBonusGacha(userItemsDTO);
 		UserItems items = userItemsRepository.findUserItemsByUserIdAndItemId(userItemsDTO.getUserId(), userItemsDTO.getItemId());
 		if(isNextLevel){
