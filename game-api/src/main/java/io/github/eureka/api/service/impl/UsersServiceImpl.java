@@ -39,8 +39,10 @@ public class UsersServiceImpl extends BaseService implements UsersService {
     private final PBKDF2Encoder passwordEncoder;
     private CharactersRepository charactersRepository;
     private BackgroundRepository backgroundRepository;
-    private static final String userDataSQL = "select u.username, u.name, u.age, u.character_id, u.background_id,\n" +
-            "uw.jewel_number, uw.jewel_bonus_number, uw.coin_number, stamina_number, heart, heart_30, heart_60\n" +
+    private static final String userDataSQL = "select * from (select u.username, u.name, u.age, u.character_id, u.background_id,\n" +
+            "ifnull(uw.jewel_number, 0) jewel_number, ifnull(uw.jewel_bonus_number, 0) jewel_bonus_number, ifnull(uw.coin_number, 0) coin_number,\n" +
+            "ifnull(stamina_number, 0) stamina_number,\n" +
+            "ifnull(heart, 0) heart, ifnull(heart_30, 0) heart_30, ifnull(heart_60, 0) heart_60\n" +
             "from users u\n" +
             "left join(\n" +
             "select uw.user_id, sum(IF(w.wallet_type = 'JEWEL', uw.number, 0)) jewel_number,\n" +
@@ -55,10 +57,12 @@ public class UsersServiceImpl extends BaseService implements UsersService {
             "                 sum( IF(ui.item_type = 'HEART60', ui.number, 0) ) heart_60\n" +
             "                 from user_items ui where ui.item_type IN ('STAMINA', 'HEART', 'HEART30', 'HEART60')\n" +
             "    group by ui.user_id) ui ON u.id = ui.user_id\n" +
-            "where u.id = :userId";
+            "where u.id = :userId ) T limit 1";
 
-    private static final String userDataSQLDevice = "select u.username, u.name, u.age, u.character_id, u.background_id,\n" +
-            "uw.jewel_number, uw.jewel_bonus_number, uw.coin_number, stamina_number, heart, heart_30, heart_60\n" +
+    private static final String userDataSQLDevice = "select * from (select u.username, u.name, u.age, u.character_id, u.background_id,\n" +
+            "ifnull(uw.jewel_number, 0) jewel_number, ifnull(uw.jewel_bonus_number, 0) jewel_bonus_number, ifnull(uw.coin_number, 0) coin_number,\n" +
+            "ifnull(stamina_number, 0) stamina_number,\n" +
+            "ifnull(heart, 0) heart, ifnull(heart_30, 0) heart_30, ifnull(heart_60, 0) heart_60\n" +
             "from users u\n" +
             "left join(\n" +
             "select uw.user_id, sum(IF(w.wallet_type = 'JEWEL', uw.number, 0)) jewel_number,\n" +
@@ -73,7 +77,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
             "                 sum( IF(ui.item_type = 'HEART60', ui.number, 0) ) heart_60\n" +
             "                 from user_items ui where ui.item_type IN ('STAMINA', 'HEART', 'HEART30', 'HEART60')\n" +
             "    group by ui.user_id) ui ON u.id = ui.user_id\n" +
-            "where u.device_id = :deviceId";
+            "where u.device_id = :deviceId ) T limit 1";
 
     @Override
     public Users createUser(CreateUserDTO users) {
