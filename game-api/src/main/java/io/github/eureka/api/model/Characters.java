@@ -42,6 +42,7 @@ public class Characters {
     private Date endDate;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private Integer isDefault;
     
     public Characters(Characters characters){
         characters = characters;}
@@ -114,6 +115,17 @@ public class Characters {
 
     public void setSituation(String situation) {
         this.situation = situation;
+    }
+
+
+    @Basic
+    @Column(name = "is_default")
+    public Integer getIsDefault() {
+        return isDefault;
+    }
+
+    public void setIsDefault(Integer isDefault) {
+        this.isDefault = isDefault;
     }
 
     @Basic

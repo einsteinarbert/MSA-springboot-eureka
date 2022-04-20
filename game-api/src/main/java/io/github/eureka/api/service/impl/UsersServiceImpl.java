@@ -5,11 +5,14 @@ import io.github.eureka.api.common.Constant;
 import io.github.eureka.api.common.DataUtil;
 import io.github.eureka.api.common.MsgUtil;
 import io.github.eureka.api.config.ActionUserHolder;
+import io.github.eureka.api.model.Characters;
+import io.github.eureka.api.model.UserItems;
 import io.github.eureka.api.model.Users;
 import io.github.eureka.api.model.dto.*;
 import io.github.eureka.api.model.entity.UserDataEntity;
 import io.github.eureka.api.repo.BackgroundRepository;
 import io.github.eureka.api.repo.CharactersRepository;
+import io.github.eureka.api.repo.UserItemsRepository;
 import io.github.eureka.api.repo.UsersRepository;
 import io.github.eureka.api.securities.PBKDF2Encoder;
 import io.github.eureka.api.service.BaseService;
@@ -22,6 +25,7 @@ import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -40,6 +44,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
     private final PBKDF2Encoder passwordEncoder;
     private CharactersRepository charactersRepository;
     private BackgroundRepository backgroundRepository;
+    private UserItemsRepository userItemsRepository;
     private static final String userDataSQL = "select * from (select u.username, u.name, u.age, u.character_id, u.background_id, u.stage,\n" +
             "ifnull(uw.jewel_number, 0) jewel_number, ifnull(uw.jewel_bonus_number, 0) jewel_bonus_number, ifnull(uw.coin_number, 0) coin_number,\n" +
             "ifnull(stamina_number, 0) stamina_number,\n" +
@@ -81,6 +86,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
             "where u.device_id = :deviceId ) T limit 1";
 
     @Override
+    @Transactional
     public Users createUser(CreateUserDTO users) {
     //Comment test
         Optional<Users> deviceIdExisting = usersRepository.findByDeviceIdAndStatusIn(users.getDeviceId(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
@@ -97,6 +103,30 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         newUser.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         newUser.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         newUser = usersRepository.save(newUser);
+        //Character default neu la nu
+        if(users.getGender() == 2){
+            Characters defaultChar = charactersRepository.getCharactersByGenderTypeAndIsDefault(2, 1);
+            UserItems newItem = new UserItems();
+            newItem.setUserId(newUser.getId());
+            newItem.setItemId(defaultChar.getItemId());
+            newItem.setItemType(Constant.ITEMTYPE.CHARACTER);
+            newItem.setLevel(1);
+            newItem.setNumber(1L);
+            newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+            userItemsRepository.save(newItem);
+        }else{
+        Characters defaultChar = charactersRepository.getCharactersByGenderTypeAndIsDefault(1, 1);
+            UserItems newItem = new UserItems();
+            newItem.setUserId(newUser.getId());
+            newItem.setItemId(defaultChar.getItemId());
+            newItem.setItemType(Constant.ITEMTYPE.CHARACTER);
+            newItem.setLevel(1);
+            newItem.setNumber(1L);
+            newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+            userItemsRepository.save(newItem);
+            }
         return newUser;
     }
 

@@ -16,4 +16,5 @@ public class CreateUserDTO {
 	String name;
 	Date birthday;
 	String username;
+	Byte gender;
 }
