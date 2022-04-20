@@ -47,7 +47,7 @@ public class AuthenticationREST {
                             String refreshToken = jwtUtil.generateRefreshToken(userDetails);
                             userDetails.setRefreshToken(refreshToken);
                             usersRepository.save(userDetails);
-                            return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails), refreshToken));
+                            return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails), refreshToken, userDetails.getId(), userDetails.getUsername()));
                         }
                 )
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()));
@@ -64,7 +64,7 @@ public class AuthenticationREST {
                 String refreshTokenNew = jwtUtil.generateRefreshToken(userDetails);
                 userDetails.setRefreshToken(refreshTokenNew);
                 usersRepository.save(userDetails);
-                return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails), refreshTokenNew));
+                return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails), refreshTokenNew, userDetails.getId(), userDetails.getUsername()));
             }
         } catch (Exception e) {
             log.error("Refresh token error", e);
@@ -110,8 +110,8 @@ public class AuthenticationREST {
             // generate new token
             String refreshTokenNew = jwtUtil.generateRefreshToken(users);
             users.setRefreshToken(refreshTokenNew);
-            usersRepository.save(users);
-            return BaseMsgDTO.success(new AuthResponse(jwtUtil.generateToken(users), refreshTokenNew));
+            users = usersRepository.save(users);
+            return BaseMsgDTO.success(new AuthResponse(jwtUtil.generateToken(users), refreshTokenNew, users.getId(), users.getUsername()));
         } else {
             try {
                 Users newUsr = new Users();
@@ -137,7 +137,7 @@ public class AuthenticationREST {
                             } else {
                                 // generate new token
                                 var created = usersRepository.findByUsernameAndStatus(newUsr.getUsername(), 0);
-                                if (created != null && created.getId() == null) {
+                                if (created == null || created.getId() == null) {
                                     return BaseMsgDTO.builder()
                                             .code(400)
                                             .message("Cannot create user")
@@ -146,8 +146,8 @@ public class AuthenticationREST {
                                 }
                                 String refreshTokenNew = jwtUtil.generateRefreshToken(created);
                                 created.setRefreshToken(refreshTokenNew);
-                                usersRepository.save(created);
-                                return new BaseMsgDTO<>(new AuthResponse(jwtUtil.generateToken(created), refreshTokenNew));
+                                created = usersRepository.save(created);
+                                return new BaseMsgDTO<>(new AuthResponse(jwtUtil.generateToken(created), refreshTokenNew, created.getId(), created.getUsername()));
                             }
                         });
             } catch (Exception e) {
