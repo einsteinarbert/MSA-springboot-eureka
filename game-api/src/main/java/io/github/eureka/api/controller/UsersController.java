@@ -53,6 +53,13 @@ public class UsersController extends BaseController{
         return BaseMsgDTO.success(userDataEntity);
     }
 
+
+    @GetMapping("/user-data-device/{deviceId}")
+    public BaseMsgDTO<?> getUserDataInMyPage(@PathVariable String deviceId){
+        UserDataDTO userDataEntity = usersService.getDataUserInMyPageWithDevice(deviceId);
+        return BaseMsgDTO.success(userDataEntity);
+    }
+
     @PostMapping("/user-setting")
     public BaseMsgDTO<?> setting(HttpServletRequest request, @RequestBody UserSettingDTO data){
         setUserInfo(request);

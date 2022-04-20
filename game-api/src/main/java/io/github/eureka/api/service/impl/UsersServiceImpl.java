@@ -57,6 +57,24 @@ public class UsersServiceImpl extends BaseService implements UsersService {
             "    group by ui.user_id) ui ON u.id = ui.user_id\n" +
             "where u.id = :userId";
 
+    private static final String userDataSQLDevice = "select u.username, u.name, u.age, u.character_id, u.background_id,\n" +
+            "uw.jewel_number, uw.jewel_bonus_number, uw.coin_number, stamina_number, heart, heart_30, heart_60\n" +
+            "from users u\n" +
+            "left join(\n" +
+            "select uw.user_id, sum(IF(w.wallet_type = 'JEWEL', uw.number, 0)) jewel_number,\n" +
+            "    sum(IF(w.wallet_type = 'JEWEL_BONUS', uw.number, 0)) jewel_bonus_number,\n" +
+            "    sum(IF(w.wallet_type = 'COIN', uw.number, 0)) coin_number\n" +
+            "from user_wallets uw left join wallets w\n" +
+            "    on uw.wallet_id = w.id and w.wallet_type IN ('JEWEL', 'COIN', 'JEWEL_BONUS')\n" +
+            "group by uw.user_id) uw ON u.id = uw.user_id\n" +
+            "left join(select ui.user_id, sum( IF(ui.item_type = 'STAMINA', ui.number, 0) ) stamina_number,\n" +
+            "                 sum( IF(ui.item_type = 'HEART', ui.number, 0) ) heart,\n" +
+            "                 sum( IF(ui.item_type = 'HEART30', ui.number, 0) ) heart_30,\n" +
+            "                 sum( IF(ui.item_type = 'HEART60', ui.number, 0) ) heart_60\n" +
+            "                 from user_items ui where ui.item_type IN ('STAMINA', 'HEART', 'HEART30', 'HEART60')\n" +
+            "    group by ui.user_id) ui ON u.id = ui.user_id\n" +
+            "where u.device_id = :deviceId";
+
     @Override
     public Users createUser(CreateUserDTO users) {
     //Comment test
@@ -150,5 +168,18 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         user.setCharacterId(data.getCharacterId());
         user.setBackgroundId(data.getBackgroundId());
         usersRepository.save(user);
+    }
+
+    @Override
+    public UserDataDTO getDataUserInMyPageWithDevice(String deviceId) {
+        UserDataEntity userDataEntity = (UserDataEntity) em.createNativeQuery(userDataSQLDevice , UserDataEntity.class)
+                .setParameter("deviceId", deviceId)
+                .getSingleResult();
+        UserDataDTO userDataDTO = super.map(userDataEntity, UserDataDTO.class);
+        BackgroundDTO background = super.map(backgroundRepository.getById(userDataEntity.getBackgroundId()), BackgroundDTO.class);
+        CharacterDTO characters = super.map(charactersRepository.getById(userDataEntity.getCharacterId()), CharacterDTO.class);
+        userDataDTO.setBackground(background);
+        userDataDTO.setCharacters(characters);
+        return userDataDTO;
     }
 }

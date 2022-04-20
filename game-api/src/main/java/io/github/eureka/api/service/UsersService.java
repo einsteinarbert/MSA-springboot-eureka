@@ -19,4 +19,6 @@ public interface UsersService {
 
 	UserDataDTO getDataUserInMyPage(Long userId);
     void saveSettingData(UserSettingDTO data);
+
+	UserDataDTO getDataUserInMyPageWithDevice(String deviceId);
 }
