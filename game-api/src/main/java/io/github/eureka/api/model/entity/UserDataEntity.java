@@ -26,6 +26,7 @@ public class UserDataEntity {
 	private Long heart;
 	private Long heart30;
 	private Long heart60;
+	private Long stage;
 
 
 	@Id
@@ -67,6 +68,17 @@ public class UserDataEntity {
 
 	public void setCharacterId(Long characterId) {
 		this.characterId = characterId;
+	}
+
+
+	@Basic
+	@Column(name = "stage")
+	public Long getStage() {
+		return stage;
+	}
+
+	public void setStage(Long stage) {
+		this.stage = stage;
 	}
 
 	@Basic

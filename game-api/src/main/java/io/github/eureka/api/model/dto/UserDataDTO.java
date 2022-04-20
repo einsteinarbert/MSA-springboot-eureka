@@ -24,6 +24,7 @@ public class UserDataDTO {
 	private Long heart;
 	private Long heart30;
 	private Long heart60;
+	private Long stage;
 	
 	private CharacterDTO characters;
 	private BackgroundDTO background;

@@ -40,6 +40,7 @@ public class Users {
     private String refreshToken;
     private Long characterId;
     private Long backgroundId;
+    private Long stage;
 
     @Column(name = "refresh_token")
     public String getRefreshToken() {
@@ -97,6 +98,17 @@ public class Users {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+
+    @Basic
+    @Column(name = "stage", nullable = false, length = 255)
+    public Long getStage() {
+        return stage;
+    }
+
+    public void setStage(Long stage) {
+        this.stage = stage;
     }
 
     @Basic
