@@ -1,10 +1,12 @@
 package io.github.eureka.api.controller;
 
+import io.github.eureka.api.common.MsgUtil;
 import io.github.eureka.api.model.Users;
 import io.github.eureka.api.model.dto.*;
 import io.github.eureka.api.service.UsersService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +51,7 @@ public class UsersController extends BaseController{
     
     @GetMapping("/user-data/{userId}")
     public BaseMsgDTO<?> getUserDataInMyPage(@PathVariable Long userId){
+        Assert.isTrue(userId > 0, MsgUtil.getMessage("user.id.invalid"));
         UserDataDTO userDataEntity = usersService.getDataUserInMyPage(userId);
         return BaseMsgDTO.success(userDataEntity);
     }

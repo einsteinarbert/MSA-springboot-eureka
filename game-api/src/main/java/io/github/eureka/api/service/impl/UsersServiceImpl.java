@@ -106,7 +106,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         newUser.setStage(1L);
         newUser = usersRepository.save(newUser);
         //Character default neu la nu
-        if(users.getGender() == 2){
+        if(null != users.getGender() && users.getGender() == 2){
             Characters defaultChar = charactersRepository.getCharactersByCharacterToken(Constant.CHARACTER_DEFAULT.FEMALE);
             UserItems newItem = new UserItems();
             newItem.setUserId(newUser.getId());
@@ -140,13 +140,18 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         Background defaultBackground = backgroundRepository.getBackgroundByBackgroundToken(Constant.BACKGROUND_DEFAULT);
         UserItems newItem = new UserItems();
         newItem.setUserId(newUser.getId());
-        newItem.setItemId(defaultBackground.getItemId());
+        if (defaultBackground != null) {
+            newItem.setItemId(defaultBackground.getItemId());
+            newUser.setBackgroundId(defaultBackground.getId());
+        } else {
+            newItem.setItemId(-1L);
+            newUser.setBackgroundId(-1L);
+        }
         newItem.setItemType(Constant.ITEMTYPE.BACKGROUND);
         newItem.setNumber(1L);
         newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         userItemsRepository.save(newItem);
-        newUser.setBackgroundId(defaultBackground.getId());
         usersRepository.save(newUser);
         return newUser;
     }

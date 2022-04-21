@@ -2,10 +2,11 @@ package io.github.eureka.api.config;
 
 import io.github.eureka.api.model.dto.BaseMsgDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,21 +26,20 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public static final String TRACE = "trace";
 
-    @Value("${reflectoring.trace:false}")
-    private boolean printStackTrace;
-
+    @NotNull
     @Override
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException ex,
-            HttpHeaders headers,
-            HttpStatus status,
-            WebRequest request
+            @NotNull MethodArgumentNotValidException ex,
+            @NotNull HttpHeaders headers,
+            @NotNull HttpStatus status,
+            @NotNull WebRequest request
     ) {
         //Body omitted as it's similar to the method of same name
         // in ProductController example...
         //.....
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        log.error(TRACE, ex);
+        return ResponseEntity.ok(BaseMsgDTO.builder().code(400).message(ex.getMessage()).build());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -51,6 +51,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         // in ProductController example...
         //.....
         log.error("ExceptionHandler", iex);
+        String msg = iex.getMessage();
+        if (StringUtils.hasLength(msg) && msg.contains(SPLIT_CHAR)) {
+            String[] msgLst = msg.split(SPLIT_CHAR);
+            try {
+                return ResponseEntity.ok().body(new BaseMsgDTO<>(HttpStatus.BAD_REQUEST.value(),
+                        msgLst[0], msgLst[1], ""));
+            } catch (Exception _e) {
+                return ResponseEntity.ok().body(new BaseMsgDTO<>(HttpStatus.BAD_REQUEST.value(),
+                        msgLst[0], msg, ""));
+            }
+        }
         return ResponseEntity.ok().body(new BaseMsgDTO<>(HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(), iex.getMessage(), ""));
     }
@@ -58,27 +69,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<Object> handleAllUncaughtException(
-            RuntimeException _exception,
+            RuntimeException ex,
             WebRequest _request
     ){
         //Body omitted as it's similar to the method of same name
         // in ProductController example...
         //.....
-        return ResponseEntity.badRequest().build();
+        log.error(TRACE, ex);
+        return ResponseEntity.ok(BaseMsgDTO.builder().code(400).message(ex.getMessage()).build());
     }
 
-    //....
-
+    @NotNull
     @Override
     public ResponseEntity<Object> handleExceptionInternal(
-            Exception ex,
+            @NotNull Exception ex,
             Object body,
-            HttpHeaders headers,
-            HttpStatus status,
-            WebRequest request) {
-
-//        return buildErrorResponse(ex,status,request);
-        return ResponseEntity.badRequest().build();
+            @NotNull HttpHeaders _headers,
+            @NotNull HttpStatus _status,
+            @NotNull WebRequest _request) {
+        log.error(TRACE, ex);
+        return ResponseEntity.ok(BaseMsgDTO.builder().code(400).message(ex.getMessage()).build());
     }
 
 }

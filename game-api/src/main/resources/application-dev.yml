@@ -39,3 +39,13 @@ jwt:
     ext: 28800
     iteration: 33
     keylength: 256
+
+logging:
+    level:
+        org:
+            hibernate:
+                type: trace
+log4j:
+    logger:
+        org:
+            hibernate: error
