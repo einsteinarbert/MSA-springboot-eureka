@@ -14,6 +14,7 @@ import javax.persistence.*;
  */
 @Entity
 public class UserDataEntity {
+	private Long id;
 	private String username;
 	private String name;
 	private Integer age;
@@ -27,9 +28,17 @@ public class UserDataEntity {
 	private Long heart30;
 	private Long heart60;
 	private Long stage;
-
-
+	
 	@Id
+	@Column(name = "id")
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	@Basic
 	@Column(name = "username")
 	public String getUsername() {
