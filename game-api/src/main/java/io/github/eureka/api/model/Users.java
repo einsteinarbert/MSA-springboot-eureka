@@ -102,7 +102,7 @@ public class Users {
 
 
     @Basic
-    @Column(name = "stage", nullable = false, length = 255)
+    @Column(name = "stage")
     public Long getStage() {
         return stage;
     }
