@@ -41,6 +41,25 @@ public class Users {
     private Long characterId;
     private Long backgroundId;
     private Long stage;
+    private Long rankId;
+    private Long mypageCharacterId;
+
+    @Column(name = "rank_id")
+    public Long getRankId() {
+        return rankId;
+    }
+
+    public void setRankId(Long rankId) {
+        this.rankId = rankId;
+    }
+    @Column(name = "mypage_character_id")
+    public Long getMypageCharacterId() {
+        return mypageCharacterId;
+    }
+
+    public void setMypageCharacterId(Long mypageCharacterId) {
+        this.mypageCharacterId = mypageCharacterId;
+    }
 
     @Column(name = "refresh_token")
     public String getRefreshToken() {
@@ -161,7 +180,7 @@ public class Users {
     }
 
     @Basic
-    @Column(name = "reset_password_sent_at", nullable = true)
+    @Column(name = "reset_password_sent_at")
     public Timestamp getResetPasswordSentAt() {
         return resetPasswordSentAt;
     }
@@ -192,7 +211,7 @@ public class Users {
     }
 
     @Basic
-    @Column(name = "created_at", nullable = true)
+    @Column(name = "created_at")
     public Timestamp getCreatedAt() {
         return createdAt;
     }

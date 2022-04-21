@@ -11,11 +11,10 @@ import lombok.Getter;
  */
 public interface Constant {
     String PLAY_STORE_TRANS_URL = "https://androidpublisher.googleapis.com/androidpublisher/v3/applications/{packageName}/purchases/subscriptions/{subscriptionId}/tokens/{token}";
-
     @Getter
     enum PlatformType {
         ALL(0), ANDROID(1), IOS(2);
-        int type;
+        final int type;
 
         PlatformType(int i) {
             this.type = i;
@@ -24,7 +23,7 @@ public interface Constant {
     @Getter
     enum UserHistoryType {
         BUY(0), USE(1), BONUS(2), GIFT(3), RETURN(4);
-        int type;
+        final int type;
         UserHistoryType(int i) {
             type = i;
         }
@@ -32,7 +31,7 @@ public interface Constant {
     @Getter
     enum WalletType {
         JEWEL(0), COIN(1);
-        int type;
+        final int type;
         WalletType(int i) {
             type = i;
         }
@@ -46,7 +45,7 @@ public interface Constant {
     @Getter
     enum JewelType {
         BUY(0), BONUS(1);
-        int type;
+        final int type;
         JewelType(int i) {
             type = i;
         }
@@ -58,7 +57,7 @@ public interface Constant {
         PAYMENT_RECEIVED("payment.received", 1),
         FREE_TRIAL("free.trial", 2),
         PENDING_DEFER("pending.deferred.up.downgrade", 3);
-        String text; int value;
+        final String text; final int value;
         PayStateAndroid(String text, int value) {
             this.text = text;
             this.value = value;
@@ -78,5 +77,13 @@ public interface Constant {
         String HEART60 = "HEART60";
         String MEDAL = "MEDAL";
         String PREMIUM_MEDAL = "PREMIUM_MEDAL";
+        String BACKGROUND = "BACKGROUND";
     }
+    
+    interface CHARACTER_DEFAULT{
+        String MALE = "ch00101000";
+        String FEMALE = "ch00201000";
+    }
+    
+    String BACKGROUND_DEFAULT = "bg0100";
 }

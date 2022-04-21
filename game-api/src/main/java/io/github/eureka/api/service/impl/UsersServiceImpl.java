@@ -5,6 +5,7 @@ import io.github.eureka.api.common.Constant;
 import io.github.eureka.api.common.DataUtil;
 import io.github.eureka.api.common.MsgUtil;
 import io.github.eureka.api.config.ActionUserHolder;
+import io.github.eureka.api.model.Background;
 import io.github.eureka.api.model.Characters;
 import io.github.eureka.api.model.UserItems;
 import io.github.eureka.api.model.Users;
@@ -106,7 +107,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         newUser = usersRepository.save(newUser);
         //Character default neu la nu
         if(users.getGender() == 2){
-            Characters defaultChar = charactersRepository.getCharactersByGenderTypeAndIsDefault(2, 1);
+            Characters defaultChar = charactersRepository.getCharactersByCharacterToken(Constant.CHARACTER_DEFAULT.FEMALE);
             UserItems newItem = new UserItems();
             newItem.setUserId(newUser.getId());
             newItem.setItemId(defaultChar.getItemId());
@@ -116,8 +117,11 @@ public class UsersServiceImpl extends BaseService implements UsersService {
             newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
             userItemsRepository.save(newItem);
+            newUser.setCharacterId(defaultChar.getId());
+            newUser.setMypageCharacterId(defaultChar.getId());
+            usersRepository.save(newUser);
         }else{
-        Characters defaultChar = charactersRepository.getCharactersByGenderTypeAndIsDefault(1, 1);
+            Characters defaultChar = charactersRepository.getCharactersByCharacterToken(Constant.CHARACTER_DEFAULT.MALE);
             UserItems newItem = new UserItems();
             newItem.setUserId(newUser.getId());
             newItem.setItemId(defaultChar.getItemId());
@@ -127,7 +131,23 @@ public class UsersServiceImpl extends BaseService implements UsersService {
             newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
             userItemsRepository.save(newItem);
-            }
+            newUser.setCharacterId(defaultChar.getId());
+            newUser.setMypageCharacterId(defaultChar.getId());
+            usersRepository.save(newUser);
+        }
+            
+        //Background default
+        Background defaultBackground = backgroundRepository.getBackgroundByBackgroundToken(Constant.BACKGROUND_DEFAULT);
+        UserItems newItem = new UserItems();
+        newItem.setUserId(newUser.getId());
+        newItem.setItemId(defaultBackground.getItemId());
+        newItem.setItemType(Constant.ITEMTYPE.BACKGROUND);
+        newItem.setNumber(1L);
+        newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        userItemsRepository.save(newItem);
+        newUser.setBackgroundId(defaultBackground.getId());
+        usersRepository.save(newUser);
         return newUser;
     }
 

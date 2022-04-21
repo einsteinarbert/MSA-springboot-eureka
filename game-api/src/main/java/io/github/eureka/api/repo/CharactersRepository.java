@@ -12,7 +12,6 @@ import java.util.List;
 @Repository
 public interface CharactersRepository extends JpaRepository<Characters, Long> {
 	Characters getCharactersByItemId (Long itemId);
-	
-	Characters getCharactersByGenderTypeAndIsDefault(Integer genderType, Integer isDefault);
+	Characters getCharactersByCharacterToken(String characterToken);
 	
 }

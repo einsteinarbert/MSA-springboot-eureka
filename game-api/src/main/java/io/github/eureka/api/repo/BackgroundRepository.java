@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BackgroundRepository extends JpaRepository<Background, Long> {
+
+	Background getBackgroundByBackgroundToken(String token);
 }
