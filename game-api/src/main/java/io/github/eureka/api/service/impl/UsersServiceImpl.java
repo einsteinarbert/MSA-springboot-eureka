@@ -96,6 +96,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         newUser.setStatus(Constant.STATUS.ANONYMOUS);
         newUser.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         newUser.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        newUser.setStage(1L);
         newUser = usersRepository.save(newUser);
         return newUser;
     }
