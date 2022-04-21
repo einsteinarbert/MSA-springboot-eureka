@@ -18,7 +18,7 @@ public class GachaController {
 	private final UserItemsRepository userItemsRepository;
 	
 	@GetMapping("/gacha-list")
-	public BaseMsgDTO<List<GachasDTO>> getTicket(){
+	public BaseMsgDTO<List<GachasDTO>> getGacha(){
 		List<GachasDTO> tickets = gachasService.getAllGachaForSpin();
 		return BaseMsgDTO.success(tickets);
 	}

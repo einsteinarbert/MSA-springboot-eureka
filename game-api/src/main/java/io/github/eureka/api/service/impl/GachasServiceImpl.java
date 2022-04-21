@@ -11,17 +11,8 @@ import io.github.eureka.api.model.Items;
 import io.github.eureka.api.model.SpecialItems;
 import io.github.eureka.api.model.UserItems;
 import io.github.eureka.api.model.Users;
-import io.github.eureka.api.model.dto.GachaResultDTO;
-import io.github.eureka.api.model.dto.GachasDTO;
-import io.github.eureka.api.model.dto.SpinGachaDTO;
-import io.github.eureka.api.model.dto.UserItemsDTO;
-import io.github.eureka.api.repo.CharactersRepository;
-import io.github.eureka.api.repo.GachasRepository;
-import io.github.eureka.api.repo.GrowthTypesRepository;
-import io.github.eureka.api.repo.ItemsRepository;
-import io.github.eureka.api.repo.SpecialItemsRepository;
-import io.github.eureka.api.repo.UserItemsRepository;
-import io.github.eureka.api.repo.UsersRepository;
+import io.github.eureka.api.model.dto.*;
+import io.github.eureka.api.repo.*;
 import io.github.eureka.api.service.BaseService;
 import io.github.eureka.api.service.GachasService;
 import lombok.AllArgsConstructor;
@@ -44,10 +35,22 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 	private final UsersRepository usersRepository;
 	private final GrowthTypesRepository growthTypesRepository;
 	private final SpecialItemsRepository specialItemsRepository;
+	private final GachaCharactersRepository gachaCharactersRepository;
 
 	@Override
 	public List<GachasDTO> getAllGachaForSpin() {
-		return super.mapList(gachasRepository.findAll(), GachasDTO.class);
+		List<GachasDTO> result = super.mapList(gachasRepository.findAll(), GachasDTO.class);
+		if(!DataUtil.isNullOrEmpty(result)){
+			for(GachasDTO gachasDTO : result){
+				List<GachaCharacterDTO> gachaCharacterDTOList = super.mapList(gachaCharactersRepository.findAllByGachaId(gachasDTO.getId()), GachaCharacterDTO.class);
+				for(GachaCharacterDTO gachaCharacterDTO : gachaCharacterDTOList){
+					Characters characterDetail = charactersRepository.getById(gachaCharacterDTO.getCharacterId());
+					gachaCharacterDTO.setCharactersDetail(characterDetail);
+				}
+				gachasDTO.setGachaCharacterDTOList(gachaCharacterDTOList);
+			}
+		}
+		return result;
 	}
 
 	@Override
