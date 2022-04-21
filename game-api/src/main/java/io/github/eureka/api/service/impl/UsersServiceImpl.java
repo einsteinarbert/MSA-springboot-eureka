@@ -45,7 +45,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
     private CharactersRepository charactersRepository;
     private BackgroundRepository backgroundRepository;
     private UserItemsRepository userItemsRepository;
-    private static final String userDataSQL = "select * from (select u.username, u.name, u.age, u.character_id, u.background_id, u.stage,\n" +
+    private static final String userDataSQL = "select * from (select u.id, u.username, u.name, u.age, u.character_id, u.background_id, u.stage,\n" +
             "ifnull(uw.jewel_number, 0) jewel_number, ifnull(uw.jewel_bonus_number, 0) jewel_bonus_number, ifnull(uw.coin_number, 0) coin_number,\n" +
             "ifnull(stamina_number, 0) stamina_number,\n" +
             "ifnull(heart, 0) heart, ifnull(heart_30, 0) heart_30, ifnull(heart_60, 0) heart_60\n" +
@@ -65,7 +65,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
             "    group by ui.user_id) ui ON u.id = ui.user_id\n" +
             "where u.id = :userId ) T limit 1";
 
-    private static final String userDataSQLDevice = "select * from (select u.username, u.name, u.age, u.character_id, u.background_id, u.stage,\n" +
+    private static final String userDataSQLDevice = "select * from (select u.id, u.username, u.name, u.age, u.character_id, u.background_id, u.stage,\n" +
             "ifnull(uw.jewel_number, 0) jewel_number, ifnull(uw.jewel_bonus_number, 0) jewel_bonus_number, ifnull(uw.coin_number, 0) coin_number,\n" +
             "ifnull(stamina_number, 0) stamina_number,\n" +
             "ifnull(heart, 0) heart, ifnull(heart_30, 0) heart_30, ifnull(heart_60, 0) heart_60\n" +
@@ -102,6 +102,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         newUser.setStatus(Constant.STATUS.ANONYMOUS);
         newUser.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         newUser.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        newUser.setStage(1L);
         newUser = usersRepository.save(newUser);
         //Character default neu la nu
         if(users.getGender() == 2){
