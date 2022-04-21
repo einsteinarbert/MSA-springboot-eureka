@@ -12,6 +12,7 @@ import io.github.eureka.api.model.SpecialItems;
 import io.github.eureka.api.model.UserItems;
 import io.github.eureka.api.model.Users;
 import io.github.eureka.api.model.dto.*;
+import io.github.eureka.api.model.form.SpinGachaForm;
 import io.github.eureka.api.repo.*;
 import io.github.eureka.api.service.BaseService;
 import io.github.eureka.api.service.GachasService;
@@ -63,16 +64,21 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 	}
 
 	@Override
-	public GachaResultDTO spinGacha(SpinGachaDTO spinGachaDTO) {
-		UserItems userItems = gachasRepository.getGachaByUserItem(spinGachaDTO.getUserId(), spinGachaDTO.getUserItemId());
-		Assert.notNull(userItems, MsgUtil.getMessage("item.gacha.notexist"));
-		List<GachaCharacters> lstGacha = gachasRepository.listGachaById(spinGachaDTO.getUserItemId());
+	public GachaResultDTO spinGacha(SpinGachaForm spinGachaForm) {
+		//Validate SL item hoac coin - jewel
+		if(Constant.SPIN_GACHA_PAYMENT.TICKET.equals(spinGachaForm.getPaymentMethod())){
+		
+		}else{
+			
+		}
+
+		List<GachaCharacters> lstGacha = gachasRepository.listGachaById(spinGachaForm.getUserItemId());
 		GachaResultDTO gachaResultDTO;
 		GachaCharacters resultSpin = this.randomGacha(lstGacha);
 		gachaResultDTO = super.map(resultSpin, GachaResultDTO.class);
 		Characters resultGachaCharacter = charactersRepository.findById(gachaResultDTO.getCharacterId()).get();
 		//Check level cua userItems 
-		UserItems userCharacterItem = userItemsRepository.findUserItemsByUserIdAndItemId(spinGachaDTO.getUserId(), resultGachaCharacter.getItemId());
+		UserItems userCharacterItem = userItemsRepository.findUserItemsByUserIdAndItemId(spinGachaForm.getUserId(), resultGachaCharacter.getItemId());
 		GrowthTypes growthTypes = growthTypesRepository.getById(resultGachaCharacter.getGrowthTypeId());
 		Integer maxCharacterToUp = growthTypes.getLevel2() + growthTypes.getLevel3() + growthTypes.getLevel4() + growthTypes.getLevel5() + growthTypes.getLevel6();
 		if(growthTypes.getLevelMax() == userCharacterItem.getLevel() && userCharacterItem.getNumber() == Long.valueOf(maxCharacterToUp)){
@@ -80,6 +86,12 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 			gachaResultDTO.setSpecialItems(specialItems);
 		}
 		gachaResultDTO.setCharacters(resultGachaCharacter);
+		//Tru SL theo gia
+		if(Constant.SPIN_GACHA_PAYMENT.TICKET.equals(spinGachaForm.getPaymentMethod())){
+
+		}else{
+
+		}
 		userItems.setNumber(userItems.getNumber() - 1L);
 		userItemsRepository.save(userItems);
 		return gachaResultDTO;

@@ -11,7 +11,8 @@ import lombok.Getter;
  */
 public interface Constant {
     String PLAY_STORE_TRANS_URL = "https://androidpublisher.googleapis.com/androidpublisher/v3/applications/{packageName}/purchases/subscriptions/{subscriptionId}/tokens/{token}";
-    @Getter
+
+	@Getter
     enum PlatformType {
         ALL(0), ANDROID(1), IOS(2);
         final int type;
