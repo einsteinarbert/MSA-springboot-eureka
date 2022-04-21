@@ -3,14 +3,7 @@ package io.github.eureka.api.service.impl;
 import io.github.eureka.api.common.Constant;
 import io.github.eureka.api.common.DataUtil;
 import io.github.eureka.api.common.MsgUtil;
-import io.github.eureka.api.model.Characters;
-import io.github.eureka.api.model.GachaCharacters;
-import io.github.eureka.api.model.Gachas;
-import io.github.eureka.api.model.GrowthTypes;
-import io.github.eureka.api.model.Items;
-import io.github.eureka.api.model.SpecialItems;
-import io.github.eureka.api.model.UserItems;
-import io.github.eureka.api.model.Users;
+import io.github.eureka.api.model.*;
 import io.github.eureka.api.model.dto.*;
 import io.github.eureka.api.model.form.SpinGachaForm;
 import io.github.eureka.api.repo.*;
@@ -37,6 +30,8 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 	private final GrowthTypesRepository growthTypesRepository;
 	private final SpecialItemsRepository specialItemsRepository;
 	private final GachaCharactersRepository gachaCharactersRepository;
+	private final UserWalletsRepository userWalletsRepository;
+	private final WalletsRepository walletsRepository;
 
 	@Override
 	public List<GachasDTO> getAllGachaForSpin() {
@@ -66,10 +61,31 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 	@Override
 	public GachaResultDTO spinGacha(SpinGachaForm spinGachaForm) {
 		//Validate SL item hoac coin - jewel
-		if(Constant.SPIN_GACHA_PAYMENT.TICKET.equals(spinGachaForm.getPaymentMethod())){
+		Optional<Gachas> gachasOptional = gachasRepository.findById(spinGachaForm.getGachaId());
+		Assert.isTrue(gachasOptional.isPresent(), MsgUtil.getMessage("gacha.notexits"));
+		Gachas gachas = gachasOptional.get();	
 		
+		if(Constant.SPIN_GACHA_PAYMENT.JEWELORCOIN.equals(spinGachaForm.getPaymentMethod())){
+			Wallets wallets = walletsRepository.findWalletsByWalletTypeIn(gachas.getPaymentMethodId() == 1);
+			UserItems checkItem = userWalletsRepository.findUserWalletsByUserIdAndWalletId(spinGachaForm.getUserId(),);
+			Assert.notNull(checkItem, MsgUtil.getMessage("ticket.under"));
 		}else{
-			
+			String itemType;
+			switch (gachas.getPaymentMethodId2().intValue()){
+				case 0:
+					itemType = "NORMAL_TICKET";
+					break;
+				case 1:
+					itemType = "PREMIUM_TICKET";
+					break;
+				case 2:
+					itemType = "PICKUP_TICKET";
+					break;
+				default:
+					itemType = "NORMAL_TICKET";
+			}
+			UserItems checkItem = userItemsRepository.findUserItemsByUserIdAndItemTypeAndNumberLessThan(spinGachaForm.getUserId(), itemType, gachas.getPaymentMethodId2().longValue());
+			Assert.notNull(checkItem, MsgUtil.getMessage("jewel.coin.under"));
 		}
 
 		List<GachaCharacters> lstGacha = gachasRepository.listGachaById(spinGachaForm.getUserItemId());
@@ -90,10 +106,24 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 		if(Constant.SPIN_GACHA_PAYMENT.TICKET.equals(spinGachaForm.getPaymentMethod())){
 
 		}else{
-
+			String itemType;
+			switch (gachas.getPaymentMethodId2().intValue()){
+				case 0:
+					itemType = "NORMAL_TICKET";
+					break;
+				case 1:
+					itemType = "PREMIUM_TICKET";
+					break;
+				case 2:
+					itemType = "PICKUP_TICKET";
+					break;
+				default:
+					itemType = "NORMAL_TICKET";
+			}
+			UserItems checkItem = userItemsRepository.findUserItemsByUserIdAndItemTypeAndNumberLessThan(spinGachaForm.getUserId(), itemType, gachas.getPaymentMethodId2().longValue());
+			checkItem.setNumber(checkItem.getNumber() - 1L);
+			userItemsRepository.save(checkItem);
 		}
-		userItems.setNumber(userItems.getNumber() - 1L);
-		userItemsRepository.save(userItems);
 		return gachaResultDTO;
 	}
 
