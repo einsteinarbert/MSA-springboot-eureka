@@ -39,7 +39,7 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 
 	@Override
 	public List<GachasDTO> getAllGachaForSpin() {
-		List<GachasDTO> result = super.mapList(gachasRepository.findAll(), GachasDTO.class);
+		List<GachasDTO> result = super.mapList(gachasRepository.getListGacha(), GachasDTO.class);
 		if(!DataUtil.isNullOrEmpty(result)){
 			for(GachasDTO gachasDTO : result){
 				List<GachaCharacterDTO> gachaCharacterDTOList = super.mapList(gachaCharactersRepository.findAllByGachaId(gachasDTO.getId()), GachaCharacterDTO.class);
