@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import static io.github.eureka.api.common.MsgUtil.SPLIT_CHAR;
+
 /**
  * Project: MSA-springboot-eureka.<br/>
  * Des: <br/>
