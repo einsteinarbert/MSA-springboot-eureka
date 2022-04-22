@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface UsersRepository extends CrudRepository<Users, Long> {
     Users findByUsernameAndStatus(String username, Integer status);
-    Optional<Users> findByUsernameAndStatusIn(String username, List<Integer> status);
+    Users findByUsernameAndStatusIn(String username, List<Integer> status);
+    List<Users> findByDeviceIdAndStatusIn(String deviceId, List<Integer> status);
     Optional<Users> findByRefreshTokenAndStatusIn(String token, List<Integer> status);
 }

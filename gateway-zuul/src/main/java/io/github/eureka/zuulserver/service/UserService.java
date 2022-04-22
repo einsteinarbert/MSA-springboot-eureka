@@ -70,9 +70,15 @@ public class UserService {
         if(!StringUtils.hasLength(ar.getUsername())) {
             ar.setUsername(Helper.generateUserName());
         }
-        Optional<Users> usr = usersRepository.findByUsernameAndStatusIn(ar.getUsername(), List.of(0, 1));
-        if (usr.isPresent()) {
-            Users users = usr.get();
+        Users users = usersRepository.findByUsernameAndStatusIn(ar.getUsername(), List.of(0, 1));
+        // TODO: mock deviceId to old user
+        if (null == users) {
+            List<Users> list = usersRepository.findByDeviceIdAndStatusIn(ar.getDeviceId(), List.of(0, 1));
+            if (list.size() != 0) {
+                users = list.get(0);
+            }
+        }
+        if (users != null && users.getId() != null) {
             // user registered will not able to login anonymous
             if (users.getStatus() == 1) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             // generate new token
