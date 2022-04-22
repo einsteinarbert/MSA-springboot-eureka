@@ -19,7 +19,7 @@ public class UsersController extends BaseController{
     private final UsersService usersService;
 
     @PostMapping("/users/create")
-    public ResponseEntity<?> createUser(HttpServletRequest request, @RequestBody CreateUserDTO users){
+    public ResponseEntity<?> createUser(@RequestBody CreateUserDTO users){
             usersService.createUser(users);
         return ResponseEntity.ok().build();
     }

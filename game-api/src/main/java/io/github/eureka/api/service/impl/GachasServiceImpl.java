@@ -87,10 +87,8 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 
 	@Override
 	public Boolean saveBonusGacha(UserItemsDTO userItemsDTO) throws IllegalAccessException {
-
 		Optional<Users> existingUser = usersRepository.findById(userItemsDTO.getUserId());
 		Assert.isTrue(existingUser.isPresent(), MsgUtil.getMessage("user.info.null"));
-		
 		Optional<Items> existingItemOp = itemsRepository.findById(userItemsDTO.getItemId());
 		Assert.isTrue(existingItemOp.isPresent(), MsgUtil.getMessage("item.notexist"));
 		var existingItem = existingItemOp.get();
