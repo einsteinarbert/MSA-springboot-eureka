@@ -27,7 +27,9 @@ public class BaseMsgDTO<T> implements Serializable {
     @JsonInclude()
     @Transient
     public static final String NG = "failure";
+    @Builder.Default
     private int code = 200;
+    @Builder.Default
     private String status = OK;
     private String message;
     private T data;

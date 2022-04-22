@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import static io.github.eureka.zuulserver.model.dto.BaseMsgDTO.NG;
+
 @Slf4j
 @AllArgsConstructor
 @RestController
@@ -46,15 +48,15 @@ public class AuthenticationREST {
     public ResponseEntity<?> refreshToken(@RequestBody RefreshToken refreshToken) {
         try {
             AuthResponse authResponse = userService.refreshToken(refreshToken);
-            return null == authResponse ? ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
-                    : ResponseEntity.ok(authResponse);
+            return null == authResponse ? ResponseEntity.ok(BaseMsgDTO.builder().status(NG).code(HttpStatus.UNAUTHORIZED.value()).build())
+                    : ResponseEntity.ok(BaseMsgDTO.builder().data(authResponse).build());
         } catch (Exception e) {
             log.error("Refresh token error", e);
-            return ResponseEntity.badRequest().body(
+            return ResponseEntity.ok(
                     BaseMsgDTO.builder()
-                            .code(400)
+                            .code(HttpStatus.UNAUTHORIZED.value())
                             .message(e.getMessage())
-                            .status(BaseMsgDTO.NG)
+                            .status(NG)
                             .build());
         }
     }
