@@ -16,10 +16,8 @@ public interface GachasRepository extends JpaRepository<Gachas, Long> {
 	value = "select u from UserItems u where u.id = :userItemId and u.userId = :userId"
 	)
 	UserItems getGachaByUserItem(Long userId, Long userItemId);
-	@Query(value = "select gtc from UserItems ui inner join Items i ON ui.itemId = i.id and i.itemType = 'COIN_GACHA'\n" +
-			"    inner join Gachas gt on i.id = gt.itemId\n" +
-			"inner join GachaCharacters gtc on gt.id = gtc.gachaId")
-	List<GachaCharacters> listGachaById(Long userItemId);
+	@Query(value = "select gtc from GachaCharacters gtc where gtc.gachaId = :gachaId")
+	List<GachaCharacters> listGachaById(Long gachaId);
 	
 	@Query(value = "select gc from Gachas gc where  COALESCE(gc.startDate, current_date) <= current_date and COALESCE(gc.endDate, current_date) >= current_date")
 	List<Gachas> getListGacha();

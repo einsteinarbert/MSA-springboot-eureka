@@ -21,19 +21,19 @@ import java.util.Objects;
 @Table(name = "payment_methods")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PaymentMethods {
-    private long id;
+    private Long id;
     private String name;
-    private int paymentType;
+    private Integer paymentType;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
     @Id
     @Column(name = "id", nullable = false)
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -49,11 +49,11 @@ public class PaymentMethods {
 
     @Basic
     @Column(name = "payment_type", nullable = false)
-    public int getPaymentType() {
+    public Integer getPaymentType() {
         return paymentType;
     }
 
-    public void setPaymentType(int paymentType) {
+    public void setPaymentType(Integer paymentType) {
         this.paymentType = paymentType;
     }
 

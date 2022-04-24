@@ -1,5 +1,6 @@
 package io.github.eureka.api.service;
 
+import io.github.eureka.api.model.dto.BaseMsgDTO;
 import io.github.eureka.api.model.dto.GachaResultDTO;
 import io.github.eureka.api.model.dto.GachasDTO;
 import io.github.eureka.api.model.form.SpinGachaForm;
@@ -12,7 +13,7 @@ public interface GachasService {
 
 	GachasDTO getGachaTicketById(Long id);
 
-	GachaResultDTO spinGacha(SpinGachaForm spinGachaForm);
+	BaseMsgDTO<?> spinGacha(SpinGachaForm spinGachaForm);
 
 	Boolean saveBonusGacha(UserItemsDTO userItemsDTO) throws IllegalAccessException;
 }

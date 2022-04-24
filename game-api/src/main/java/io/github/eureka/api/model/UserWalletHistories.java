@@ -2,11 +2,8 @@ package io.github.eureka.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Date;
 import java.util.Objects;
 
@@ -21,11 +18,11 @@ import java.util.Objects;
 @Table(name = "user_wallet_histories")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class UserWalletHistories {
-    private long id;
-    private long userId;
-    private long walletId;
-    private int supplyNumber;
-    private int number;
+    private Long id;
+    private Long userId;
+    private Long walletId;
+    private Integer supplyNumber;
+    private Integer number;
     private String message;
     private String transNumber;
     private Integer historyType;
@@ -36,41 +33,42 @@ public class UserWalletHistories {
 
     @Id
     @Column(name = "id", nullable = false)
-    public long getId() {
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     @Basic
     @Column(name = "user_id", nullable = false)
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
     @Basic
     @Column(name = "wallet_id", nullable = false)
-    public long getWalletId() {
+    public Long getWalletId() {
         return walletId;
     }
 
-    public void setWalletId(long walletId) {
+    public void setWalletId(Long walletId) {
         this.walletId = walletId;
     }
 
     @Basic
-    @Column(name = "supply_number", nullable = false)
-    public int getSupplyNumber() {
+    @Column(name = "supply_number")
+    public Integer getSupplyNumber() {
         return supplyNumber;
     }
 
-    public void setSupplyNumber(int supplyNumber) {
+    public void setSupplyNumber(Integer supplyNumber) {
         this.supplyNumber = supplyNumber;
     }
 
@@ -85,7 +83,7 @@ public class UserWalletHistories {
     }
 
     @Basic
-    @Column(name = "message", nullable = false, length = 255)
+    @Column(name = "message", length = 255)
     public String getMessage() {
         return message;
     }
@@ -95,7 +93,7 @@ public class UserWalletHistories {
     }
 
     @Basic
-    @Column(name = "history_type", nullable = true)
+    @Column(name = "history_type", nullable = false)
     public Integer getHistoryType() {
         return historyType;
     }
@@ -105,7 +103,7 @@ public class UserWalletHistories {
     }
 
     @Basic
-    @Column(name = "generatable_type", nullable = true, length = 255)
+    @Column(name = "generatable_type", length = 255)
     public String getGeneratableType() {
         return generatableType;
     }
@@ -115,7 +113,7 @@ public class UserWalletHistories {
     }
 
     @Basic
-    @Column(name = "generatable_id", nullable = true)
+    @Column(name = "generatable_id")
     public Long getGeneratableId() {
         return generatableId;
     }

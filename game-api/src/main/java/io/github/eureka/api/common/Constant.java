@@ -55,6 +55,24 @@ public interface Constant {
     }
 
     @Getter
+    enum walletHistoryType {
+        BUY(0), USE(1), BONUS(2), GIFT(3), RETURN(4);
+        final int type;
+        walletHistoryType(int i) {
+            type = i;
+        }
+    }
+
+    @Getter
+    enum PaymentMethodType {
+        JEWEL(0), COIN(1);
+        final int type;
+        PaymentMethodType(int i) {
+            type = i;
+        }
+    }
+
+    @Getter
     enum PayStateAndroid {
         PAYMENT_PENDING("payment.pending", 0),
         PAYMENT_RECEIVED("payment.received", 1),
@@ -89,8 +107,8 @@ public interface Constant {
     }
     
     interface SPIN_GACHA_PAYMENT{
-        Integer TICKET = 1;
-        Integer JEWELORCOIN = 2;
+        Integer TICKET = 2;
+        Integer JEWELORCOIN = 1;
     }
     
     interface TICKET_PAYMENT_METHOD{

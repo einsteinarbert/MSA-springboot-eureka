@@ -29,9 +29,8 @@ public class GachaController {
 	}
 	
 	@PostMapping("/gacha-result")
-	public BaseMsgDTO<GachaResultDTO> spinGacha(@RequestBody SpinGachaForm spinGachaForm) {
-		GachaResultDTO resultSpin = gachasService.spinGacha(spinGachaForm);
-		return BaseMsgDTO.success(resultSpin);
+	public BaseMsgDTO<?> spinGacha(@RequestBody SpinGachaForm spinGachaForm) {
+		return gachasService.spinGacha(spinGachaForm);
 	}
 
 	@PostMapping("/save-bonus-gacha")

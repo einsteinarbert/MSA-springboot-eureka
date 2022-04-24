@@ -8,5 +8,7 @@ import java.util.List;
 
 @Repository
 public interface WalletsRepository extends JpaRepository<Wallets, Long> {
-	Wallets findWalletsByWalletTypeIn(List<Long> walletType);
+	Wallets findWalletsByWalletTypeIn(List<Integer> walletType);
+	Wallets findWalletsByWalletTypeAndJewelType(Integer walletType, Integer jewelType);
+	Wallets findWalletsByWalletType(Integer walletType);
 }
