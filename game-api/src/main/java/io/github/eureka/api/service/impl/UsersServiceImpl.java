@@ -53,11 +53,11 @@ public class UsersServiceImpl extends BaseService implements UsersService {
             "ifnull(heart, 0) heart, ifnull(heart_30, 0) heart_30, ifnull(heart_60, 0) heart_60\n" +
             "from users u\n" +
             "left join(\n" +
-            "select uw.user_id, sum(IF(w.wallet_type = 'JEWEL', uw.number, 0)) jewel_number,\n" +
-            "    sum(IF(w.wallet_type = 'JEWEL_BONUS', uw.number, 0)) jewel_bonus_number,\n" +
-            "    sum(IF(w.wallet_type = 'COIN', uw.number, 0)) coin_number\n" +
+            "select uw.user_id, sum(IF(w.wallet_type = 0 and w.jewel_type = 0, uw.number, 0)) jewel_number,\n" +
+            "            sum(IF(w.wallet_type = 0 and w.jewel_type = 1, uw.number, 0)) jewel_bonus_number,\n" +
+            "            sum(IF(w.wallet_type = 1, uw.number, 0)) coin_number \n" +
             "from user_wallets uw left join wallets w\n" +
-            "    on uw.wallet_id = w.id and w.wallet_type IN ('JEWEL', 'COIN', 'JEWEL_BONUS')\n" +
+            "    on uw.wallet_id = w.id and w.wallet_type IN (0, 1)\n" +
             "group by uw.user_id) uw ON u.id = uw.user_id\n" +
             "left join(select ui.user_id, sum( IF(ui.item_type = 'STAMINA', ui.number, 0) ) stamina_number,\n" +
             "                 sum( IF(ui.item_type = 'HEART', ui.number, 0) ) heart,\n" +
@@ -68,16 +68,16 @@ public class UsersServiceImpl extends BaseService implements UsersService {
             "where u.id = :userId ) T limit 1";
 
     private static final String userDataSQLDevice = "select * from (select u.id, u.username, u.name, u.age, u.character_id, u.background_id, u.stage,\n" +
-            "ifnull(uw.jewel_number, 0) jewel_number, ifnull(uw.jewel_bonus_number, 0) jewel_bonus_number, ifnull(uw.coin_number, 0) coin_number,\n" +
+            " ifnull(uw.jewel_number, 0) jewel_number, ifnull(uw.jewel_bonus_number, 0) jewel_bonus_number, ifnull(uw.coin_number, 0) coin_number,\n" +
             "ifnull(stamina_number, 0) stamina_number,\n" +
             "ifnull(heart, 0) heart, ifnull(heart_30, 0) heart_30, ifnull(heart_60, 0) heart_60\n" +
             "from users u\n" +
             "left join(\n" +
-            "select uw.user_id, sum(IF(w.wallet_type = 'JEWEL', uw.number, 0)) jewel_number,\n" +
-            "    sum(IF(w.wallet_type = 'JEWEL_BONUS', uw.number, 0)) jewel_bonus_number,\n" +
-            "    sum(IF(w.wallet_type = 'COIN', uw.number, 0)) coin_number\n" +
+            "select uw.user_id, sum(IF(w.wallet_type = 0 and w.jewel_type = 0, uw.number, 0)) jewel_number,\n" +
+            "            sum(IF(w.wallet_type = 0 and w.jewel_type = 1, uw.number, 0)) jewel_bonus_number,\n" +
+            "            sum(IF(w.wallet_type = 1, uw.number, 0)) coin_number \n" +
             "from user_wallets uw left join wallets w\n" +
-            "    on uw.wallet_id = w.id and w.wallet_type IN ('JEWEL', 'COIN', 'JEWEL_BONUS')\n" +
+            "    on uw.wallet_id = w.id and w.wallet_type IN (0, 1)\n" +
             "group by uw.user_id) uw ON u.id = uw.user_id\n" +
             "left join(select ui.user_id, sum( IF(ui.item_type = 'STAMINA', ui.number, 0) ) stamina_number,\n" +
             "                 sum( IF(ui.item_type = 'HEART', ui.number, 0) ) heart,\n" +
