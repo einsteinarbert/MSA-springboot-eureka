@@ -34,23 +34,23 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
         String[] split = msg.split(SPLIT_CHAR);
         ResponseDTO<String> responseDTO = new ResponseDTO<>();
         if (split.length == 2) {
-            responseDTO.setCode(split[0]);
             responseDTO.setMessage(split[1]);
+            responseDTO.setData(split[0]);
         } else {
             responseDTO.setMessage(msg);
-            responseDTO.setCode(ResponseDTO.NG);
         }
         int code = (int) map.get("status");
         convertStatus(msg, code, responseDTO);
-        map.put("status", 200);
         parameters(responseDTO, map);
         return map;
     }
 
     private void convertStatus(String msg, int status, ResponseDTO<String> responseDTO) {
         if (status == 500 && msg.contains("JWT expired at")) {
-            responseDTO.setStatus(ResponseCode.TOKEN_EXPIRED);
-            responseDTO.setCode("JWT expired");
+            responseDTO.setStatusCode(ResponseCode.TOKEN_EXPIRED);
+            responseDTO.setMessage("JWT expired");
+        } else if (status > 399 || status < 200) {
+            responseDTO.setStatusCode(ResponseCode.FAILURE);
         }
     }
 

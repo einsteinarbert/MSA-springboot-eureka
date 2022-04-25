@@ -104,9 +104,8 @@ public class UserService {
                                     return new Gson().fromJson(s, base.getClass());
                                 } catch (Exception e) {
                                     return ResponseEntity.ok(ResponseDTO.builder()
-                                            .status(ResponseCode.FAILURE)
+                                            .statusCode(ResponseCode.FAILURE)
                                             .message(e.getMessage())
-                                            .code(ResponseDTO.NG)
                                             .build());
                                 }
                             } else {
@@ -114,9 +113,8 @@ public class UserService {
                                 var created = usersRepository.findByUsernameAndStatus(newUsr.getUsername(), 0);
                                 if (created == null || created.getId() == null) {
                                     return ResponseEntity.ok(ResponseDTO.builder()
-                                            .status(ResponseCode.FAILURE)
+                                            .statusCode(ResponseCode.FAILURE)
                                             .message("Cannot create user")
-                                            .code(ResponseDTO.NG)
                                             .build());
                                 }
                                 String refreshTokenNew = jwtUtil.generateRefreshToken(created);
@@ -128,9 +126,8 @@ public class UserService {
             } catch (Exception e) {
                 log.error("Cannot call api create user", e);
                 return ResponseEntity.ok(ResponseDTO.builder()
-                        .status(ResponseCode.FAILURE)
+                        .statusCode(ResponseCode.FAILURE)
                         .message(e.getMessage())
-                        .code(ResponseDTO.NG)
                         .build());
             }
         }

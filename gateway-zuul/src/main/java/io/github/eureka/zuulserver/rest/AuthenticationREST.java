@@ -48,15 +48,14 @@ public class AuthenticationREST {
     public ResponseEntity<?> refreshToken(@RequestBody RefreshToken refreshToken) {
         try {
             AuthResponse authResponse = userService.refreshToken(refreshToken);
-            return null == authResponse ? ResponseEntity.ok(ResponseDTO.builder().code(NG).status(HttpStatus.UNAUTHORIZED.value()).build())
+            return null == authResponse ? ResponseEntity.ok(ResponseDTO.builder().statusCode(HttpStatus.UNAUTHORIZED.value()).build())
                     : ResponseEntity.ok(ResponseDTO.builder().data(authResponse).build());
         } catch (Exception e) {
             log.error("Refresh token error", e);
             return ResponseEntity.ok(
                     ResponseDTO.builder()
-                            .status(HttpStatus.UNAUTHORIZED.value())
+                            .statusCode(HttpStatus.UNAUTHORIZED.value())
                             .message(e.getMessage())
-                            .code(NG)
                             .build());
         }
     }
