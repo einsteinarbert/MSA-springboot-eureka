@@ -8,6 +8,7 @@ import io.github.eureka.api.service.GachasService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @AllArgsConstructor
@@ -29,7 +30,7 @@ public class GachaController {
 	}
 	
 	@PostMapping("/gacha-result")
-	public ResponseDTO<?> spinGacha(@RequestBody SpinGachaForm spinGachaForm) {
+	public ResponseDTO<?> spinGacha(@Valid @RequestBody SpinGachaForm spinGachaForm) {
 		return gachasService.spinGacha(spinGachaForm);
 	}
 
