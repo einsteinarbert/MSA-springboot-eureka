@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import io.github.eureka.zuulserver.common.Constant;
 import io.github.eureka.zuulserver.common.Helper;
 import io.github.eureka.zuulserver.model.Users;
-import io.github.eureka.zuulserver.model.dto.BaseMsgDTO;
+import io.github.eureka.zuulserver.model.dto.ResponseDTO;
 import io.github.eureka.zuulserver.model.security.AuthRequest;
 import io.github.eureka.zuulserver.model.security.AuthResponse;
 import io.github.eureka.zuulserver.model.security.RefreshToken;
@@ -85,7 +85,7 @@ public class UserService {
             String refreshTokenNew = jwtUtil.generateRefreshToken(users);
             users.setRefreshToken(refreshTokenNew);
             users = usersRepository.save(users);
-            return ResponseEntity.ok(BaseMsgDTO.success(new AuthResponse(jwtUtil.generateToken(users), refreshTokenNew, users.getId(), users.getUsername())));
+            return ResponseEntity.ok(ResponseDTO.success(new AuthResponse(jwtUtil.generateToken(users), refreshTokenNew, users.getId(), users.getUsername())));
         } else {
             try {
                 Users newUsr = new Users();
@@ -98,38 +98,38 @@ public class UserService {
                         .defaultIfEmpty("")
                         .map(s -> {
                             if (StringUtils.hasLength(s)) {
-                                var base = new BaseMsgDTO<String>();
+                                var base = new ResponseDTO<String>();
                                 try {
                                     return new Gson().fromJson(s, base.getClass());
                                 } catch (Exception e) {
-                                    return ResponseEntity.ok(BaseMsgDTO.builder()
+                                    return ResponseEntity.ok(ResponseDTO.builder()
                                             .code(HttpStatus.BAD_REQUEST.value())
                                             .message(e.getMessage())
-                                            .status(BaseMsgDTO.NG)
+                                            .status(ResponseDTO.NG)
                                             .build());
                                 }
                             } else {
                                 // generate new token
                                 var created = usersRepository.findByUsernameAndStatus(newUsr.getUsername(), 0);
                                 if (created == null || created.getId() == null) {
-                                    return ResponseEntity.ok(BaseMsgDTO.builder()
+                                    return ResponseEntity.ok(ResponseDTO.builder()
                                             .code(400)
                                             .message("Cannot create user")
-                                            .status(BaseMsgDTO.NG)
+                                            .status(ResponseDTO.NG)
                                             .build());
                                 }
                                 String refreshTokenNew = jwtUtil.generateRefreshToken(created);
                                 created.setRefreshToken(refreshTokenNew);
                                 created = usersRepository.save(created);
-                                return ResponseEntity.ok(new BaseMsgDTO<>(new AuthResponse(jwtUtil.generateToken(created), refreshTokenNew, created.getId(), created.getUsername())));
+                                return ResponseEntity.ok(new ResponseDTO<>(new AuthResponse(jwtUtil.generateToken(created), refreshTokenNew, created.getId(), created.getUsername())));
                             }
                         });
             } catch (Exception e) {
                 log.error("Cannot call api create user", e);
-                return ResponseEntity.ok(BaseMsgDTO.builder()
+                return ResponseEntity.ok(ResponseDTO.builder()
                         .code(HttpStatus.BAD_REQUEST.value())
                         .message(e.getMessage())
-                        .status(BaseMsgDTO.NG)
+                        .status(ResponseDTO.NG)
                         .build());
             }
         }

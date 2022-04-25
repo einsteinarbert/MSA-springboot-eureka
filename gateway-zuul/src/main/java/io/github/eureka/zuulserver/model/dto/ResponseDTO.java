@@ -20,7 +20,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class BaseMsgDTO<T> implements Serializable {
+public class ResponseDTO<T> implements Serializable {
     @JsonInclude()
     @Transient
     public static final String OK = "success";
@@ -34,10 +34,10 @@ public class BaseMsgDTO<T> implements Serializable {
     private String message;
     private T data;
 
-    public BaseMsgDTO(T data) {
+    public ResponseDTO(T data) {
         this.data = data;
     }
-    public static <T> BaseMsgDTO<T> success(T data) {
-        return new BaseMsgDTO<>(data);
+    public static <T> ResponseDTO<T> success(T data) {
+        return new ResponseDTO<>(data);
     }
 }

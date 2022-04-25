@@ -1,6 +1,6 @@
 package io.github.eureka.zuulserver.rest;
 
-import io.github.eureka.zuulserver.model.dto.BaseMsgDTO;
+import io.github.eureka.zuulserver.model.dto.ResponseDTO;
 import io.github.eureka.zuulserver.model.security.AuthRequest;
 import io.github.eureka.zuulserver.model.security.AuthResponse;
 import io.github.eureka.zuulserver.model.security.RefreshToken;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import static io.github.eureka.zuulserver.model.dto.BaseMsgDTO.NG;
+import static io.github.eureka.zuulserver.model.dto.ResponseDTO.NG;
 
 @Slf4j
 @AllArgsConstructor
@@ -46,14 +46,15 @@ public class AuthenticationREST {
 
     @PostMapping("/auth/refresh-token")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshToken refreshToken) {
+        if (refreshToken != null) throw new IllegalArgumentException("Failure abc");
         try {
             AuthResponse authResponse = userService.refreshToken(refreshToken);
-            return null == authResponse ? ResponseEntity.ok(BaseMsgDTO.builder().status(NG).code(HttpStatus.UNAUTHORIZED.value()).build())
-                    : ResponseEntity.ok(BaseMsgDTO.builder().data(authResponse).build());
+            return null == authResponse ? ResponseEntity.ok(ResponseDTO.builder().status(NG).code(HttpStatus.UNAUTHORIZED.value()).build())
+                    : ResponseEntity.ok(ResponseDTO.builder().data(authResponse).build());
         } catch (Exception e) {
             log.error("Refresh token error", e);
             return ResponseEntity.ok(
-                    BaseMsgDTO.builder()
+                    ResponseDTO.builder()
                             .code(HttpStatus.UNAUTHORIZED.value())
                             .message(e.getMessage())
                             .status(NG)
