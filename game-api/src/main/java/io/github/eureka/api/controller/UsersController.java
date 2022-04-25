@@ -2,10 +2,10 @@ package io.github.eureka.api.controller;
 
 import io.github.eureka.api.common.MsgUtil;
 import io.github.eureka.api.model.Users;
-import io.github.eureka.api.model.dto.ChangePasswordDTO;
+import io.github.eureka.api.model.form.ChangePasswordForm;
 import io.github.eureka.api.model.dto.ResponseDTO;
 import io.github.eureka.api.model.dto.UserDataDTO;
-import io.github.eureka.api.model.dto.UserSettingDTO;
+import io.github.eureka.api.model.form.UserSettingForm;
 import io.github.eureka.api.model.form.CreateUserForm;
 import io.github.eureka.api.service.UsersService;
 import lombok.AllArgsConstructor;
@@ -33,7 +33,7 @@ public class UsersController extends BaseController{
     }
 
     @PostMapping("/change-password")
-    public ResponseDTO<?> updateUserPassword(@RequestBody ChangePasswordDTO users){
+    public ResponseDTO<?> updateUserPassword(@RequestBody ChangePasswordForm users){
         return usersService.updateUserPassword(users);
     }
 
@@ -64,7 +64,7 @@ public class UsersController extends BaseController{
     }
 
     @PostMapping("/user-setting")
-    public ResponseDTO<?> setting(HttpServletRequest request, @RequestBody UserSettingDTO data){
+    public ResponseDTO<?> setting(HttpServletRequest request, @RequestBody UserSettingForm data){
         setUserInfo(request);
         usersService.saveSettingData(data);
         return ResponseDTO.success("");

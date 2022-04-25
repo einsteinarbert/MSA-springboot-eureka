@@ -1,4 +1,4 @@
-package io.github.eureka.api.model.dto;
+package io.github.eureka.api.model.form;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserSettingDTO {
+public class UserSettingForm {
     private Long characterId;
     private Long backgroundId;
 }

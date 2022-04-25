@@ -10,7 +10,9 @@ import io.github.eureka.api.model.UserItems;
 import io.github.eureka.api.model.Users;
 import io.github.eureka.api.model.dto.*;
 import io.github.eureka.api.model.entity.UserDataEntity;
+import io.github.eureka.api.model.form.ChangePasswordForm;
 import io.github.eureka.api.model.form.CreateUserForm;
+import io.github.eureka.api.model.form.UserSettingForm;
 import io.github.eureka.api.repo.BackgroundRepository;
 import io.github.eureka.api.repo.CharactersRepository;
 import io.github.eureka.api.repo.UserItemsRepository;
@@ -184,7 +186,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
     }
 
     @Override
-    public ResponseDTO<?> updateUserPassword(ChangePasswordDTO users) {
+    public ResponseDTO<?> updateUserPassword(ChangePasswordForm users) {
         if(!users.getPassword().equals(users.getConfirmPassword())){
             throw new IllegalArgumentException(MsgUtil.getMessage("password.notmatch"));
         }
@@ -215,7 +217,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
     }
 
     @Override
-    public void saveSettingData(UserSettingDTO data) {
+    public void saveSettingData(UserSettingForm data) {
         ActionUserDTO userDTO = ActionUserHolder.getActionUser();
         Users user = commonService.validateUser(userDTO);
         BigInteger count = (BigInteger) em.createNativeQuery("select count(ui.item_id) " +
