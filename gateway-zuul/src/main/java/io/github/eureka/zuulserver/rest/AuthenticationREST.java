@@ -46,7 +46,6 @@ public class AuthenticationREST {
 
     @PostMapping("/auth/refresh-token")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshToken refreshToken) {
-        if (refreshToken != null) throw new IllegalArgumentException("Failure abc");
         try {
             AuthResponse authResponse = userService.refreshToken(refreshToken);
             return null == authResponse ? ResponseEntity.ok(ResponseDTO.builder().code(NG).status(HttpStatus.UNAUTHORIZED.value()).build())
