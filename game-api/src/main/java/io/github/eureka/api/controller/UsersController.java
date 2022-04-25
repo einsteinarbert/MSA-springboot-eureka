@@ -40,14 +40,12 @@ public class UsersController extends BaseController{
 
     @GetMapping("/user-info/{id}")
     public ResponseDTO<?> getOneUser(@PathVariable Long id){
-        Users users = usersService.getUserById(id);
-        return ResponseDTO.success(users);
+        return usersService.getUserById(id);
     }
 
     @GetMapping("/list-user")
     public ResponseDTO<?> getAllUser(){
-        List<Users> users = usersService.getAllUser();
-        return ResponseDTO.success(users);
+        return usersService.getAllUser();
     }
     
     @GetMapping("/user-data/{userId}")

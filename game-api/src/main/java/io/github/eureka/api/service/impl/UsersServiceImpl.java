@@ -9,6 +9,7 @@ import io.github.eureka.api.model.Characters;
 import io.github.eureka.api.model.UserItems;
 import io.github.eureka.api.model.Users;
 import io.github.eureka.api.model.dto.*;
+import io.github.eureka.api.model.entity.UserDTO;
 import io.github.eureka.api.model.entity.UserDataEntity;
 import io.github.eureka.api.model.form.ChangePasswordForm;
 import io.github.eureka.api.model.form.CreateUserForm;
@@ -141,14 +142,14 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         defaultBackgroundItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         userItemsRepository.save(defaultBackgroundItem);
         usersRepository.save(newUser);
-        return ResponseDTO.success(newUser);
+        return ResponseDTO.success(super.map(newUser, UserDTO.class));
     }
 
     @Override
-    public Users getUserById(Long id) {
-        return usersRepository.findByIdAndStatusIn(id, Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED)).orElseThrow (
+    public ResponseDTO<?> getUserById(Long id) {
+        return ResponseDTO.success(super.map(usersRepository.findByIdAndStatusIn(id, Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED)).orElseThrow (
                 () -> new IllegalArgumentException(MsgUtil.getMessage("user.info.null"))
-        );
+        ), UserDTO.class));
     }
 
     @Override
@@ -168,7 +169,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         users.setAge(new Date(Calendar.getInstance().getTimeInMillis()), users.getBirthday());
         users.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         usersRepository.save(users);
-        return ResponseDTO.success(users);
+        return ResponseDTO.success(super.map(users, UserDTO.class));
     }
 
     @Override
@@ -181,12 +182,13 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         existingId.setEncryptedPassword(passwordEncoder.encode(users.getPassword()));
         existingId.setStatus(Constant.STATUS.REGITERED);
         usersRepository.save(existingId);
-        return ResponseDTO.success(existingId);
+        return ResponseDTO.success(super.map(existingId, UserDTO.class));
     }
 
     @Override
-    public List<Users> getAllUser() {
-        return usersRepository.findAllByStatusIn(Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
+    public ResponseDTO<?> getAllUser() {
+        List<Users> usersList = usersRepository.findAllByStatusIn(Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
+        return ResponseDTO.success(super.mapList(usersList, UserDTO.class));
     }
 
     @Override

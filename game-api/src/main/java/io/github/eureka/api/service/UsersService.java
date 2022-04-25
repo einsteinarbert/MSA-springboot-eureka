@@ -7,15 +7,13 @@ import io.github.eureka.api.model.form.CreateUserForm;
 import io.github.eureka.api.model.dto.UserDataDTO;
 import io.github.eureka.api.model.form.UserSettingForm;
 
-import java.util.List;
-
 public interface UsersService {
     ResponseDTO<?> createUser(CreateUserForm users);
-    Users getUserById(Long id);
+	ResponseDTO<?> getUserById(Long id);
 	ResponseDTO<?> updateUser(Users users);
 	ResponseDTO<?> updateUserPassword(ChangePasswordForm users);
 
-	List<Users> getAllUser();
+	ResponseDTO<?> getAllUser();
 
 	UserDataDTO getDataUserInMyPage(Long userId);
     void saveSettingData(UserSettingForm data);
