@@ -60,10 +60,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             String[] msgLst = msg.split(SPLIT_CHAR);
             try {
                 return ResponseEntity.ok().body(new ResponseDTO<>(msgLst[0],
-                        HttpStatus.BAD_REQUEST.value(), msgLst[1], ""));
+                        FAILURE, msgLst[1], ""));
             } catch (Exception _e) {
                 return ResponseEntity.ok().body(new ResponseDTO<>(msgLst[0],
-                        HttpStatus.BAD_REQUEST.value(), msg, ""));
+                        FAILURE, msg, ""));
             }
         }
         return ResponseEntity.ok().body(new ResponseDTO<>(ResponseDTO.NG,
