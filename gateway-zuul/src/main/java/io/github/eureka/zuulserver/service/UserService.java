@@ -3,6 +3,7 @@ package io.github.eureka.zuulserver.service;
 import com.google.gson.Gson;
 import io.github.eureka.zuulserver.common.Constant;
 import io.github.eureka.zuulserver.common.Helper;
+import io.github.eureka.zuulserver.common.ResponseCode;
 import io.github.eureka.zuulserver.model.Users;
 import io.github.eureka.zuulserver.model.dto.ResponseDTO;
 import io.github.eureka.zuulserver.model.security.AuthRequest;
@@ -103,9 +104,9 @@ public class UserService {
                                     return new Gson().fromJson(s, base.getClass());
                                 } catch (Exception e) {
                                     return ResponseEntity.ok(ResponseDTO.builder()
-                                            .code(HttpStatus.BAD_REQUEST.value())
+                                            .status(ResponseCode.FAILURE)
                                             .message(e.getMessage())
-                                            .status(ResponseDTO.NG)
+                                            .code(ResponseDTO.NG)
                                             .build());
                                 }
                             } else {
@@ -113,9 +114,9 @@ public class UserService {
                                 var created = usersRepository.findByUsernameAndStatus(newUsr.getUsername(), 0);
                                 if (created == null || created.getId() == null) {
                                     return ResponseEntity.ok(ResponseDTO.builder()
-                                            .code(400)
+                                            .status(ResponseCode.FAILURE)
                                             .message("Cannot create user")
-                                            .status(ResponseDTO.NG)
+                                            .code(ResponseDTO.NG)
                                             .build());
                                 }
                                 String refreshTokenNew = jwtUtil.generateRefreshToken(created);
@@ -127,9 +128,9 @@ public class UserService {
             } catch (Exception e) {
                 log.error("Cannot call api create user", e);
                 return ResponseEntity.ok(ResponseDTO.builder()
-                        .code(HttpStatus.BAD_REQUEST.value())
+                        .status(ResponseCode.FAILURE)
                         .message(e.getMessage())
-                        .status(ResponseDTO.NG)
+                        .code(ResponseDTO.NG)
                         .build());
             }
         }

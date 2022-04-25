@@ -49,15 +49,15 @@ public class AuthenticationREST {
         if (refreshToken != null) throw new IllegalArgumentException("Failure abc");
         try {
             AuthResponse authResponse = userService.refreshToken(refreshToken);
-            return null == authResponse ? ResponseEntity.ok(ResponseDTO.builder().status(NG).code(HttpStatus.UNAUTHORIZED.value()).build())
+            return null == authResponse ? ResponseEntity.ok(ResponseDTO.builder().code(NG).status(HttpStatus.UNAUTHORIZED.value()).build())
                     : ResponseEntity.ok(ResponseDTO.builder().data(authResponse).build());
         } catch (Exception e) {
             log.error("Refresh token error", e);
             return ResponseEntity.ok(
                     ResponseDTO.builder()
-                            .code(HttpStatus.UNAUTHORIZED.value())
+                            .status(HttpStatus.UNAUTHORIZED.value())
                             .message(e.getMessage())
-                            .status(NG)
+                            .code(NG)
                             .build());
         }
     }

@@ -1,7 +1,6 @@
 package io.github.eureka.api.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.github.eureka.api.model.UserItems;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,9 +30,9 @@ public class ResponseDTO<T> implements Serializable {
     @Transient
     public static final String NG = "failure";
     @Builder.Default
-    private int code = SUCCESS;
+    private String code = OK;
     @Builder.Default
-    private String status = OK;
+    private int status = SUCCESS;
     private String message;
     private T data;
 
@@ -45,6 +44,6 @@ public class ResponseDTO<T> implements Serializable {
     }
 
     public static <T> ResponseDTO<T> success(T data, int i) {
-        return ResponseDTO.<T>builder().data(data).code(i).build();
+        return ResponseDTO.<T>builder().data(data).status(i).build();
     }
 }

@@ -42,14 +42,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         // in ProductController example...
         //.....
         log.error(TRACE, iex);
-        return ResponseEntity.ok().body(new ResponseDTO<>(FAILURE,
-                ResponseDTO.NG, iex.getMessage(), ""));
+        return ResponseEntity.ok().body(new ResponseDTO<>(ResponseDTO.NG,
+                FAILURE, iex.getMessage(), ""));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleItemNotFoundException(
             IllegalArgumentException iex,
-            WebRequest _request
+            WebRequest ignored
     ){
         //Body omitted as it's similar to the method of same name
         // in ProductController example...
@@ -59,28 +59,28 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         if (StringUtils.hasLength(msg) && msg.contains(SPLIT_CHAR)) {
             String[] msgLst = msg.split(SPLIT_CHAR);
             try {
-                return ResponseEntity.ok().body(new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(),
-                        msgLst[0], msgLst[1], ""));
+                return ResponseEntity.ok().body(new ResponseDTO<>(msgLst[0],
+                        HttpStatus.BAD_REQUEST.value(), msgLst[1], ""));
             } catch (Exception _e) {
-                return ResponseEntity.ok().body(new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(),
-                        msgLst[0], msg, ""));
+                return ResponseEntity.ok().body(new ResponseDTO<>(msgLst[0],
+                        HttpStatus.BAD_REQUEST.value(), msg, ""));
             }
         }
-        return ResponseEntity.ok().body(new ResponseDTO<>(FAILURE,
-                ResponseDTO.NG, iex.getMessage(), ""));
+        return ResponseEntity.ok().body(new ResponseDTO<>(ResponseDTO.NG,
+                FAILURE, iex.getMessage(), ""));
     }
 
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<Object> handleAllUncaughtException(
             RuntimeException ex,
-            WebRequest _request
+            WebRequest ignored
     ){
         //Body omitted as it's similar to the method of same name
         // in ProductController example...
         //.....
         log.error(TRACE, ex);
-        return ResponseEntity.ok(ResponseDTO.builder().code(FAILURE).message(ex.getMessage()).build());
+        return ResponseEntity.ok(ResponseDTO.builder().status(FAILURE).message(ex.getMessage()).build());
     }
 
     @NotNull
@@ -92,7 +92,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             @NotNull HttpStatus _status,
             @NotNull WebRequest _request) {
         log.error(TRACE, ex);
-        return ResponseEntity.ok(ResponseDTO.builder().code(FAILURE).message(ex.getMessage()).build());
+        return ResponseEntity.ok(ResponseDTO.builder().status(FAILURE).message(ex.getMessage()).build());
     }
 
 }
