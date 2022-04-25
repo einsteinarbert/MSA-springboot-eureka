@@ -91,11 +91,10 @@ public class UsersServiceImpl extends BaseService implements UsersService {
     @Transactional
     public ResponseDTO<?> createUser(CreateUserForm users) {
         Optional<Users> deviceIdExisting = usersRepository.findByDeviceIdAndStatusIn(users.getDeviceId(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
-        
-        
         Assert.isTrue(deviceIdExisting.isEmpty(), MsgUtil.getMessage("device.exist"));
         Optional<Users> existingName = usersRepository.findByNameAndStatusIn(users.getName(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
         Assert.isTrue(existingName.isEmpty(), MsgUtil.getMessage("name.exist"));
+        Characters defaultChar;
         Users newUser = new Users();
         newUser.setUsername(users.getUsername());
         newUser.setDeviceId(users.getDeviceId());
@@ -106,54 +105,41 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         newUser.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         newUser.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         newUser.setStage(1L);
-        newUser = usersRepository.save(newUser);
         //Character default neu la nu
         if(null != users.getGender() && users.getGender() == 2){
-            Characters defaultChar = charactersRepository.getCharactersByCharacterToken(Constant.CHARACTER_DEFAULT.FEMALE);
-            UserItems newItem = new UserItems();
-            newItem.setUserId(newUser.getId());
-            newItem.setItemId(defaultChar.getItemId());
-            newItem.setItemType(Constant.ITEMTYPE.CHARACTER);
-            newItem.setLevel(1);
-            newItem.setNumber(1L);
-            newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-            newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-            userItemsRepository.save(newItem);
-            newUser.setCharacterId(defaultChar.getId());
-            newUser.setMypageCharacterId(defaultChar.getId());
-            usersRepository.save(newUser);
+            defaultChar = charactersRepository.getCharactersByCharacterToken(Constant.CHARACTER_DEFAULT.FEMALE);
         }else{
-            Characters defaultChar = charactersRepository.getCharactersByCharacterToken(Constant.CHARACTER_DEFAULT.MALE);
-            UserItems newItem = new UserItems();
-            newItem.setUserId(newUser.getId());
-            newItem.setItemId(defaultChar.getItemId());
-            newItem.setItemType(Constant.ITEMTYPE.CHARACTER);
-            newItem.setLevel(1);
-            newItem.setNumber(1L);
-            newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-            newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-            userItemsRepository.save(newItem);
-            newUser.setCharacterId(defaultChar.getId());
-            newUser.setMypageCharacterId(defaultChar.getId());
-            usersRepository.save(newUser);
+            defaultChar = charactersRepository.getCharactersByCharacterToken(Constant.CHARACTER_DEFAULT.MALE);
         }
+
+        UserItems defaultCharItem = new UserItems();
+        defaultCharItem.setUserId(newUser.getId());
+        defaultCharItem.setItemId(defaultChar.getItemId());
+        defaultCharItem.setItemType(Constant.ITEMTYPE.CHARACTER);
+        defaultCharItem.setLevel(1);
+        defaultCharItem.setNumber(1L);
+        defaultCharItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        defaultCharItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        newUser.setCharacterId(defaultChar.getId());
+        newUser.setMypageCharacterId(defaultChar.getId());
+        userItemsRepository.save(defaultCharItem);
 
         //Background default
         Background defaultBackground = backgroundRepository.getBackgroundByBackgroundToken(Constant.BACKGROUND_DEFAULT);
-        UserItems newItem = new UserItems();
-        newItem.setUserId(newUser.getId());
+        UserItems defaultBackgroundItem = new UserItems();
+        defaultBackgroundItem.setUserId(newUser.getId());
         if (defaultBackground != null) {
-            newItem.setItemId(defaultBackground.getItemId());
+            defaultBackgroundItem.setItemId(defaultBackground.getItemId());
             newUser.setBackgroundId(defaultBackground.getId());
         } else {
-            newItem.setItemId(-1L);
+            defaultBackgroundItem.setItemId(-1L);
             newUser.setBackgroundId(-1L);
         }
-        newItem.setItemType(Constant.ITEMTYPE.BACKGROUND);
-        newItem.setNumber(1L);
-        newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        userItemsRepository.save(newItem);
+        defaultBackgroundItem.setItemType(Constant.ITEMTYPE.BACKGROUND);
+        defaultBackgroundItem.setNumber(1L);
+        defaultBackgroundItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        defaultBackgroundItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        userItemsRepository.save(defaultBackgroundItem);
         usersRepository.save(newUser);
         return ResponseDTO.success(newUser);
     }
