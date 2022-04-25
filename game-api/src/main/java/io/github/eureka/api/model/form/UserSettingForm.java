@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Project: MSA-springboot-eureka.<br/>
  * Des: <br/>
@@ -14,6 +16,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserSettingForm {
+    @NotNull(message = "characterId.null")
     private Long characterId;
+    @NotNull(message = "backgroundId.null")
     private Long backgroundId;
 }

@@ -13,11 +13,11 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateUserForm {
-	@NotNull(message = "deviceId must not be null")
+	@NotNull(message = "deviceId.null")
 	String deviceId;
 	String name;
 	Date birthday;
-	@NotNull(message = "username must not be null")
+	@NotNull(message = "username.null")
 	String username;
 	Integer gender;
 }

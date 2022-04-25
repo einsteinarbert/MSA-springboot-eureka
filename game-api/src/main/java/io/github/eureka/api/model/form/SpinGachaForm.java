@@ -12,10 +12,10 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class SpinGachaForm {
-	@NotNull(message = "gachaId must be not null")
+	@NotNull(message = "gachaId.null")
 	private Long gachaId;
-	@NotNull(message = "userId must be not null")
+	@NotNull(message = "userId.null")
 	private Long userId;
-	@NotNull(message = "paymentMethod must be not null")
+	@NotNull(message = "paymentMethod.null")
 	private Integer paymentMethod;
 }

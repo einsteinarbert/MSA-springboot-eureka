@@ -12,10 +12,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChangePasswordForm {
-    @NotNull(message = "userId must not be null")
+    @NotNull(message = "userId.null")
     private Long id;
-    @NotNull(message = "password must not be null")
+    @NotNull(message = "passwd.null")
     private String password;
-    @NotNull(message = "confirmPassword must not be null")
+    @NotNull(message = "confirmPassword.null")
     private String confirmPassword;
 }

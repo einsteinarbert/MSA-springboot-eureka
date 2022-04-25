@@ -1,5 +1,6 @@
 package io.github.eureka.api.config;
 
+import io.github.eureka.api.common.MsgUtil;
 import io.github.eureka.api.model.dto.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -7,12 +8,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import javax.validation.ConstraintViolationException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static io.github.eureka.api.common.MsgUtil.SPLIT_CHAR;
 import static io.github.eureka.api.common.ResponseCode.FAILURE;
@@ -42,8 +49,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         // in ProductController example...
         //.....
         log.error(TRACE, iex);
-        return ResponseEntity.ok().body(new ResponseDTO<>(ResponseDTO.NG,
-                FAILURE, iex.getMessage(), ""));
+        var fieldErr = iex.getBindingResult();
+        List<FieldError> fieldErrors = fieldErr.getFieldErrors();
+        if (fieldErrors.size() > 0) {
+            Map<String, String> data = new HashMap<>();
+            ResponseDTO<Map<String, String>> response = new ResponseDTO<>();
+            response.setStatusCode(FAILURE);
+            response.setMessage(MsgUtil.getMessageContent("validate.fields.error"));
+            for (var f: fieldErrors) {
+                String msgContent = MsgUtil.getMessageContent(f.getDefaultMessage());
+                data.put(f.getField(), "-1".equals(msgContent) ? f.getDefaultMessage() : msgContent);
+            }
+            response.setData(data);
+            return ResponseEntity.ok().body(response);
+        }
+        return ResponseEntity.ok().body(new ResponseDTO<>(FAILURE, iex.getMessage(), ""));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -59,15 +79,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         if (StringUtils.hasLength(msg) && msg.contains(SPLIT_CHAR)) {
             String[] msgLst = msg.split(SPLIT_CHAR);
             try {
-                return ResponseEntity.ok().body(new ResponseDTO<>(msgLst[0],
-                        FAILURE, msgLst[1], ""));
+                return ResponseEntity.ok().body(new ResponseDTO<>(FAILURE, msgLst[1], msgLst[0]));
             } catch (Exception _e) {
-                return ResponseEntity.ok().body(new ResponseDTO<>(msgLst[0],
-                        FAILURE, msg, ""));
+                return ResponseEntity.ok().body(new ResponseDTO<>(FAILURE, msg, msgLst[0]));
             }
         }
-        return ResponseEntity.ok().body(new ResponseDTO<>(ResponseDTO.NG,
-                FAILURE, iex.getMessage(), ""));
+        return ResponseEntity.ok().body(new ResponseDTO<>(FAILURE, iex.getMessage(), ResponseDTO.NG));
     }
 
     @ExceptionHandler(RuntimeException.class)
@@ -80,7 +97,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         // in ProductController example...
         //.....
         log.error(TRACE, ex);
-        return ResponseEntity.ok(ResponseDTO.builder().status(FAILURE).message(ex.getMessage()).build());
+        if (ex instanceof ConstraintViolationException) {
+            var fieldErr = ((ConstraintViolationException) ex).getConstraintViolations();
+            ResponseDTO<Map<String, String>> res = new ResponseDTO<>();
+            res.setStatusCode(FAILURE);
+            Map<String, String> data = new HashMap<>();
+            for (var err: fieldErr) {
+                var paths = err.getPropertyPath().toString().split("\\.");
+                String key = err.getMessageTemplate();
+                String msgErr = MsgUtil.getMessageContent(key);
+                data.put(paths.length == 2 ? paths[1]: key, "-1".equals(msgErr) ? key : msgErr);
+                res.setData(data);
+            }
+            res.setMessage(MsgUtil.getMessageContent("validate.fields.error"));
+            return ResponseEntity.ok(res);
+        }
+        return ResponseEntity.ok(ResponseDTO.builder().statusCode(FAILURE).message(ex.getMessage()).build());
     }
 
     @NotNull
@@ -92,7 +124,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             @NotNull HttpStatus _status,
             @NotNull WebRequest _request) {
         log.error(TRACE, ex);
-        return ResponseEntity.ok(ResponseDTO.builder().status(FAILURE).message(ex.getMessage()).build());
+        return ResponseEntity.ok(ResponseDTO.builder().statusCode(FAILURE).message(ex.getMessage()).build());
     }
 
 }

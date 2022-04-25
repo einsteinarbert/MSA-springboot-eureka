@@ -48,7 +48,6 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
     private void convertStatus(String msg, int status, ResponseDTO<String> responseDTO) {
         if (status == 500 && msg.contains("JWT expired at")) {
             responseDTO.setStatusCode(ResponseCode.TOKEN_EXPIRED);
-            responseDTO.setMessage("JWT expired");
         } else if (status > 399 || status < 200) {
             responseDTO.setStatusCode(ResponseCode.FAILURE);
         }

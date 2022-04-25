@@ -16,20 +16,27 @@ public final class MsgUtil {
         return getMessage(code, null, locale);
     }
 
-    public static String getMessage(String code, Object[] args, Locale locale) {
+    public static String getMessage(String code, Object[] args, Locale locale, Object... ext) {
         ResourceBundle resourceBundle = ResourceBundle.getBundle(BASE_NAME, locale);
         String message;
         try {
             message = resourceBundle.getString(code);
         } catch (MissingResourceException ex) {
             log.debug(ex.getMessage(), ex);
-            message = code;
+            message = "-1";
+        }
+        if (ext.length > 0 && (Boolean) ext[0]) {
+            return MessageFormat.format(message, args);
         }
         return MessageFormat.format(code + SPLIT_CHAR + message, args);
     }
 
     public static String getMessage(String code) {
         return getMessage(code, null, Locale.US);
+    }
+
+    public static String getMessageContent(String code) {
+        return getMessage(code, null, Locale.US, true);
     }
 
     public static String getMessage(String code, Object... args) {
