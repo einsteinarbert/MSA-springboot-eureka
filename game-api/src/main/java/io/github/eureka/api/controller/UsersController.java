@@ -29,12 +29,12 @@ public class UsersController extends BaseController{
 
 
     @PostMapping("/users/update")
-    public ResponseDTO<?> updateUser(@RequestBody Users users){
+    public ResponseDTO<?> updateUser(@Valid @RequestBody Users users){
         return usersService.updateUser(users);
     }
 
     @PostMapping("/change-password")
-    public ResponseDTO<?> updateUserPassword(@RequestBody ChangePasswordForm users){
+    public ResponseDTO<?> updateUserPassword(@Valid @RequestBody ChangePasswordForm users){
         return usersService.updateUserPassword(users);
     }
 
