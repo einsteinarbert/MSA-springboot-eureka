@@ -1,4 +1,4 @@
-package io.github.eureka.api.model.dto;
+package io.github.eureka.api.model.form;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,10 +11,10 @@ import java.sql.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateUserDTO {
+public class CreateUserForm {
 	String deviceId;
 	String name;
 	Date birthday;
 	String username;
-	Byte gender;
+	Integer gender;
 }

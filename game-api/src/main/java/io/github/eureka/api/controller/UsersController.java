@@ -3,6 +3,7 @@ package io.github.eureka.api.controller;
 import io.github.eureka.api.common.MsgUtil;
 import io.github.eureka.api.model.Users;
 import io.github.eureka.api.model.dto.*;
+import io.github.eureka.api.model.form.CreateUserForm;
 import io.github.eureka.api.service.UsersService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,8 @@ public class UsersController extends BaseController{
     private final UsersService usersService;
 
     @PostMapping("/users/create")
-    public ResponseEntity<?> createUser(@RequestBody CreateUserDTO users){
-            usersService.createUser(users);
-        return ResponseEntity.ok().build();
+    public ResponseDTO<?> createUser(@RequestBody CreateUserForm users){
+        return usersService.createUser(users);
     }
 
 

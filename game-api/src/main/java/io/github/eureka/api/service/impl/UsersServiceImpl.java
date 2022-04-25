@@ -1,6 +1,5 @@
 package io.github.eureka.api.service.impl;
 
-import com.github.javafaker.Faker;
 import io.github.eureka.api.common.Constant;
 import io.github.eureka.api.common.DataUtil;
 import io.github.eureka.api.common.MsgUtil;
@@ -11,6 +10,7 @@ import io.github.eureka.api.model.UserItems;
 import io.github.eureka.api.model.Users;
 import io.github.eureka.api.model.dto.*;
 import io.github.eureka.api.model.entity.UserDataEntity;
+import io.github.eureka.api.model.form.CreateUserForm;
 import io.github.eureka.api.repo.BackgroundRepository;
 import io.github.eureka.api.repo.CharactersRepository;
 import io.github.eureka.api.repo.UserItemsRepository;
@@ -18,7 +18,6 @@ import io.github.eureka.api.repo.UsersRepository;
 import io.github.eureka.api.securities.PBKDF2Encoder;
 import io.github.eureka.api.service.BaseService;
 import io.github.eureka.api.service.CommonService;
-import io.github.eureka.api.service.ItemService;
 import io.github.eureka.api.service.UsersService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -88,8 +87,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
 
     @Override
     @Transactional
-    public Users createUser(CreateUserDTO users) {
-    //Comment test
+    public ResponseDTO<?> createUser(CreateUserForm users) {
         Optional<Users> deviceIdExisting = usersRepository.findByDeviceIdAndStatusIn(users.getDeviceId(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
         Assert.isTrue(deviceIdExisting.isEmpty(), MsgUtil.getMessage("device.exist"));
         Optional<Users> existingName = usersRepository.findByNameAndStatusIn(users.getName(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
@@ -117,7 +115,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
             newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
             userItemsRepository.save(newItem);
-//            newUser.setCharacterId(defaultChar.getId() == null );
+            newUser.setCharacterId(defaultChar.getId());
             newUser.setMypageCharacterId(defaultChar.getId());
             usersRepository.save(newUser);
         }else{
@@ -153,7 +151,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         userItemsRepository.save(newItem);
         usersRepository.save(newUser);
-        return newUser;
+        return ResponseDTO.success(newUser);
     }
 
     @Override
