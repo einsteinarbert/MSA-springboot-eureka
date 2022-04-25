@@ -24,6 +24,6 @@ public class GachaResultDTO {
 	private String memo;
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
-	private Characters character;
-	private SpecialItems specialItem;
+	private Characters characters;
+	private SpecialItems specialItems;
 }
