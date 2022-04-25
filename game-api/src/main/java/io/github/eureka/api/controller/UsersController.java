@@ -13,6 +13,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 @AllArgsConstructor
@@ -22,7 +23,7 @@ public class UsersController extends BaseController{
     private final UsersService usersService;
 
     @PostMapping("/users/create")
-    public ResponseDTO<?> createUser(@RequestBody CreateUserForm users){
+    public ResponseDTO<?> createUser(@Valid @RequestBody CreateUserForm users){
         return usersService.createUser(users);
     }
 
