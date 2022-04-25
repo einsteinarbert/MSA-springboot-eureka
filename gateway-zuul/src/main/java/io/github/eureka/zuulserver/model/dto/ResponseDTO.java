@@ -29,10 +29,9 @@ public class ResponseDTO<T> implements Serializable {
     @Transient
     public static final String NG = "failure";
     @Builder.Default
-    private String code = OK;
+    private int statusCode = ResponseCode.SUCCESS;
     @Builder.Default
-    private int status = ResponseCode.SUCCESS;
-    private String message;
+    private String message = OK;
     private T data;
 
     public ResponseDTO(T data) {
@@ -43,6 +42,6 @@ public class ResponseDTO<T> implements Serializable {
     }
 
     public static <T> ResponseDTO<T> success(T data, int i) {
-        return ResponseDTO.<T>builder().data(data).status(i).build();
+        return ResponseDTO.<T>builder().data(data).statusCode(i).build();
     }
 }
