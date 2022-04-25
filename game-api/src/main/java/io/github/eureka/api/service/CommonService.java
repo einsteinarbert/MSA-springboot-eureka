@@ -17,4 +17,10 @@ import java.io.IOException;
 public interface CommonService {
     Object verifyInAppPurchase(PurchaseDTO transInfo) throws IllegalAccessException, IOException, JSONException;
     Users validateUser(ActionUserDTO userDTO);
+    Boolean checkBalanceEnought(Long userId, String platform, Integer paymentMethodType, Integer price);
+    void changeBalanceProgress(Long userId, Integer paymentMethodId, Integer price);
+
+    Boolean checkJewelBonusEnought(Long userId, Integer price);
+
+    Integer jewelBonus(Long userId);
 }

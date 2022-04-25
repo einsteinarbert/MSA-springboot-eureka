@@ -20,50 +20,50 @@ import java.util.Date;
 @Table(name = "user_wallets")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class UserWallets {
-    private long id;
-    private long walletId;
-    private long userId;
-    private long number;
+    private Long id;
+    private Long walletId;
+    private Long userId;
+    private Integer number;
     private Date createdAt;
     private Date updatedAt;
 
     @Id
     @Column(name = "id", nullable = false)
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     @Basic
     @Column(name = "wallet_id", nullable = false)
-    public long getWalletId() {
+    public Long getWalletId() {
         return walletId;
     }
 
-    public void setWalletId(long walletId) {
+    public void setWalletId(Long walletId) {
         this.walletId = walletId;
     }
 
     @Basic
     @Column(name = "user_id", nullable = false)
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
     @Basic
     @Column(name = "number", nullable = false)
-    public long getNumber() {
+    public Integer getNumber() {
         return number;
     }
 
-    public void setNumber(long number) {
+    public void setNumber(Integer number) {
         this.number = number;
     }
 

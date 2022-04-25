@@ -19,20 +19,21 @@ import java.util.Objects;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Wallets {
-    private long id;
+    private Long id;
     private String walletName;
-    private String walletType;
-    private Integer limit;
+    private Integer walletType;
+    private Integer jewelType;
+    private Integer limitNumber;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
     @Id
     @Column(name = "id", nullable = false)
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -48,22 +49,33 @@ public class Wallets {
 
     @Basic
     @Column(name = "wallet_type", nullable = false)
-    public String getWalletType() {
+    public Integer getWalletType() {
         return walletType;
     }
 
-    public void setWalletType(String walletType) {
+    public void setWalletType(Integer walletType) {
         this.walletType = walletType;
     }
 
+
     @Basic
-    @Column(name = "limit", nullable = false)
-    public Integer getLimit() {
-        return limit;
+    @Column(name = "jewel_type", nullable = false)
+    public Integer getJewelType() {
+        return jewelType;
     }
 
-    public void setLimit(Integer limit) {
-        this.limit = limit;
+    public void setJewelType(Integer jewelType) {
+        this.jewelType = jewelType;
+    }
+
+    @Basic
+    @Column(name = "limit_number", nullable = false)
+    public Integer getLimitNumber() {
+        return limitNumber;
+    }
+
+    public void setLimitNumber(Integer limitNumber) {
+        this.limitNumber = limitNumber;
     }
 
     @Basic
@@ -91,11 +103,11 @@ public class Wallets {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Wallets wallets = (Wallets) o;
-        return id == wallets.id && walletType == wallets.walletType && limit == wallets.limit && Objects.equals(walletName, wallets.walletName) && Objects.equals(createdAt, wallets.createdAt) && Objects.equals(updatedAt, wallets.updatedAt);
+        return id == wallets.id && walletType == wallets.walletType && limitNumber == wallets.limitNumber && Objects.equals(walletName, wallets.walletName) && Objects.equals(createdAt, wallets.createdAt) && Objects.equals(updatedAt, wallets.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, walletName, walletType, limit, createdAt, updatedAt);
+        return Objects.hash(id, walletName, walletType, limitNumber, createdAt, updatedAt);
     }
 }

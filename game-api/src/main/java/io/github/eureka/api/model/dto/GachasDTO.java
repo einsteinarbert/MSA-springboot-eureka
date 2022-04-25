@@ -16,7 +16,11 @@ public class GachasDTO {
 	private Long id;
 	private Long itemId;
 	private String name;
-	private Integer gachaTicketType;
+	private Integer gachaType;
+	private Long paymentMethodId;
+	private Integer price;
+	private Long paymentMethodId2;
+	private Integer price2;
 	private String thumbnail;
 	private String icon;
 	private Date startDate;

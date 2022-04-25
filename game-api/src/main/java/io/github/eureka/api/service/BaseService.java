@@ -25,4 +25,6 @@ public abstract class BaseService {
                         .map(i -> modelMapper.map(i, clazz))
                         .collect(Collectors.toList());
     }
+    
+    
 }

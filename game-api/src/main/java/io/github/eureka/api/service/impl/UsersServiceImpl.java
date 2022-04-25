@@ -106,53 +106,53 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         newUser.setStage(1L);
         newUser = usersRepository.save(newUser);
         //Character default neu la nu
-//        if(null != users.getGender() && users.getGender() == 2){
-//            Characters defaultChar = charactersRepository.getCharactersByCharacterToken(Constant.CHARACTER_DEFAULT.FEMALE);
-//            UserItems newItem = new UserItems();
-//            newItem.setUserId(newUser.getId());
-//            newItem.setItemId(defaultChar.getItemId());
-//            newItem.setItemType(Constant.ITEMTYPE.CHARACTER);
-//            newItem.setLevel(1);
-//            newItem.setNumber(1L);
-//            newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-//            newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-//            userItemsRepository.save(newItem);
-////            newUser.setCharacterId(defaultChar.getId() == null );
-//            newUser.setMypageCharacterId(defaultChar.getId());
-//            usersRepository.save(newUser);
-//        }else{
-//            Characters defaultChar = charactersRepository.getCharactersByCharacterToken(Constant.CHARACTER_DEFAULT.MALE);
-//            UserItems newItem = new UserItems();
-//            newItem.setUserId(newUser.getId());
-//            newItem.setItemId(defaultChar.getItemId());
-//            newItem.setItemType(Constant.ITEMTYPE.CHARACTER);
-//            newItem.setLevel(1);
-//            newItem.setNumber(1L);
-//            newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-//            newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-//            userItemsRepository.save(newItem);
-//            newUser.setCharacterId(defaultChar.getId());
-//            newUser.setMypageCharacterId(defaultChar.getId());
-//            usersRepository.save(newUser);
-//        }
-//            
-//        //Background default
-//        Background defaultBackground = backgroundRepository.getBackgroundByBackgroundToken(Constant.BACKGROUND_DEFAULT);
-//        UserItems newItem = new UserItems();
-//        newItem.setUserId(newUser.getId());
-//        if (defaultBackground != null) {
-//            newItem.setItemId(defaultBackground.getItemId());
-//            newUser.setBackgroundId(defaultBackground.getId());
-//        } else {
-//            newItem.setItemId(-1L);
-//            newUser.setBackgroundId(-1L);
-//        }
-//        newItem.setItemType(Constant.ITEMTYPE.BACKGROUND);
-//        newItem.setNumber(1L);
-//        newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-//        newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-//        userItemsRepository.save(newItem);
-//        usersRepository.save(newUser);
+        if(null != users.getGender() && users.getGender() == 2){
+            Characters defaultChar = charactersRepository.getCharactersByCharacterToken(Constant.CHARACTER_DEFAULT.FEMALE);
+            UserItems newItem = new UserItems();
+            newItem.setUserId(newUser.getId());
+            newItem.setItemId(defaultChar.getItemId());
+            newItem.setItemType(Constant.ITEMTYPE.CHARACTER);
+            newItem.setLevel(1);
+            newItem.setNumber(1L);
+            newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+            userItemsRepository.save(newItem);
+//            newUser.setCharacterId(defaultChar.getId() == null );
+            newUser.setMypageCharacterId(defaultChar.getId());
+            usersRepository.save(newUser);
+        }else{
+            Characters defaultChar = charactersRepository.getCharactersByCharacterToken(Constant.CHARACTER_DEFAULT.MALE);
+            UserItems newItem = new UserItems();
+            newItem.setUserId(newUser.getId());
+            newItem.setItemId(defaultChar.getItemId());
+            newItem.setItemType(Constant.ITEMTYPE.CHARACTER);
+            newItem.setLevel(1);
+            newItem.setNumber(1L);
+            newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+            userItemsRepository.save(newItem);
+            newUser.setCharacterId(defaultChar.getId());
+            newUser.setMypageCharacterId(defaultChar.getId());
+            usersRepository.save(newUser);
+        }
+
+        //Background default
+        Background defaultBackground = backgroundRepository.getBackgroundByBackgroundToken(Constant.BACKGROUND_DEFAULT);
+        UserItems newItem = new UserItems();
+        newItem.setUserId(newUser.getId());
+        if (defaultBackground != null) {
+            newItem.setItemId(defaultBackground.getItemId());
+            newUser.setBackgroundId(defaultBackground.getId());
+        } else {
+            newItem.setItemId(-1L);
+            newUser.setBackgroundId(-1L);
+        }
+        newItem.setItemType(Constant.ITEMTYPE.BACKGROUND);
+        newItem.setNumber(1L);
+        newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        userItemsRepository.save(newItem);
+        usersRepository.save(newUser);
         return newUser;
     }
 

@@ -19,4 +19,6 @@ public interface UserWalletsRepository extends CrudRepository<UserWallets, Long>
     @Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
     @Query(value = "select c from UserWallets c where c.id in ?1")
     List<UserWallets> findAllByIdWithLock(List<Long> ids);
+    
+    UserWallets findUserWalletsByUserIdAndWalletId(Long userId, Long walletId);
 }

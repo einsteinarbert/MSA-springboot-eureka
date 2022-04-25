@@ -2,6 +2,7 @@ package io.github.eureka.api.controller;
 
 import io.github.eureka.api.model.UserItems;
 import io.github.eureka.api.model.dto.*;
+import io.github.eureka.api.model.form.SpinGachaForm;
 import io.github.eureka.api.repo.UserItemsRepository;
 import io.github.eureka.api.service.GachasService;
 import lombok.AllArgsConstructor;
@@ -28,9 +29,8 @@ public class GachaController {
 	}
 	
 	@PostMapping("/gacha-result")
-	public ResponseDTO<GachaResultDTO> spinGacha(@RequestBody SpinGachaDTO spinGachaDTO) {
-		GachaResultDTO resultSpin = gachasService.spinGacha(spinGachaDTO);
-		return ResponseDTO.success(resultSpin);
+	public ResponseDTO<?> spinGacha(@RequestBody SpinGachaForm spinGachaForm) {
+		return gachasService.spinGacha(spinGachaForm);
 	}
 
 	@PostMapping("/save-bonus-gacha")

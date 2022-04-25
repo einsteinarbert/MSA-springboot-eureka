@@ -2,6 +2,8 @@ package io.github.eureka.api.common;
 
 import lombok.Getter;
 
+import javax.persistence.criteria.CriteriaBuilder;
+
 /**
  * Project: MSA-springboot-eureka.<br/>
  * Des: <br/>
@@ -11,7 +13,8 @@ import lombok.Getter;
  */
 public interface Constant {
     String PLAY_STORE_TRANS_URL = "https://androidpublisher.googleapis.com/androidpublisher/v3/applications/{packageName}/purchases/subscriptions/{subscriptionId}/tokens/{token}";
-    @Getter
+
+	@Getter
     enum PlatformType {
         ALL(0), ANDROID(1), IOS(2);
         final int type;
@@ -52,6 +55,24 @@ public interface Constant {
     }
 
     @Getter
+    enum walletHistoryType {
+        BUY(0), USE(1), BONUS(2), GIFT(3), RETURN(4);
+        final int type;
+        walletHistoryType(int i) {
+            type = i;
+        }
+    }
+
+    @Getter
+    enum PaymentMethodType {
+        JEWEL(0), COIN(1);
+        final int type;
+        PaymentMethodType(int i) {
+            type = i;
+        }
+    }
+
+    @Getter
     enum PayStateAndroid {
         PAYMENT_PENDING("payment.pending", 0),
         PAYMENT_RECEIVED("payment.received", 1),
@@ -83,6 +104,17 @@ public interface Constant {
     interface CHARACTER_DEFAULT{
         String MALE = "ch00101000";
         String FEMALE = "ch00201000";
+    }
+    
+    interface SPIN_GACHA_PAYMENT{
+        Integer TICKET = 2;
+        Integer JEWELORCOIN = 1;
+    }
+    
+    interface TICKET_PAYMENT_METHOD{
+        Integer NORMAL_TICKET = 0;
+        Integer PREMIUM_TICKET = 1;
+        Integer PICKUP_TICKET = 2;
     }
     
     String BACKGROUND_DEFAULT = "bg0100";

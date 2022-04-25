@@ -3,17 +3,12 @@ package io.github.eureka.api.service.impl;
 import io.github.eureka.api.common.Constant;
 import io.github.eureka.api.common.DataUtil;
 import io.github.eureka.api.common.MsgUtil;
-import io.github.eureka.api.model.Characters;
-import io.github.eureka.api.model.GachaCharacters;
-import io.github.eureka.api.model.Gachas;
-import io.github.eureka.api.model.GrowthTypes;
-import io.github.eureka.api.model.Items;
-import io.github.eureka.api.model.SpecialItems;
-import io.github.eureka.api.model.UserItems;
-import io.github.eureka.api.model.Users;
+import io.github.eureka.api.model.*;
 import io.github.eureka.api.model.dto.*;
+import io.github.eureka.api.model.form.SpinGachaForm;
 import io.github.eureka.api.repo.*;
 import io.github.eureka.api.service.BaseService;
+import io.github.eureka.api.service.CommonService;
 import io.github.eureka.api.service.GachasService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.internal.util.Assert;
@@ -36,10 +31,12 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 	private final GrowthTypesRepository growthTypesRepository;
 	private final SpecialItemsRepository specialItemsRepository;
 	private final GachaCharactersRepository gachaCharactersRepository;
+	private final CommonService commonService;
+	private final PaymentMethodsRepository paymentMethodsRepository;
 
 	@Override
 	public List<GachasDTO> getAllGachaForSpin() {
-		List<GachasDTO> result = super.mapList(gachasRepository.findAll(), GachasDTO.class);
+		List<GachasDTO> result = super.mapList(gachasRepository.getListGacha(), GachasDTO.class);
 		if(!DataUtil.isNullOrEmpty(result)){
 			for(GachasDTO gachasDTO : result){
 				List<GachaCharacterDTO> gachaCharacterDTOList = super.mapList(gachaCharactersRepository.findAllByGachaId(gachasDTO.getId()), GachaCharacterDTO.class);
@@ -63,26 +60,75 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 	}
 
 	@Override
-	public GachaResultDTO spinGacha(SpinGachaDTO spinGachaDTO) {
-		UserItems userItems = gachasRepository.getGachaByUserItem(spinGachaDTO.getUserId(), spinGachaDTO.getUserItemId());
-		Assert.notNull(userItems, MsgUtil.getMessage("item.gacha.notexist"));
-		List<GachaCharacters> lstGacha = gachasRepository.listGachaById(spinGachaDTO.getUserItemId());
+	public ResponseDTO<?> spinGacha(SpinGachaForm spinGachaForm) {
+		//Validate SL item hoac coin - jewel
+		Optional<Gachas> gachasOptional = gachasRepository.findById(spinGachaForm.getGachaId());
+		Assert.isTrue(gachasOptional.isPresent(), MsgUtil.getMessage("gacha.notexits"));
+		Gachas gachas = gachasOptional.get();
+		Optional<PaymentMethods> paymentMethodsOptional = paymentMethodsRepository.findById(gachas.getPaymentMethodId());
+		Assert.isTrue(gachasOptional.isPresent(), MsgUtil.getMessage("payment.notexits"));
+		PaymentMethods paymentMethods = paymentMethodsOptional.get();
+		if(Constant.SPIN_GACHA_PAYMENT.JEWELORCOIN.equals(spinGachaForm.getPaymentMethod())){
+			if(!commonService.checkBalanceEnought(spinGachaForm.getUserId(), "IOS", paymentMethods.getPaymentType(), gachas.getPrice()))
+				return ResponseDTO.success(gachas);
+		}else{
+			String itemType;
+			switch (gachas.getPaymentMethodId2().intValue()){
+				case 0:
+					itemType = "NORMAL_TICKET";
+					break;
+				case 1:
+					itemType = "PREMIUM_TICKET";
+					break;
+				case 2:
+					itemType = "PICKUP_TICKET";
+					break;
+				default:
+					itemType = "NORMAL_TICKET";
+			}
+			UserItems checkItem = userItemsRepository.findUserItemsByUserIdAndItemType(spinGachaForm.getUserId(), itemType);
+			Assert.notNull(checkItem, MsgUtil.getMessage("ticket.not.enough"));
+		}
+
+		List<GachaCharacters> lstGacha = gachasRepository.listGachaById(gachas.getId());
 		GachaResultDTO gachaResultDTO;
 		GachaCharacters resultSpin = this.randomGacha(lstGacha);
 		gachaResultDTO = super.map(resultSpin, GachaResultDTO.class);
 		Characters resultGachaCharacter = charactersRepository.findById(gachaResultDTO.getCharacterId()).get();
 		//Check level cua userItems 
-		UserItems userCharacterItem = userItemsRepository.findUserItemsByUserIdAndItemId(spinGachaDTO.getUserId(), resultGachaCharacter.getItemId());
+		UserItems userCharacterItem = userItemsRepository.findUserItemsByUserIdAndItemId(spinGachaForm.getUserId(), resultGachaCharacter.getItemId());
 		GrowthTypes growthTypes = growthTypesRepository.getById(resultGachaCharacter.getGrowthTypeId());
 		Integer maxCharacterToUp = growthTypes.getLevel2() + growthTypes.getLevel3() + growthTypes.getLevel4() + growthTypes.getLevel5() + growthTypes.getLevel6();
-		if(growthTypes.getLevelMax() == userCharacterItem.getLevel() && userCharacterItem.getNumber() == Long.valueOf(maxCharacterToUp)){
-			SpecialItems specialItems = specialItemsRepository.getSpecialItemsBySpecialItemType("MEDAL");
-			gachaResultDTO.setSpecialItems(specialItems);
+		if(!DataUtil.isNullOrEmpty(userCharacterItem)) {
+			if (growthTypes.getLevelMax() == userCharacterItem.getLevel() && userCharacterItem.getNumber() == Long.valueOf(maxCharacterToUp)) {
+				SpecialItems specialItems = specialItemsRepository.getSpecialItemsBySpecialItemType("MEDAL");
+				gachaResultDTO.setSpecialItems(specialItems);
+			}
 		}
 		gachaResultDTO.setCharacters(resultGachaCharacter);
-		userItems.setNumber(userItems.getNumber() - 1L);
-		userItemsRepository.save(userItems);
-		return gachaResultDTO;
+		//Tru SL theo gia
+		if(Constant.SPIN_GACHA_PAYMENT.JEWELORCOIN.equals(spinGachaForm.getPaymentMethod())){
+			commonService.changeBalanceProgress(spinGachaForm.getUserId(), paymentMethods.getPaymentType(), gachas.getPrice());
+		}else{
+			String itemType;
+			switch (gachas.getPaymentMethodId2().intValue()){
+				case 0:
+					itemType = "NORMAL_TICKET";
+					break;
+				case 1:
+					itemType = "PREMIUM_TICKET";
+					break;
+				case 2:
+					itemType = "PICKUP_TICKET";
+					break;
+				default:
+					itemType = "NORMAL_TICKET";
+			}
+			UserItems checkItem = userItemsRepository.findUserItemsByUserIdAndItemType(spinGachaForm.getUserId(), itemType);
+			checkItem.setNumber(checkItem.getNumber() - 1L);
+			userItemsRepository.save(checkItem);
+		}
+		return ResponseDTO.success(gachaResultDTO);
 	}
 
 	@Override
