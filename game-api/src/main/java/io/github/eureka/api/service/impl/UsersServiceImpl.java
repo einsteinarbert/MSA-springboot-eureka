@@ -89,6 +89,8 @@ public class UsersServiceImpl extends BaseService implements UsersService {
     @Transactional
     public ResponseDTO<?> createUser(CreateUserForm users) {
         Optional<Users> deviceIdExisting = usersRepository.findByDeviceIdAndStatusIn(users.getDeviceId(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
+        
+        
         Assert.isTrue(deviceIdExisting.isEmpty(), MsgUtil.getMessage("device.exist"));
         Optional<Users> existingName = usersRepository.findByNameAndStatusIn(users.getName(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
         Assert.isTrue(existingName.isEmpty(), MsgUtil.getMessage("name.exist"));
@@ -162,7 +164,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
     }
 
     @Override
-    public Users updateUser(Users users) {
+    public ResponseDTO<?> updateUser(Users users) {
         Users existingId = usersRepository.getById(users.getId());
         Assert.notNull(existingId, MsgUtil.getMessage("user.info.null"));
         Optional<Users> existingUser = usersRepository.findByUsernameAndStatusIn(users.getUsername(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
@@ -178,11 +180,11 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         users.setAge(new Date(Calendar.getInstance().getTimeInMillis()), users.getBirthday());
         users.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         usersRepository.save(users);
-        return users;
+        return ResponseDTO.success(users);
     }
 
     @Override
-    public void updateUserPassword(ChangePasswordDTO users) {
+    public ResponseDTO<?> updateUserPassword(ChangePasswordDTO users) {
         if(!users.getPassword().equals(users.getConfirmPassword())){
             throw new IllegalArgumentException(MsgUtil.getMessage("password.notmatch"));
         }
@@ -191,6 +193,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         existingId.setEncryptedPassword(passwordEncoder.encode(users.getPassword()));
         existingId.setStatus(Constant.STATUS.REGITERED);
         usersRepository.save(existingId);
+        return ResponseDTO.success(existingId);
     }
 
     @Override

@@ -12,8 +12,8 @@ import java.util.List;
 public interface UsersService {
     ResponseDTO<?> createUser(CreateUserForm users);
     Users getUserById(Long id);
-    Users updateUser(Users users);
-    void updateUserPassword(ChangePasswordDTO users);
+	ResponseDTO<?> updateUser(Users users);
+	ResponseDTO<?> updateUserPassword(ChangePasswordDTO users);
 
 	List<Users> getAllUser();
 

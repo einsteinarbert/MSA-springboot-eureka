@@ -26,15 +26,13 @@ public class UsersController extends BaseController{
 
 
     @PostMapping("/users/update")
-    public ResponseEntity<?> updateUser(@RequestBody Users users){
-        usersService.updateUser(users);
-        return ResponseEntity.ok().build();
+    public ResponseDTO<?> updateUser(@RequestBody Users users){
+        return usersService.updateUser(users);
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<?> updateUserPassword(@RequestBody ChangePasswordDTO users){
-        usersService.updateUserPassword(users);
-        return ResponseEntity.ok().build();
+    public ResponseDTO<?> updateUserPassword(@RequestBody ChangePasswordDTO users){
+        return usersService.updateUserPassword(users);
     }
 
     @GetMapping("/user-info/{id}")
