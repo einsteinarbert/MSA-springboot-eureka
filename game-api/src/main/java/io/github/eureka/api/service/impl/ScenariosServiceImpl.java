@@ -3,7 +3,6 @@ package io.github.eureka.api.service.impl;
 import io.github.eureka.api.common.DataUtil;
 import io.github.eureka.api.common.MsgUtil;
 import io.github.eureka.api.model.Scenarios;
-import io.github.eureka.api.model.dto.BaseMsgDTO;
 import io.github.eureka.api.model.dto.ScenariosDTO;
 import io.github.eureka.api.repo.ScenariosRepository;
 import io.github.eureka.api.service.BaseService;

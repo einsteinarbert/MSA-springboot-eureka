@@ -1,6 +1,6 @@
 package io.github.eureka.api.controller;
 
-import io.github.eureka.api.model.dto.BaseMsgDTO;
+import io.github.eureka.api.model.dto.ResponseDTO;
 import io.github.eureka.api.model.dto.ScenariosDTO;
 import io.github.eureka.api.service.ScenariosService;
 import lombok.AllArgsConstructor;
@@ -18,13 +18,13 @@ public class ScenariosController {
     private final ScenariosService scenariosService;
 
     @GetMapping("/scenarios")
-    public BaseMsgDTO<List<ScenariosDTO>> getListScenario(){
-        return BaseMsgDTO.success(scenariosService.getListScenarios());
+    public ResponseDTO<List<ScenariosDTO>> getListScenario(){
+        return ResponseDTO.success(scenariosService.getListScenarios());
     }
     
     @GetMapping("/scenario-detail/{id}")
-    public BaseMsgDTO<ScenariosDTO> getListScenario(@PathVariable Long id){
-        return BaseMsgDTO.success(scenariosService.findScenarioById(id));
+    public ResponseDTO<ScenariosDTO> getListScenario(@PathVariable Long id){
+        return ResponseDTO.success(scenariosService.findScenarioById(id));
     }
 
 

@@ -1,6 +1,6 @@
 package io.github.eureka.api.config;
 
-import io.github.eureka.api.model.dto.BaseMsgDTO;
+import io.github.eureka.api.model.dto.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +15,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import static io.github.eureka.api.common.MsgUtil.SPLIT_CHAR;
+import static io.github.eureka.api.common.ResponseCode.FAILURE;
 
 /**
  * Project: MSA-springboot-eureka.<br/>
@@ -32,7 +33,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            @NotNull MethodArgumentNotValidException ex,
+            @NotNull MethodArgumentNotValidException iex,
             @NotNull HttpHeaders headers,
             @NotNull HttpStatus status,
             @NotNull WebRequest request
@@ -40,8 +41,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         //Body omitted as it's similar to the method of same name
         // in ProductController example...
         //.....
-        log.error(TRACE, ex);
-        return ResponseEntity.ok(BaseMsgDTO.builder().code(400).message(ex.getMessage()).build());
+        log.error(TRACE, iex);
+        return ResponseEntity.ok().body(new ResponseDTO<>(FAILURE,
+                ResponseDTO.NG, iex.getMessage(), ""));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -57,15 +59,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         if (StringUtils.hasLength(msg) && msg.contains(SPLIT_CHAR)) {
             String[] msgLst = msg.split(SPLIT_CHAR);
             try {
-                return ResponseEntity.ok().body(new BaseMsgDTO<>(HttpStatus.BAD_REQUEST.value(),
+                return ResponseEntity.ok().body(new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(),
                         msgLst[0], msgLst[1], ""));
             } catch (Exception _e) {
-                return ResponseEntity.ok().body(new BaseMsgDTO<>(HttpStatus.BAD_REQUEST.value(),
+                return ResponseEntity.ok().body(new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(),
                         msgLst[0], msg, ""));
             }
         }
-        return ResponseEntity.ok().body(new BaseMsgDTO<>(HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(), iex.getMessage(), ""));
+        return ResponseEntity.ok().body(new ResponseDTO<>(FAILURE,
+                ResponseDTO.NG, iex.getMessage(), ""));
     }
 
     @ExceptionHandler(RuntimeException.class)
@@ -78,7 +80,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         // in ProductController example...
         //.....
         log.error(TRACE, ex);
-        return ResponseEntity.ok(BaseMsgDTO.builder().code(400).message(ex.getMessage()).build());
+        return ResponseEntity.ok(ResponseDTO.builder().code(FAILURE).message(ex.getMessage()).build());
     }
 
     @NotNull
@@ -90,7 +92,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             @NotNull HttpStatus _status,
             @NotNull WebRequest _request) {
         log.error(TRACE, ex);
-        return ResponseEntity.ok(BaseMsgDTO.builder().code(400).message(ex.getMessage()).build());
+        return ResponseEntity.ok(ResponseDTO.builder().code(FAILURE).message(ex.getMessage()).build());
     }
 
 }

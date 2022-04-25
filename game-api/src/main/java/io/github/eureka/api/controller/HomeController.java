@@ -1,7 +1,7 @@
 package io.github.eureka.api.controller;
 
 import io.github.eureka.api.model.Users;
-import io.github.eureka.api.model.dto.BaseMsgDTO;
+import io.github.eureka.api.model.dto.ResponseDTO;
 import io.github.eureka.api.model.dto.PurchaseDTO;
 import io.github.eureka.api.model.dto.SaleInfoDTO;
 import io.github.eureka.api.service.ItemService;
@@ -48,27 +48,27 @@ public class HomeController extends BaseController {
 	}
 
 	@PostMapping("buy-product")
-	public BaseMsgDTO<String> buyProduct(HttpServletRequest request, @RequestBody SaleInfoDTO info) {
+	public ResponseDTO<String> buyProduct(HttpServletRequest request, @RequestBody SaleInfoDTO info) {
 		setUserInfo(request);
 		boolean res = itemService.buyProduct(info);
-		String result = res ? BaseMsgDTO.OK : BaseMsgDTO.NG;
-		return BaseMsgDTO.<String>builder().data(result).build();
+		String result = res ? ResponseDTO.OK : ResponseDTO.NG;
+		return ResponseDTO.<String>builder().data(result).build();
 	}
 
 	@PostMapping("purchase-product")
-	public BaseMsgDTO<String> byCashBuy(HttpServletRequest request, @RequestBody PurchaseDTO info) throws JSONException, IOException, IllegalAccessException {
+	public ResponseDTO<String> byCashBuy(HttpServletRequest request, @RequestBody PurchaseDTO info) throws JSONException, IOException, IllegalAccessException {
 		setUserInfo(request);
 		var res = itemService.purchase(info);
-		String result = res ? BaseMsgDTO.OK : BaseMsgDTO.NG;
-		return BaseMsgDTO.<String>builder().data(result).build();
+		String result = res ? ResponseDTO.OK : ResponseDTO.NG;
+		return ResponseDTO.<String>builder().data(result).build();
 	}
 
 	@GetMapping("list-products")
-	public BaseMsgDTO<?> getListProducts(
+	public ResponseDTO<?> getListProducts(
 			@RequestParam(name = "productId", required = false) Long productId,
 			@RequestParam(name = "productType", required = false) String productType,
 			@RequestParam(name = "itemType", required = false) String itemType
 	) {
-		return BaseMsgDTO.builder().data(itemService.getListProducts(productId, productType, itemType)).build();
+		return ResponseDTO.builder().data(itemService.getListProducts(productId, productType, itemType)).build();
 	}
 }

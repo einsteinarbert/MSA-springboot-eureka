@@ -38,36 +38,36 @@ public class UsersController extends BaseController{
     }
 
     @GetMapping("/user-info/{id}")
-    public BaseMsgDTO<?> getOneUser(@PathVariable Long id){
+    public ResponseDTO<?> getOneUser(@PathVariable Long id){
         Users users = usersService.getUserById(id);
-        return BaseMsgDTO.success(users);
+        return ResponseDTO.success(users);
     }
 
     @GetMapping("/list-user")
-    public BaseMsgDTO<?> getAllUser(){
+    public ResponseDTO<?> getAllUser(){
         List<Users> users = usersService.getAllUser();
-        return BaseMsgDTO.success(users);
+        return ResponseDTO.success(users);
     }
     
     @GetMapping("/user-data/{userId}")
-    public BaseMsgDTO<?> getUserDataInMyPage(@PathVariable Long userId){
+    public ResponseDTO<?> getUserDataInMyPage(@PathVariable Long userId){
         Assert.isTrue(userId > 0, MsgUtil.getMessage("user.id.invalid"));
         UserDataDTO userDataEntity = usersService.getDataUserInMyPage(userId);
-        return BaseMsgDTO.success(userDataEntity);
+        return ResponseDTO.success(userDataEntity);
     }
 
 
     @GetMapping("/user-data-device/{deviceId}")
-    public BaseMsgDTO<?> getUserDataInMyPage(@PathVariable String deviceId){
+    public ResponseDTO<?> getUserDataInMyPage(@PathVariable String deviceId){
         UserDataDTO userDataEntity = usersService.getDataUserInMyPageWithDevice(deviceId);
-        return BaseMsgDTO.success(userDataEntity);
+        return ResponseDTO.success(userDataEntity);
     }
 
     @PostMapping("/user-setting")
-    public BaseMsgDTO<?> setting(HttpServletRequest request, @RequestBody UserSettingDTO data){
+    public ResponseDTO<?> setting(HttpServletRequest request, @RequestBody UserSettingDTO data){
         setUserInfo(request);
         usersService.saveSettingData(data);
-        return BaseMsgDTO.success("");
+        return ResponseDTO.success("");
     }
 
 }
