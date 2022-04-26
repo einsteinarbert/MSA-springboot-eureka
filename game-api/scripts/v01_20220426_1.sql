@@ -9,7 +9,7 @@ alter table characters
     add face_surprise_id varchar(255);
 --
 --
-delete from background;
+truncate table background;
 insert into background (item_id, background_token, name, picture, description, start_date, end_date, created_at, updated_at)  values (2, 'bg0100', 'officeEX_day','picture','怪奇局外観（大きな神社）　昼',current_date(),current_date(), current_date(), current_date());
 insert into background (item_id, background_token, name, picture, description, start_date, end_date, created_at, updated_at)  values (2, 'bg0110', 'officeEX_sunset','picture','怪奇局外観（大きな神社）　夕方',current_date(),current_date(), current_date(), current_date());
 insert into background (item_id, background_token, name, picture, description, start_date, end_date, created_at, updated_at)  values (2, 'bg0200', 'office_day','picture','怪奇局事務所　昼',current_date(),current_date(), current_date(), current_date());
@@ -25,3 +25,64 @@ insert into background (item_id, background_token, name, picture, description, s
 insert into background (item_id, background_token, name, picture, description, start_date, end_date, created_at, updated_at)  values (2, 'bg0710', 'park_sunset','picture','公園　夕方',current_date(),current_date(), current_date(), current_date());
 insert into background (item_id, background_token, name, picture, description, start_date, end_date, created_at, updated_at)  values (2, 'bg0800', 'terraceEX_day','picture','まちてらす外観　昼',current_date(),current_date(), current_date(), current_date());
 insert into background (item_id, background_token, name, picture, description, start_date, end_date, created_at, updated_at)  values (2, 'bg0810', 'terraceEX_sunset','picture','まちてらす外観　夕方',current_date(),current_date(), current_date(), current_date());
+
+drop table if exists skills;
+create table skills(
+    id bigint auto_increment primary key,
+    name       varchar(255) not null,
+    skill_type int          not null,
+    skill_option_id bigint,
+    change_type int,
+    pattern_type int,
+    skill_coin_boost_id bigint,
+    created_at timestamp    null,
+    updated_at timestamp    null
+
+
+);
+--
+drop table if exists skill_options;
+create table skill_options(
+    id bigint auto_increment primary key ,
+    name varchar(255) not null,
+    level1_number varchar(255) not null ,
+    level1_probability varchar(255) not null ,
+    level2_number varchar(255) not null ,
+    level2_probability varchar(255) not null ,
+    level3_number varchar(255) not null ,
+    level3_probability varchar(255) not null ,
+    level4_number varchar(255) not null ,
+    level4_probability varchar(255) not null ,
+    level5_number varchar(255) not null ,
+    level5_probability varchar(255) not null ,
+    level6_number varchar(255) not null ,
+    level6_probability varchar(255) not null ,
+    created_at timestamp,
+    updated_at timestamp
+);
+--
+drop table if exists skill_coin_boosts;
+create table skill_coin_boosts(
+    id bigint auto_increment primary key,
+    name varchar(255) not null,
+    level1_number_of_move integer not null,
+    level1_time integer not null,
+    level1_rate integer not null,
+    level2_number_of_move integer not null,
+    level2_time integer not null,
+    level2_rate integer not null,
+    level3_number_of_move integer not null,
+    level3_time integer not null,
+    level3_rate integer not null,
+    level4_number_of_move integer not null,
+    level4_time integer not null,
+    level4_rate integer not null,
+    level5_number_of_move integer not null,
+    level5_time integer not null,
+    level5_rate integer not null,
+    level6_number_of_move integer not null,
+    level6_time integer not null,
+    level6_rate integer not null,
+    created_at timestamp,
+    updated_at timestamp
+);
