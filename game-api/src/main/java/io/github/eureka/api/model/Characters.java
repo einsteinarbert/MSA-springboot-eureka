@@ -33,7 +33,7 @@ public class Characters {
     private String situation;
     private Integer genderType;
     private Integer getRoute;
-    private String stand;
+    private String standId;
     private String thumbnail;
     private String icon;
     private String skillGage;
@@ -178,13 +178,13 @@ public class Characters {
     }
 
     @Basic
-    @Column(name = "stand", nullable = true, length = 255)
-    public String getStand() {
-        return stand;
+    @Column(name = "stand_id", nullable = true, length = 255)
+    public String getStandId() {
+        return standId;
     }
 
-    public void setStand(String stand) {
-        this.stand = stand;
+    public void setStandId(String standId) {
+        this.standId = standId;
     }
 
     @Basic
@@ -272,11 +272,11 @@ public class Characters {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Characters that = (Characters) o;
-        return id == that.id && itemId == that.itemId && name == that.name && skillId == that.skillId && growthTypeId == that.growthTypeId && Objects.equals(characterToken, that.characterToken) && Objects.equals(situation, that.situation) && Objects.equals(genderType, that.genderType) && Objects.equals(getRoute, that.getRoute) && Objects.equals(stand, that.stand) && Objects.equals(thumbnail, that.thumbnail) && Objects.equals(icon, that.icon) && Objects.equals(skillGage, that.skillGage) && Objects.equals(cutin, that.cutin) && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
+        return id == that.id && itemId == that.itemId && name == that.name && skillId == that.skillId && growthTypeId == that.growthTypeId && Objects.equals(characterToken, that.characterToken) && Objects.equals(situation, that.situation) && Objects.equals(genderType, that.genderType) && Objects.equals(getRoute, that.getRoute) && Objects.equals(standId, that.standId) && Objects.equals(thumbnail, that.thumbnail) && Objects.equals(icon, that.icon) && Objects.equals(skillGage, that.skillGage) && Objects.equals(cutin, that.cutin) && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, itemId, characterToken, name, skillId, growthTypeId, situation, genderType, getRoute, stand, thumbnail, icon, skillGage, cutin, startDate, endDate, createdAt, updatedAt);
+        return Objects.hash(id, itemId, characterToken, name, skillId, growthTypeId, situation, genderType, getRoute, standId, thumbnail, icon, skillGage, cutin, startDate, endDate, createdAt, updatedAt);
     }
 }
