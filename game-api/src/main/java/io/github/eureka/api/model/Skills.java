@@ -1,32 +1,31 @@
 package io.github.eureka.api.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.sql.Timestamp;
-import java.util.Objects;
+import java.util.Date;
 
 /**
  * Project: MSA-springboot-eureka.<br/>
  * Des: <br/>
  * User: HieuTT<br/>
- * Date: 03/04/2022<br/>
- * Time: 18:17<br/>
+ * Date: 26/04/2022<br/>
  */
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Skills {
     private long id;
     private String name;
     private int skillType;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private Long skillOptionId;
+    private Integer changeType;
+    private Integer patternType;
+    private Long skillCoinBoostId;
+    private Date createdAt;
+    private Date updatedAt;
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     public long getId() {
         return id;
     }
@@ -36,7 +35,7 @@ public class Skills {
     }
 
     @Basic
-    @Column(name = "name", nullable = false, length = 255)
+    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -46,7 +45,7 @@ public class Skills {
     }
 
     @Basic
-    @Column(name = "skill_type", nullable = false)
+    @Column(name = "skill_type")
     public int getSkillType() {
         return skillType;
     }
@@ -56,35 +55,62 @@ public class Skills {
     }
 
     @Basic
-    @Column(name = "created_at", nullable = true)
-    public Timestamp getCreatedAt() {
+    @Column(name = "skill_option_id")
+    public Long getSkillOptionId() {
+        return skillOptionId;
+    }
+
+    public void setSkillOptionId(Long skillOptionId) {
+        this.skillOptionId = skillOptionId;
+    }
+
+    @Basic
+    @Column(name = "change_type")
+    public Integer getChangeType() {
+        return changeType;
+    }
+
+    public void setChangeType(Integer changeType) {
+        this.changeType = changeType;
+    }
+
+    @Basic
+    @Column(name = "pattern_type")
+    public Integer getPatternType() {
+        return patternType;
+    }
+
+    public void setPatternType(Integer patternType) {
+        this.patternType = patternType;
+    }
+
+    @Basic
+    @Column(name = "skill_coin_boost_id")
+    public Long getSkillCoinBoostId() {
+        return skillCoinBoostId;
+    }
+
+    public void setSkillCoinBoostId(Long skillCoinBoostId) {
+        this.skillCoinBoostId = skillCoinBoostId;
+    }
+
+    @Basic
+    @Column(name = "created_at")
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
     @Basic
-    @Column(name = "updated_at", nullable = true)
-    public Timestamp getUpdatedAt() {
+    @Column(name = "updated_at")
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Skills skills = (Skills) o;
-        return id == skills.id && skillType == skills.skillType && Objects.equals(name, skills.name) && Objects.equals(createdAt, skills.createdAt) && Objects.equals(updatedAt, skills.updatedAt);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, skillType, createdAt, updatedAt);
     }
 }

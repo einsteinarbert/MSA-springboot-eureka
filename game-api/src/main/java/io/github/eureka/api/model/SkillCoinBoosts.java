@@ -1,4 +1,4 @@
-package io.github.eureka.api.model.entity;
+package io.github.eureka.api.model;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
