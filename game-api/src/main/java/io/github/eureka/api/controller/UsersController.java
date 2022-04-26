@@ -1,6 +1,5 @@
 package io.github.eureka.api.controller;
 
-import io.github.eureka.api.common.MsgUtil;
 import io.github.eureka.api.model.Users;
 import io.github.eureka.api.model.dto.ResponseDTO;
 import io.github.eureka.api.model.dto.UserDataDTO;
@@ -9,19 +8,12 @@ import io.github.eureka.api.model.form.CreateUserForm;
 import io.github.eureka.api.model.form.UserSettingForm;
 import io.github.eureka.api.service.UsersService;
 import lombok.AllArgsConstructor;
-import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -64,7 +56,7 @@ public class UsersController extends BaseController{
 
 
     @GetMapping("/user-data-device/{deviceId}")
-    public ResponseDTO<?> getUserDataInMyPage(@Min(message = "userId.null", value = 1L) @PathVariable String deviceId){
+    public ResponseDTO<?> getUserDataInMyPage(@PathVariable String deviceId){
         UserDataDTO userDataEntity = usersService.getDataUserInMyPageWithDevice(deviceId);
         return ResponseDTO.success(userDataEntity);
     }
