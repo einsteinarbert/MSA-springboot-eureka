@@ -38,13 +38,14 @@ public class Characters {
     private String icon;
     private String skillGage;
     private String cutin;
+    private String faceSmileId;
+    private String faceSadId;
+    private String faceAngryId;
+    private String faceSurpriceId;
     private Date startDate;
     private Date endDate;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    
-    public Characters(Characters characters){
-        characters = characters;}
 
     @Id
     @Column(name = "id", nullable = false)
@@ -74,6 +75,46 @@ public class Characters {
 
     public void setCharacterToken(String characterToken) {
         this.characterToken = characterToken;
+    }
+
+    @Basic
+    @Column(name = "face_smile_id")
+    public String getFaceSmileId() {
+        return faceSmileId;
+    }
+
+    public void setFaceSmileId(String faceSmileId) {
+        this.faceSmileId = faceSmileId;
+    }
+
+    @Basic
+    @Column(name = "face_sad_id")
+    public String getFaceSadId() {
+        return faceSadId;
+    }
+
+    public void setFaceSadId(String faceSadId) {
+        this.faceSadId = faceSadId;
+    }
+
+    @Basic
+    @Column(name = "face_angry_id")
+    public String getFaceAngryId() {
+        return faceAngryId;
+    }
+
+    public void setFaceAngryId(String faceAngryId) {
+        this.faceAngryId = faceAngryId;
+    }
+
+    @Basic
+    @Column(name = "face_surprise_id")
+    public String getFaceSurpriceId() {
+        return faceSurpriceId;
+    }
+
+    public void setFaceSurpriceId(String faceSurpriceId) {
+        this.faceSurpriceId = faceSurpriceId;
     }
 
     @Basic

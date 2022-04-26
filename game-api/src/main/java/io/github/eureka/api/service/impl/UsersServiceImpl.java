@@ -106,6 +106,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         newUser.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         newUser.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         newUser.setStage(1L);
+        newUser.setGenderType(users.getGender());
         //Character default neu la nu
         if(null != users.getGender() && users.getGender() == 2){
             defaultChar = charactersRepository.getCharactersByCharacterToken(Constant.CHARACTER_DEFAULT.FEMALE);

@@ -43,6 +43,7 @@ public class Users {
     private Long stage;
     private Long rankId;
     private Long mypageCharacterId;
+    private Integer genderType;
 
     @Column(name = "rank_id")
     public Long getRankId() {
@@ -52,6 +53,7 @@ public class Users {
     public void setRankId(Long rankId) {
         this.rankId = rankId;
     }
+    
     @Column(name = "mypage_character_id")
     public Long getMypageCharacterId() {
         return mypageCharacterId;
@@ -86,6 +88,15 @@ public class Users {
 
     public void setBackgroundId(Long backgroundId) {
         this.backgroundId = backgroundId;
+    }
+
+    @Column(name = "gender_type")
+    public Integer getGenderType() {
+        return genderType;
+    }
+
+    public void setGenderType(Integer backgroundId) {
+        this.genderType = genderType;
     }
 
     @Id
