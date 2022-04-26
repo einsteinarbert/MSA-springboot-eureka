@@ -17,7 +17,7 @@ import javax.validation.constraints.Min;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 @Validated
 public class UsersController extends BaseController{
     private final UsersService usersService;

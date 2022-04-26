@@ -10,7 +10,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class CharacterController {
     private final CharactersService charactersService;
     

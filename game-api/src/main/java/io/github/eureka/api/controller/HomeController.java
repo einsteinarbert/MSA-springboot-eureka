@@ -23,7 +23,7 @@ import java.io.IOException;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class HomeController extends BaseController {
 	private final Environment env;
 	private final ItemService itemService;

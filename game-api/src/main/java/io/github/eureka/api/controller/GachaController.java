@@ -13,7 +13,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class GachaController {
 	private final GachasService gachasService;
 	private final UserItemsRepository userItemsRepository;
