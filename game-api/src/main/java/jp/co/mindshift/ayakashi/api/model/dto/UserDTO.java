@@ -1,4 +1,4 @@
-package jp.co.mindshift.ayakashi.api.model.entity;
+package jp.co.mindshift.ayakashi.api.model.dto;
 
 import lombok.*;
 

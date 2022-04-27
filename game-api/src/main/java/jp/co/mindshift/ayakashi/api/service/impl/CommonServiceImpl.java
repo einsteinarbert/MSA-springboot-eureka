@@ -8,7 +8,7 @@ import jp.co.mindshift.ayakashi.api.model.UserWallets;
 import jp.co.mindshift.ayakashi.api.model.Users;
 import jp.co.mindshift.ayakashi.api.model.Wallets;
 import jp.co.mindshift.ayakashi.api.model.dto.ActionUserDTO;
-import jp.co.mindshift.ayakashi.api.model.dto.PurchaseDTO;
+import jp.co.mindshift.ayakashi.api.model.form.PurchaseForm;
 import jp.co.mindshift.ayakashi.api.model.dto.google.SubscriptionPurchaseDTO;
 import jp.co.mindshift.ayakashi.api.repo.UserWalletHistoriesRepository;
 import jp.co.mindshift.ayakashi.api.repo.UserWalletsRepository;
@@ -58,7 +58,7 @@ public class CommonServiceImpl implements CommonService {
             "inner join wallets w ON uw.wallet_id = w.id and 0 = w.wallet_type and w.jewel_type = 1 where user_id = :userId group by uw.user_id";
 
     @Override
-    public Object verifyInAppPurchase(PurchaseDTO transInfo) throws IllegalAccessException, IOException, JSONException {
+    public Object verifyInAppPurchase(PurchaseForm transInfo) throws IllegalAccessException, IOException, JSONException {
         if (Constant.PlatformType.ANDROID.getType() == transInfo.getPlatformType()) {
             String url = Constant.PLAY_STORE_TRANS_URL;
             url = url.replace("{packageName}", transInfo.getPackageName());

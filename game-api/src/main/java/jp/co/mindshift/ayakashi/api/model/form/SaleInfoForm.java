@@ -1,11 +1,13 @@
-package jp.co.mindshift.ayakashi.api.model.dto;
+package jp.co.mindshift.ayakashi.api.model.form;
 
+import jp.co.mindshift.ayakashi.api.model.entity.ProductPriceEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Project: MSA-springboot-eureka.<br/>
@@ -18,11 +20,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PurchaseDTO implements Serializable {
-    private String packageName;
-    private String subscriptionId;
-    private String tokenProduct;
-    private Integer platformType;
-    private Long productId;
-    private Integer number;
+public class SaleInfoForm implements Serializable {
+    private List<ProductPriceEntity> productIds;
+    private Integer payType; // payment_type
 }

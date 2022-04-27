@@ -1,18 +1,18 @@
 package jp.co.mindshift.ayakashi.api.service;
 
-import jp.co.mindshift.ayakashi.api.model.dto.GachasDTO;
+import jp.co.mindshift.ayakashi.api.model.form.GachasForm;
 import jp.co.mindshift.ayakashi.api.model.dto.ResponseDTO;
 import jp.co.mindshift.ayakashi.api.model.form.SpinGachaForm;
-import jp.co.mindshift.ayakashi.api.model.dto.UserItemsDTO;
+import jp.co.mindshift.ayakashi.api.model.form.UserItemsForm;
 
 import java.util.List;
 
 public interface GachasService {
-	List<GachasDTO> getAllGachaForSpin();
+	List<GachasForm> getAllGachaForSpin();
 
-	GachasDTO getGachaTicketById(Long id);
+	GachasForm getGachaTicketById(Long id);
 
 	ResponseDTO<?> spinGacha(SpinGachaForm spinGachaForm);
 
-	Boolean saveBonusGacha(UserItemsDTO userItemsDTO) throws IllegalAccessException;
+	Boolean saveBonusGacha(UserItemsForm userItemsForm) throws IllegalAccessException;
 }

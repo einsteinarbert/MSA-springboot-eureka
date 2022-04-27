@@ -10,8 +10,8 @@ import jp.co.mindshift.ayakashi.api.model.UserWallets;
 import jp.co.mindshift.ayakashi.api.model.Users;
 import jp.co.mindshift.ayakashi.api.model.dto.ActionUserDTO;
 import jp.co.mindshift.ayakashi.api.model.dto.ProductListDTO;
-import jp.co.mindshift.ayakashi.api.model.dto.PurchaseDTO;
-import jp.co.mindshift.ayakashi.api.model.dto.SaleInfoDTO;
+import jp.co.mindshift.ayakashi.api.model.form.PurchaseForm;
+import jp.co.mindshift.ayakashi.api.model.form.SaleInfoForm;
 import jp.co.mindshift.ayakashi.api.model.dto.google.SubscriptionPurchaseDTO;
 import jp.co.mindshift.ayakashi.api.model.entity.ProductInfoEntity;
 import jp.co.mindshift.ayakashi.api.model.entity.ProductPriceEntity;
@@ -67,7 +67,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public boolean buyProduct(SaleInfoDTO saleInfo) {
+    public boolean buyProduct(SaleInfoForm saleInfo) {
         ActionUserDTO userDTO = ActionUserHolder.getActionUser();
         Users user = commonService.validateUser(userDTO);
         // find user wallet
@@ -81,7 +81,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public boolean purchase(PurchaseDTO saleInfo) throws JSONException, IOException, IllegalAccessException {
+    public boolean purchase(PurchaseForm saleInfo) throws JSONException, IOException, IllegalAccessException {
         ActionUserDTO userDTO = ActionUserHolder.getActionUser();
         Users user = commonService.validateUser(userDTO);
         ProductPriceEntity productPriceInfo = (ProductPriceEntity) em.createNativeQuery(ProductPriceEntity.SQL,
@@ -183,7 +183,7 @@ public class ItemServiceImpl implements ItemService {
                 )));
     }
 
-    private void validateTotalAmount(List<UserWalletEntity> listWallet, SaleInfoDTO saleInfo, Users user) {
+    private void validateTotalAmount(List<UserWalletEntity> listWallet, SaleInfoForm saleInfo, Users user) {
         List<ProductPriceEntity> ids = saleInfo.getProductIds();
         List<ProductPriceEntity> priceInfoLst = new ArrayList<>(ids.size());
         int totalAmount = 0;

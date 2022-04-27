@@ -4,7 +4,7 @@ import jp.co.mindshift.ayakashi.api.common.MsgUtil;
 import jp.co.mindshift.ayakashi.api.model.Users;
 import jp.co.mindshift.ayakashi.api.model.dto.PuzzleItemDTO;
 import jp.co.mindshift.ayakashi.api.model.dto.ResponseDTO;
-import jp.co.mindshift.ayakashi.api.model.entity.UserDTO;
+import jp.co.mindshift.ayakashi.api.model.dto.UserDTO;
 import jp.co.mindshift.ayakashi.api.model.form.PuzzleGameForm;
 import jp.co.mindshift.ayakashi.api.repo.UsersRepository;
 import jp.co.mindshift.ayakashi.api.service.BaseService;

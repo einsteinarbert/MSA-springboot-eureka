@@ -1,5 +1,6 @@
-package jp.co.mindshift.ayakashi.api.model.dto;
+package jp.co.mindshift.ayakashi.api.model.form;
 
+import jp.co.mindshift.ayakashi.api.model.dto.GachaCharacterDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GachasDTO {
+public class GachasForm {
 	private Long id;
 	private Long itemId;
 	private String name;

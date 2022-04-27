@@ -14,9 +14,9 @@ import jp.co.mindshift.ayakashi.api.model.UserItems;
 import jp.co.mindshift.ayakashi.api.model.Users;
 import jp.co.mindshift.ayakashi.api.model.dto.GachaCharacterDTO;
 import jp.co.mindshift.ayakashi.api.model.dto.GachaResultDTO;
-import jp.co.mindshift.ayakashi.api.model.dto.GachasDTO;
+import jp.co.mindshift.ayakashi.api.model.form.GachasForm;
 import jp.co.mindshift.ayakashi.api.model.dto.ResponseDTO;
-import jp.co.mindshift.ayakashi.api.model.dto.UserItemsDTO;
+import jp.co.mindshift.ayakashi.api.model.form.UserItemsForm;
 import jp.co.mindshift.ayakashi.api.model.form.SpinGachaForm;
 import jp.co.mindshift.ayakashi.api.repo.CharactersRepository;
 import jp.co.mindshift.ayakashi.api.repo.GachaCharactersRepository;
@@ -55,28 +55,28 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 	private final PaymentMethodsRepository paymentMethodsRepository;
 
 	@Override
-	public List<GachasDTO> getAllGachaForSpin() {
-		List<GachasDTO> result = super.mapList(gachasRepository.getListGacha(), GachasDTO.class);
+	public List<GachasForm> getAllGachaForSpin() {
+		List<GachasForm> result = super.mapList(gachasRepository.getListGacha(), GachasForm.class);
 		if(!DataUtil.isNullOrEmpty(result)){
-			for(GachasDTO gachasDTO : result){
-				List<GachaCharacterDTO> gachaCharacterDTOList = super.mapList(gachaCharactersRepository.findAllByGachaId(gachasDTO.getId()), GachaCharacterDTO.class);
+			for(GachasForm gachasForm : result){
+				List<GachaCharacterDTO> gachaCharacterDTOList = super.mapList(gachaCharactersRepository.findAllByGachaId(gachasForm.getId()), GachaCharacterDTO.class);
 				for(GachaCharacterDTO gachaCharacterDTO : gachaCharacterDTOList){
 					Characters characterDetail = charactersRepository.getById(gachaCharacterDTO.getCharacterId());
 					gachaCharacterDTO.setCharactersDetail(characterDetail);
 				}
-				gachasDTO.setGachaCharacterDTOList(gachaCharacterDTOList);
+				gachasForm.setGachaCharacterDTOList(gachaCharacterDTOList);
 			}
 		}
 		return result;
 	}
 
 	@Override
-	public GachasDTO getGachaTicketById(Long id) {
+	public GachasForm getGachaTicketById(Long id) {
 		Gachas gachaExists = gachasRepository.getById(id);
 		if (DataUtil.isNullOrEmpty(gachaExists)){
 			throw new IllegalArgumentException(MsgUtil.getMessage("gacha.notfound"));
 		}
-		return super.map(gachaExists, GachasDTO.class);
+		return super.map(gachaExists, GachasForm.class);
 	}
 
 	@Override
@@ -152,21 +152,21 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 	}
 
 	@Override
-	public Boolean saveBonusGacha(UserItemsDTO userItemsDTO) throws IllegalAccessException {
-		Optional<Users> existingUser = usersRepository.findById(userItemsDTO.getUserId());
+	public Boolean saveBonusGacha(UserItemsForm userItemsForm) throws IllegalAccessException {
+		Optional<Users> existingUser = usersRepository.findById(userItemsForm.getUserId());
 		Assert.isTrue(existingUser.isPresent(), MsgUtil.getMessage("user.info.null"));
-		Optional<Items> existingItemOp = itemsRepository.findById(userItemsDTO.getItemId());
+		Optional<Items> existingItemOp = itemsRepository.findById(userItemsForm.getItemId());
 		Assert.isTrue(existingItemOp.isPresent(), MsgUtil.getMessage("item.notexist"));
 		var existingItem = existingItemOp.get();
 		boolean isNextLevel = false;
 		if(Constant.ITEMTYPE.MEDAL.equals(existingItem.getItemType()) || Constant.ITEMTYPE.PREMIUM_MEDAL.equals(existingItem.getItemType())){
-			UserItems existingUserItem = userItemsRepository.findUserItemsByUserIdAndItemId(userItemsDTO.getUserId(), userItemsDTO.getItemId());
+			UserItems existingUserItem = userItemsRepository.findUserItemsByUserIdAndItemId(userItemsForm.getUserId(), userItemsForm.getItemId());
 			if (DataUtil.isNullOrEmpty(existingUserItem)){
 				UserItems newItem = new UserItems();
-				newItem.setUserId(userItemsDTO.getUserId());
+				newItem.setUserId(userItemsForm.getUserId());
 				newItem.setNumber(1L);
 				newItem.setItemType(existingItem.getItemType());
-				newItem.setItemId(userItemsDTO.getItemId());
+				newItem.setItemId(userItemsForm.getItemId());
 				newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 				newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 				userItemsRepository.save(newItem);
@@ -177,11 +177,11 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 				return false;
 			}
 		} else if (Constant.ITEMTYPE.CHARACTER.equals(existingItem.getItemType())){
-			UserItems existing = userItemsRepository.findUserItemsByUserIdAndItemId(userItemsDTO.getUserId(), userItemsDTO.getItemId());
+			UserItems existing = userItemsRepository.findUserItemsByUserIdAndItemId(userItemsForm.getUserId(), userItemsForm.getItemId());
 			if (DataUtil.isNullOrEmpty(existing)){
 				UserItems newItem = new UserItems();
-				newItem.setUserId(userItemsDTO.getUserId());
-				newItem.setItemId(userItemsDTO.getItemId());
+				newItem.setUserId(userItemsForm.getUserId());
+				newItem.setItemId(userItemsForm.getItemId());
 				newItem.setItemType(existingItem.getItemType());
 				newItem.setNumber(1L);
 				newItem.setLevel(1);
