@@ -19,5 +19,6 @@ public class CreateUserForm {
 	Date birthday;
 	@NotNull(message = "username.null")
 	String username;
+	@NotNull(message = "gender.null")
 	Integer gender;
 }

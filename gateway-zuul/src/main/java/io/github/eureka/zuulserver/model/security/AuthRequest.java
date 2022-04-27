@@ -20,4 +20,5 @@ public class  AuthRequest {
     private String refreshToken; // optional
     private String birthday; // optional
     private String name; // optional
+    private Integer gender; // optional
 }

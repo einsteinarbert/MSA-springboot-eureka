@@ -6,6 +6,7 @@ import io.github.eureka.zuulserver.common.Helper;
 import io.github.eureka.zuulserver.common.ResponseCode;
 import io.github.eureka.zuulserver.model.Users;
 import io.github.eureka.zuulserver.model.dto.ResponseDTO;
+import io.github.eureka.zuulserver.model.form.CreateUserForm;
 import io.github.eureka.zuulserver.model.security.AuthRequest;
 import io.github.eureka.zuulserver.model.security.AuthResponse;
 import io.github.eureka.zuulserver.model.security.RefreshToken;
@@ -89,11 +90,12 @@ public class UserService {
             return ResponseEntity.ok(ResponseDTO.success(new AuthResponse(jwtUtil.generateToken(users), refreshTokenNew, users.getId(), users.getUsername())));
         } else {
             try {
-                Users newUsr = new Users();
+                CreateUserForm newUsr = new CreateUserForm();
                 newUsr.setBirthday(new SimpleDateFormat(Constant.DATE_FORMAT).parse(ar.getBirthday()));
                 newUsr.setName(ar.getName());
                 newUsr.setUsername(ar.getUsername());
                 newUsr.setDeviceId(ar.getDeviceId());
+                newUsr.setGender(ar.getGender());
 
                 return userApiService.createNewUser(newUsr).filter(StringUtils::hasLength)
                         .defaultIfEmpty("")
