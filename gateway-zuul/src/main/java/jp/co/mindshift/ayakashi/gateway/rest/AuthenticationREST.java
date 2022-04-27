@@ -15,12 +15,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @Slf4j
 @AllArgsConstructor
 @RestController
+@RequestMapping("/auth/v1")
 public class AuthenticationREST {
 
     private final JWTUtil jwtUtil;
@@ -28,7 +30,7 @@ public class AuthenticationREST {
     private final UserService userService;
     private final UsersRepository usersRepository;
 
-    @PostMapping("/auth/login")
+    @PostMapping("/login")
     public Mono<ResponseEntity<AuthResponse>> login(@RequestBody AuthRequest ar) {
         return userService.findByUsername(ar.getUsername())
                 .filter(userDetails -> passwordEncoder.encode(ar.getPassword()).equals(userDetails.getEncryptedPassword()))
@@ -42,7 +44,7 @@ public class AuthenticationREST {
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()));
     }
 
-    @PostMapping("/auth/refresh-token")
+    @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshToken refreshToken) {
         try {
             AuthResponse authResponse = userService.refreshToken(refreshToken);
@@ -58,7 +60,7 @@ public class AuthenticationREST {
         }
     }
 
-    @PostMapping("/auth/form/login-anonymous")
+    @PostMapping("/form/login-anonymous")
     public Object loginAnonymousForm(@ModelAttribute AuthRequest ar) {
         return loginAnonymous(ar);
     }
@@ -69,7 +71,7 @@ public class AuthenticationREST {
      * @param ar user info
      * @return authentication token
      */
-    @PostMapping("/auth/login-anonymous")
+    @PostMapping("/login-anonymous")
     public Object loginAnonymous(@RequestBody AuthRequest ar) {
         return userService.loginAnonymous(ar);
     }
