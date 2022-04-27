@@ -100,17 +100,13 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         Optional<Users> existingName = usersRepository.findByNameAndStatusIn(users.getName(), Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
         Assert.isTrue(existingName.isEmpty(), MsgUtil.getMessage("name.exist"));
         Characters defaultChar;
-        Users newUser = new Users();
-        newUser.setUsername(users.getUsername());
-        newUser.setDeviceId(users.getDeviceId());
-        newUser.setBirthday(users.getBirthday());
-        newUser.setName(users.getName());
+        Users newUser = super.map(users, Users.class);
         newUser.setAge(new Date(Calendar.getInstance().getTimeInMillis()), users.getBirthday());
         newUser.setStatus(Constant.STATUS.ANONYMOUS);
         newUser.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         newUser.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         newUser.setStage(1L);
-        newUser.setGenderType(users.getGender());
+
         //Character default neu la nu
         if(null != users.getGender() && users.getGender() == 2) {
             defaultChar = charactersRepository.getCharactersByCharacterToken(Constant.CHARACTER_DEFAULT.FEMALE);
@@ -142,7 +138,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         defaultBackgroundItem.setNumber(1L);
         defaultBackgroundItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         defaultBackgroundItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        usersRepository.save(newUser);
+        newUser = usersRepository.save(newUser);
         defaultBackgroundItem.setUserId(newUser.getId());
         userItemsRepository.save(defaultBackgroundItem);
         defaultCharItem.setUserId(newUser.getId());

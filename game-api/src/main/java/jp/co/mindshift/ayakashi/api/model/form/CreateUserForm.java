@@ -13,6 +13,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateUserForm {
+	Long id;
 	@NotNull(message = "deviceId.null")
 	String deviceId;
 	String name;
