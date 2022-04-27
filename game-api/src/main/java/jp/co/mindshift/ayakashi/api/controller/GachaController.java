@@ -15,28 +15,28 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/gacha")
 public class GachaController {
 	private final GachasService gachasService;
 	private final UserItemsRepository userItemsRepository;
 	
-	@GetMapping("/gacha-list")
+	@GetMapping("/list")
 	public ResponseDTO<List<GachasForm>> getGacha(){
 		List<GachasForm> tickets = gachasService.getAllGachaForSpin();
 		return ResponseDTO.success(tickets);
 	}
-	@GetMapping("/gacha/{id}")
+	@GetMapping("/{id}")
 	public ResponseDTO<GachasForm> getDetailGachaTicket(@PathVariable Long id){
 		GachasForm tickets = gachasService.getGachaTicketById(id);
 		return ResponseDTO.success(tickets);
 	}
 	
-	@PostMapping("/gacha-result")
+	@PostMapping("/result")
 	public ResponseDTO<?> spinGacha(@Valid @RequestBody SpinGachaForm spinGachaForm) {
 		return gachasService.spinGacha(spinGachaForm);
 	}
 
-	@PostMapping("/save-bonus-gacha")
+	@PostMapping("/save-bonus")
 	public ResponseDTO<?> saveBonusGacha(@RequestBody UserItemsForm userItemsForm) throws IllegalAccessException {
 		Boolean isNextLevel = gachasService.saveBonusGacha(userItemsForm);
 		UserItems items = userItemsRepository.findUserItemsByUserIdAndItemId(userItemsForm.getUserId(), userItemsForm.getItemId());

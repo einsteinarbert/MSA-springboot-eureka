@@ -18,12 +18,12 @@ import java.io.IOException;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/products")
 public class HomeController extends BaseController {
 	private final ItemService itemService;
 
 
-	@PostMapping("buy-product")
+	@PostMapping("buy")
 	public ResponseDTO<String> buyProduct(HttpServletRequest request, @RequestBody SaleInfoForm info) {
 		setUserInfo(request);
 		boolean res = itemService.buyProduct(info);
@@ -31,7 +31,7 @@ public class HomeController extends BaseController {
 		return ResponseDTO.<String>builder().data(result).build();
 	}
 
-	@PostMapping("purchase-product")
+	@PostMapping("purchase")
 	public ResponseDTO<String> byCashBuy(HttpServletRequest request, @RequestBody PurchaseForm info) throws JSONException, IOException, IllegalAccessException {
 		setUserInfo(request);
 		var res = itemService.purchase(info);
@@ -39,7 +39,7 @@ public class HomeController extends BaseController {
 		return ResponseDTO.<String>builder().data(result).build();
 	}
 
-	@GetMapping("list-products")
+	@GetMapping("list")
 	public ResponseDTO<?> getListProducts(
 			@RequestParam(name = "productId", required = false) Long productId,
 			@RequestParam(name = "productType", required = false) String productType,

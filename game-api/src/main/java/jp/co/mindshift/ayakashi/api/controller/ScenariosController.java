@@ -13,16 +13,16 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("scenarios")
 public class ScenariosController {
     private final ScenariosService scenariosService;
 
-    @GetMapping("/scenarios")
+    @GetMapping("get")
     public ResponseDTO<List<ScenariosDTO>> getListScenario(){
         return ResponseDTO.success(scenariosService.getListScenarios());
     }
     
-    @GetMapping("/scenario-detail/{id}")
+    @GetMapping("/detail/{id}")
     public ResponseDTO<ScenariosDTO> getListScenario(@PathVariable Long id){
         return ResponseDTO.success(scenariosService.findScenarioById(id));
     }

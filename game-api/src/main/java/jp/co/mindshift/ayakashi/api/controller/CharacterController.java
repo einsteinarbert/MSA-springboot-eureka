@@ -10,17 +10,17 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/characters")
 public class CharacterController {
     private final CharactersService charactersService;
     
-    @GetMapping("user-characters/{userId}")
+    @GetMapping("/user-char/{userId}")
     public ResponseDTO<?> getCharacterOfUser(@PathVariable Long userId){
         List<Characters> characters = charactersService.getCharacterByUser(userId);
         return ResponseDTO.success(characters);
     }
 
-    @GetMapping("char-detail/{id}")
+    @GetMapping("/detail/{id}")
     public ResponseDTO<?> getOneCharacter(@PathVariable Long id){
         Characters characters = charactersService.getDetailCharacter(id);
         return ResponseDTO.success(characters);

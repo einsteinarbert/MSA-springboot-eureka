@@ -148,6 +148,7 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 			checkItem.setNumber(checkItem.getNumber() - 1L);
 			userItemsRepository.save(checkItem);
 		}
+		//TO-DO save item
 		return ResponseDTO.success(gachaResultDTO);
 	}
 

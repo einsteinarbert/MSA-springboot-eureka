@@ -15,7 +15,7 @@ import javax.validation.Valid;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("puzzle-game")
 public class PuzzleGameController {
     private final PuzzleGameService puzzleGameService;
 

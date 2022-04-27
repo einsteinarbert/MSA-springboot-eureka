@@ -34,6 +34,8 @@ springdoc:
 
 server:
     port: '8080'
+    servlet:
+        context-path: /api/v1
 jwt:
     secret: ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave64ByteLength
     ext: 28800
