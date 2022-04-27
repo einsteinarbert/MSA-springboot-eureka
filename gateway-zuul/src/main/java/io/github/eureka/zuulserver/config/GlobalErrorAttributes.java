@@ -30,7 +30,8 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
                                                   ErrorAttributeOptions options) {
         Map<String, Object> map = super.getErrorAttributes(
                 request, options);
-        String msg = map.get("message").toString();
+        Object obj = map.get("message");
+        String msg = obj == null ? "" : obj.toString();
         String[] split = msg.split(SPLIT_CHAR);
         ResponseDTO<String> responseDTO = new ResponseDTO<>();
         if (split.length == 2) {
