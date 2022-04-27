@@ -86,3 +86,14 @@ create table skill_coin_boosts(
     created_at timestamp,
     updated_at timestamp
 );
+--
+insert into special_items (item_id, special_item_token, name, special_item_type, picture, description, start_date, end_date, created_date, updated_date)
+values (2000, '300000', '300000', 4, 'itm300000', 'Item A（trong puzzle）', current_date , current_date , current_date , current_date );
+insert into special_items (item_id, special_item_token, name, special_item_type, picture, description, start_date, end_date, created_date, updated_date)
+values (2000, '300001', '300001', 4, 'itm300001', 'Item B（trong puzzle）', current_date , current_date , current_date , current_date );
+insert into special_items (item_id, special_item_token, name, special_item_type, picture, description, start_date, end_date, created_date, updated_date)
+values (2000, '300002', '300002', 4, 'itm300002', 'Item C（trong puzzle）', current_date , current_date , current_date , current_date );
+insert into special_items (item_id, special_item_token, name, special_item_type, picture, description, start_date, end_date, created_date, updated_date)
+values (2000, '310000', '310000', 4, 'itm310000', 'Item A（trước puzzle）', current_date , current_date , current_date , current_date );
+insert into special_items (item_id, special_item_token, name, special_item_type, picture, description, start_date, end_date, created_date, updated_date)
+values (2000, '310001', '310001', 4, 'itm310001', 'Item B（trước puzzle）', current_date , current_date , current_date , current_date );

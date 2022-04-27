@@ -6,10 +6,7 @@ import io.github.eureka.api.model.form.PuzzleGameForm;
 import io.github.eureka.api.service.PuzzleGameService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -21,7 +18,12 @@ public class PuzzleGameController {
 	PuzzleGameService puzzleGameService;
 
 	@PostMapping("/end-game")
-	public ResponseDTO<?> updateUser(@Valid @RequestBody PuzzleGameForm puzzleGameForm){
+	public ResponseDTO<?> endPuzzleGame(@Valid @RequestBody PuzzleGameForm puzzleGameForm){
 		return puzzleGameService.endGameProcess(puzzleGameForm);
+	}
+	
+	@GetMapping("/list-puzzle-item/{userId}")
+	public ResponseDTO<?> getListItemPuzzleGame(@PathVariable Long userId){
+		return puzzleGameService.getListItemPuzzleGame(userId);
 	}
 }
