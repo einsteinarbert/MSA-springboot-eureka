@@ -19,7 +19,7 @@ public class WebSecurityConfig {
 	private static final String[] AUTH_WHITELIST = {
 			"/actuator/**",
 			"/captcha",
-			"/auth/**"
+			"/auth/v1/**"
 	};
 
 	private final AuthenticationManager authenticationManager;
