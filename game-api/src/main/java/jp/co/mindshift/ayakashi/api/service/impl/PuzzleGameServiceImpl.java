@@ -1,14 +1,14 @@
-package io.github.eureka.api.service.impl;
+package jp.co.mindshift.ayakashi.api.service.impl;
 
-import io.github.eureka.api.common.MsgUtil;
-import io.github.eureka.api.model.Users;
-import io.github.eureka.api.model.dto.*;
-import io.github.eureka.api.model.entity.UserDTO;
-import io.github.eureka.api.model.entity.UserDataEntity;
-import io.github.eureka.api.model.form.PuzzleGameForm;
-import io.github.eureka.api.repo.UsersRepository;
-import io.github.eureka.api.service.BaseService;
-import io.github.eureka.api.service.PuzzleGameService;
+import jp.co.mindshift.ayakashi.api.common.MsgUtil;
+import jp.co.mindshift.ayakashi.api.model.Users;
+import jp.co.mindshift.ayakashi.api.model.dto.PuzzleItemDTO;
+import jp.co.mindshift.ayakashi.api.model.dto.ResponseDTO;
+import jp.co.mindshift.ayakashi.api.model.entity.UserDTO;
+import jp.co.mindshift.ayakashi.api.model.form.PuzzleGameForm;
+import jp.co.mindshift.ayakashi.api.repo.UsersRepository;
+import jp.co.mindshift.ayakashi.api.service.BaseService;
+import jp.co.mindshift.ayakashi.api.service.PuzzleGameService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
