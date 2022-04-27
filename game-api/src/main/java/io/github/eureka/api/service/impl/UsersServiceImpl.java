@@ -108,14 +108,13 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         newUser.setStage(1L);
         newUser.setGenderType(users.getGender());
         //Character default neu la nu
-        if(null != users.getGender() && users.getGender() == 2){
+        if(null != users.getGender() && users.getGender() == 2) {
             defaultChar = charactersRepository.getCharactersByCharacterToken(Constant.CHARACTER_DEFAULT.FEMALE);
-        }else{
+        } else {
             defaultChar = charactersRepository.getCharactersByCharacterToken(Constant.CHARACTER_DEFAULT.MALE);
         }
 
         UserItems defaultCharItem = new UserItems();
-        defaultCharItem.setUserId(newUser.getId());
         defaultCharItem.setItemId(defaultChar.getItemId());
         defaultCharItem.setItemType(Constant.ITEMTYPE.CHARACTER);
         defaultCharItem.setLevel(1);
@@ -124,12 +123,10 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         defaultCharItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         newUser.setCharacterId(defaultChar.getId());
         newUser.setMypageCharacterId(defaultChar.getId());
-        userItemsRepository.save(defaultCharItem);
 
         //Background default
         Background defaultBackground = backgroundRepository.getBackgroundByBackgroundToken(Constant.BACKGROUND_DEFAULT);
         UserItems defaultBackgroundItem = new UserItems();
-        defaultBackgroundItem.setUserId(newUser.getId());
         if (defaultBackground != null) {
             defaultBackgroundItem.setItemId(defaultBackground.getItemId());
             newUser.setBackgroundId(defaultBackground.getId());
@@ -141,8 +138,11 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         defaultBackgroundItem.setNumber(1L);
         defaultBackgroundItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         defaultBackgroundItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        userItemsRepository.save(defaultBackgroundItem);
         usersRepository.save(newUser);
+        defaultBackgroundItem.setUserId(newUser.getId());
+        userItemsRepository.save(defaultBackgroundItem);
+        defaultCharItem.setUserId(newUser.getId());
+        userItemsRepository.save(defaultCharItem);
         return ResponseDTO.success(super.map(newUser, UserDTO.class));
     }
 

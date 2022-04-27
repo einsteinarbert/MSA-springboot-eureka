@@ -1,8 +1,6 @@
 package io.github.eureka.zuulserver.service.feign;
 
-import io.github.eureka.zuulserver.model.Users;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
+import io.github.eureka.zuulserver.model.form.CreateUserForm;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import reactivefeign.spring.config.ReactiveFeignClient;
@@ -16,6 +14,6 @@ import reactor.core.publisher.Mono;
  */
 @ReactiveFeignClient(name = "${feign.address.game-api.name}", url = "${feign.address.game-api.url}")
 public interface UserApiService {
-    @PostMapping(value = "/api/users/create")
-    Mono<String> createNewUser(@RequestBody Users users);
+    @PostMapping(value = "/api/v1/users/create")
+    Mono<String> createNewUser(@RequestBody CreateUserForm users);
 }
