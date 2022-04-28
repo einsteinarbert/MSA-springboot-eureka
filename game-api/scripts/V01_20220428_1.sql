@@ -1,5 +1,5 @@
-create table user_quets(
-   id bigint auto_increment primary key,
+create table user_quests(
+    id bigint auto_increment primary key,
     user_id bigint not null,
     quest_id bigint not null,
     created_at timestamp,
