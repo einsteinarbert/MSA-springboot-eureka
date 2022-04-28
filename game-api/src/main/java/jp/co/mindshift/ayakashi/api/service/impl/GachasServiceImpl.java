@@ -80,7 +80,7 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 	}
 
 	@Override
-	public ResponseDTO<?> spinGacha(SpinGachaForm spinGachaForm) {
+	public ResponseDTO<?> spinGacha(SpinGachaForm spinGachaForm) throws IllegalAccessException {
 		//Validate SL item hoac coin - jewel
 		Optional<Gachas> gachasOptional = gachasRepository.findById(spinGachaForm.getGachaId());
 		Assert.isTrue(gachasOptional.isPresent(), MsgUtil.getMessage("gacha.notexits"));
@@ -109,23 +109,78 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 			UserItems checkItem = userItemsRepository.findUserItemsByUserIdAndItemType(spinGachaForm.getUserId(), itemType);
 			Assert.notNull(checkItem, MsgUtil.getMessage("ticket.not.enough"));
 		}
-
-		List<GachaCharacters> lstGacha = gachasRepository.listGachaById(gachas.getId());
+		List<GachaCharacters> lstGachaCharacter = gachasRepository.listGachaById(gachas.getId());
 		GachaResultDTO gachaResultDTO;
-		GachaCharacters resultSpin = this.randomGacha(lstGacha);
+		GachaCharacters resultSpin = this.randomGacha(lstGachaCharacter);
 		gachaResultDTO = super.map(resultSpin, GachaResultDTO.class);
 		Characters resultGachaCharacter = charactersRepository.findById(gachaResultDTO.getCharacterId()).get();
 		//Check level cua userItems 
 		UserItems userCharacterItem = userItemsRepository.findUserItemsByUserIdAndItemId(spinGachaForm.getUserId(), resultGachaCharacter.getItemId());
-		GrowthTypes growthTypes = growthTypesRepository.getById(resultGachaCharacter.getGrowthTypeId());
-		Integer maxCharacterToUp = growthTypes.getLevel2() + growthTypes.getLevel3() + growthTypes.getLevel4() + growthTypes.getLevel5() + growthTypes.getLevel6();
+		GrowthTypes growthTypes = growthTypesRepository.findById(resultGachaCharacter.getGrowthTypeId()).orElseThrow(()-> new IllegalArgumentException(MsgUtil.getMessage("growthType.not.exists")));
+		Integer maxCharacterToUp = 0;
+		Field[] fields = GrowthTypes.class.getDeclaredFields();
+		for (var f : fields) {
+			if (f.getName().contains("level")) {
+				f.setAccessible(true);
+				String tail = f.getName().split("level")[1];
+				int nextLv = f.getInt(growthTypes.getLevelMax());
+				if (tail.equals(nextLv)) {
+					maxCharacterToUp = f.getInt(growthTypes);
+				}
+			}
+		}
+		
 		if(!DataUtil.isNullOrEmpty(userCharacterItem)) {
+		//TH ton tai character max level
 			if (growthTypes.getLevelMax() == userCharacterItem.getLevel() && userCharacterItem.getNumber() == Long.valueOf(maxCharacterToUp)) {
 				SpecialItems specialItems = specialItemsRepository.getSpecialItemsBySpecialItemType("MEDAL");
 				gachaResultDTO.setSpecialItems(specialItems);
+				UserItems existingUserItem = userItemsRepository.findUserItemsByUserIdAndItemId(spinGachaForm.getUserId(), specialItems.getItemId());
+				if (DataUtil.isNullOrEmpty(existingUserItem)){
+					UserItems newItem = new UserItems();
+					newItem.setUserId(spinGachaForm.getUserId());
+					newItem.setNumber(1L);
+					newItem.setItemType("MEDAL");
+					newItem.setItemId(specialItems.getItemId());
+					newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+					newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+					userItemsRepository.save(newItem);
+				} else {
+					existingUserItem.setNumber(existingUserItem.getNumber() + 1L);
+					userItemsRepository.save(existingUserItem);
+				}
+			}else{
+				Characters characters = charactersRepository.getCharactersByItemId(userCharacterItem.getItemId());
+				GrowthTypes nextLevel = growthTypesRepository.findById(characters.getGrowthTypeId()).orElseThrow(); // Độ: TODO exception message here
+				Integer level = userCharacterItem.getLevel();
+				Field[] fieldMax = GrowthTypes.class.getDeclaredFields();
+				for (var f : fields) {
+					if (f.getName().contains("level")) {
+						f.setAccessible(true);
+						String tail = f.getName().split("level")[1];
+						int nextLv = f.getInt(nextLevel);
+						if (!tail.equals("Max")) { 
+							if (Integer.parseInt(tail) - 1 == level && userCharacterItem.getNumber() + 1L == nextLv) {
+								userCharacterItem.setLevel(userCharacterItem.getLevel() + 1);
+							}
+						}
+					}
+				}
+				userCharacterItem.setNumber(userCharacterItem.getNumber() + 1L);
+				userItemsRepository.save(userCharacterItem);
 			}
+		}else {
+			gachaResultDTO.setCharacters(resultGachaCharacter);
+			UserItems newItem = new UserItems();
+			newItem.setUserId(spinGachaForm.getUserId());
+			newItem.setItemId(resultGachaCharacter.getItemId());
+			newItem.setItemType("CHARACTERS");
+			newItem.setNumber(1L);
+			newItem.setLevel(1);
+			newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+			newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+			userItemsRepository.save(newItem);
 		}
-		gachaResultDTO.setCharacters(resultGachaCharacter);
 		//Tru SL theo gia
 		if(Constant.SPIN_GACHA_PAYMENT.JEWELORCOIN.equals(spinGachaForm.getPaymentMethod())){
 			commonService.changeBalanceProgress(spinGachaForm.getUserId(), paymentMethods.getPaymentType(), gachas.getPrice());
@@ -148,81 +203,7 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 			checkItem.setNumber(checkItem.getNumber() - 1L);
 			userItemsRepository.save(checkItem);
 		}
-		//TO-DO save item
 		return ResponseDTO.success(gachaResultDTO);
-	}
-
-	@Override
-	public Boolean saveBonusGacha(UserItemsForm userItemsForm) throws IllegalAccessException {
-		Optional<Users> existingUser = usersRepository.findById(userItemsForm.getUserId());
-		Assert.isTrue(existingUser.isPresent(), MsgUtil.getMessage("user.info.null"));
-		Optional<Items> existingItemOp = itemsRepository.findById(userItemsForm.getItemId());
-		Assert.isTrue(existingItemOp.isPresent(), MsgUtil.getMessage("item.notexist"));
-		var existingItem = existingItemOp.get();
-		boolean isNextLevel = false;
-		if(Constant.ITEMTYPE.MEDAL.equals(existingItem.getItemType()) || Constant.ITEMTYPE.PREMIUM_MEDAL.equals(existingItem.getItemType())){
-			UserItems existingUserItem = userItemsRepository.findUserItemsByUserIdAndItemId(userItemsForm.getUserId(), userItemsForm.getItemId());
-			if (DataUtil.isNullOrEmpty(existingUserItem)){
-				UserItems newItem = new UserItems();
-				newItem.setUserId(userItemsForm.getUserId());
-				newItem.setNumber(1L);
-				newItem.setItemType(existingItem.getItemType());
-				newItem.setItemId(userItemsForm.getItemId());
-				newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-				newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-				userItemsRepository.save(newItem);
-				return false;
-			} else {
-				existingUserItem.setNumber(existingUserItem.getNumber() + 1L);
-				userItemsRepository.save(existingUserItem);
-				return false;
-			}
-		} else if (Constant.ITEMTYPE.CHARACTER.equals(existingItem.getItemType())){
-			UserItems existing = userItemsRepository.findUserItemsByUserIdAndItemId(userItemsForm.getUserId(), userItemsForm.getItemId());
-			if (DataUtil.isNullOrEmpty(existing)){
-				UserItems newItem = new UserItems();
-				newItem.setUserId(userItemsForm.getUserId());
-				newItem.setItemId(userItemsForm.getItemId());
-				newItem.setItemType(existingItem.getItemType());
-				newItem.setNumber(1L);
-				newItem.setLevel(1);
-				newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-				newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-				userItemsRepository.save(newItem);
-				return false;
-			} else {
-				Characters characters = charactersRepository.getCharactersByItemId(existing.getItemId());
-				GrowthTypes nextLevel = growthTypesRepository.findById(characters.getGrowthTypeId()).orElseThrow(); // Độ: TODO exception message here
-				/*if((existing.getLevel() == 1 && (existing.getNumber() + 1L == (long) nextLevel.getLevel2()))
-				|| (existing.getLevel() == 2 && (existing.getNumber() + 1L == (long) nextLevel.getLevel3()))
-				|| (existing.getLevel() == 3 && (existing.getNumber() + 1L == (long) nextLevel.getLevel4()))
-				|| (existing.getLevel() == 4 && (existing.getNumber() + 1L == (long) nextLevel.getLevel5()))
-				|| (existing.getLevel() == 5 && (existing.getNumber() + 1L == (long) nextLevel.getLevel6()))){
-					existing.setLevel(existing.getLevel() + 1);
-					isNextLevel = true;
-				}*/
-				Integer level = existing.getLevel();
-				Field[] fields = GrowthTypes.class.getDeclaredFields();
-				for (var f: fields) {
-					if (f.getName().contains("level")) {
-						f.setAccessible(true);
-						String tail = f.getName().split("level")[1];
-						int nextLv = f.getInt(nextLevel);
-						if (!tail.equals("_max")) { // TODO with max level? @Độ
-							if (Integer.parseInt(tail) - 1 == level && existing.getNumber() + 1L == nextLv) {
-								existing.setLevel(existing.getLevel() + 1);
-								isNextLevel = true;
-							}
-						}
-					}
-				}
-				existing.setNumber(existing.getNumber() + 1L);
-				userItemsRepository.save(existing);
-				return isNextLevel;
-			}
-		} else {
-			throw new IllegalArgumentException(MsgUtil.getMessage("item.type.savegacha"));
-		}
 	}
 
 	private GachaCharacters randomGacha(List<GachaCharacters> lstGacha) {

@@ -32,18 +32,8 @@ public class GachaController {
 	}
 	
 	@PostMapping("/result")
-	public ResponseDTO<?> spinGacha(@Valid @RequestBody SpinGachaForm spinGachaForm) {
+	public ResponseDTO<?> spinGacha(@Valid @RequestBody SpinGachaForm spinGachaForm) throws IllegalAccessException {
 		return gachasService.spinGacha(spinGachaForm);
 	}
 
-	@PostMapping("/save-bonus")
-	public ResponseDTO<?> saveBonusGacha(@RequestBody UserItemsForm userItemsForm) throws IllegalAccessException {
-		Boolean isNextLevel = gachasService.saveBonusGacha(userItemsForm);
-		UserItems items = userItemsRepository.findUserItemsByUserIdAndItemId(userItemsForm.getUserId(), userItemsForm.getItemId());
-		if(isNextLevel){
-			return ResponseDTO.success(items, 10000);
-		} else {
-			return ResponseDTO.success(items);
-		}
-	}
 }

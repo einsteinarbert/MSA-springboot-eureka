@@ -12,7 +12,5 @@ public interface GachasService {
 
 	GachasForm getGachaTicketById(Long id);
 
-	ResponseDTO<?> spinGacha(SpinGachaForm spinGachaForm);
-
-	Boolean saveBonusGacha(UserItemsForm userItemsForm) throws IllegalAccessException;
+	ResponseDTO<?> spinGacha(SpinGachaForm spinGachaForm) throws IllegalAccessException;
 }
