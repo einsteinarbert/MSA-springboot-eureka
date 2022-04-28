@@ -2,7 +2,7 @@ package jp.co.mindshift.ayakashi.api.service.impl;
 
 import jp.co.mindshift.ayakashi.api.common.MsgUtil;
 import jp.co.mindshift.ayakashi.api.model.Users;
-import jp.co.mindshift.ayakashi.api.model.dto.PuzzleItemDTO;
+import jp.co.mindshift.ayakashi.api.model.entity.PuzzleItemEntity;
 import jp.co.mindshift.ayakashi.api.model.dto.ResponseDTO;
 import jp.co.mindshift.ayakashi.api.model.dto.UserDTO;
 import jp.co.mindshift.ayakashi.api.model.form.PuzzleGameForm;
@@ -15,6 +15,7 @@ import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,7 +24,7 @@ public class PuzzleGameServiceImpl extends BaseService implements PuzzleGameServ
 	private final UsersRepository usersRepository;
 	@PersistenceContext
 	EntityManager em;
-	public static final String sqlListItem = "select ui.user_id, ui.item_id, sum(ui.number) number, max(si.picture) picture\n" +
+	public static final String sqlListItem = "select row_number() over (order by ui.user_id) id, ui.user_id, ui.item_id, sum(ui.number) number, max(si.picture) picture\n" +
 			"from user_items ui left join special_items si on ui.item_id = si.item_id where ui.user_id = :userId and si.special_item_type = 4\n" +
 			"group by ui.user_id, ui.item_id";
 	
@@ -41,10 +42,9 @@ public class PuzzleGameServiceImpl extends BaseService implements PuzzleGameServ
 	public ResponseDTO<?> getListItemPuzzleGame(Long userId) {
 		Optional<Users> optionalUsers = usersRepository.findById(userId);
 		Assert.isTrue(optionalUsers.isPresent(), MsgUtil.getMessage("user.info.null"));
-		PuzzleItemDTO puzzleItem =(PuzzleItemDTO) em.createNativeQuery(sqlListItem, PuzzleItemDTO.class)
+		List<PuzzleItemEntity> puzzleItem = em.createNativeQuery(sqlListItem, PuzzleItemEntity.class)
 				.setParameter("userId", userId)
 				.getResultList();
-		PuzzleItemDTO puzzleItemDTO = super.map(puzzleItem, PuzzleItemDTO.class);
-		return ResponseDTO.success(puzzleItemDTO);
+		return ResponseDTO.success(puzzleItem);
 	}
 }

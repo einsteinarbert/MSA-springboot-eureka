@@ -24,7 +24,7 @@ public class PuzzleGameController {
 		return puzzleGameService.endGameProcess(puzzleGameForm);
 	}
 	
-	@GetMapping("/list-puzzle-item/{userId}")
+	@GetMapping("/list-item/{userId}")
 	public ResponseDTO<?> getListItemPuzzleGame(@PathVariable Long userId){
 		return puzzleGameService.getListItemPuzzleGame(userId);
 	}
