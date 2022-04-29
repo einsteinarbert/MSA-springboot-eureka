@@ -22,11 +22,11 @@ import java.util.Objects;
 @Table(name = "special_items")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class SpecialItems {
-    private long id;
-    private long itemId;
+    private Long id;
+    private Long itemId;
     private String specialItemToken;
     private String name;
-    private int specialItemType;
+    private Integer specialItemType;
     private String picture;
     private String description;
     private Date startDate;
@@ -36,21 +36,21 @@ public class SpecialItems {
 
     @Id
     @Column(name = "id", nullable = false)
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     @Basic
     @Column(name = "item_id", nullable = false)
-    public long getItemId() {
+    public Long getItemId() {
         return itemId;
     }
 
-    public void setItemId(long itemId) {
+    public void setItemId(Long itemId) {
         this.itemId = itemId;
     }
 
@@ -76,11 +76,11 @@ public class SpecialItems {
 
     @Basic
     @Column(name = "special_item_type", nullable = false)
-    public int getSpecialItemType() {
+    public Integer getSpecialItemType() {
         return specialItemType;
     }
 
-    public void setSpecialItemType(int specialItemType) {
+    public void setSpecialItemType(Integer specialItemType) {
         this.specialItemType = specialItemType;
     }
 

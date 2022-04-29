@@ -101,6 +101,10 @@ public interface Constant {
         String BACKGROUND = "BACKGROUND";
     }
     
+    interface SPECIAL_ITEM_TYPE{
+        Integer MEDAL = 6;
+    }
+    
     interface CHARACTER_DEFAULT{
         String MALE = "ch00101000";
         String FEMALE = "ch00201000";

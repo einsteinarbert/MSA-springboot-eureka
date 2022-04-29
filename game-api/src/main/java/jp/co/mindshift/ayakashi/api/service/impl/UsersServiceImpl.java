@@ -106,14 +106,13 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         newUser.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         newUser.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         newUser.setStage(1L);
-
+        newUser = usersRepository.save(newUser);
         //Character default neu la nu
         if(null != users.getGender() && users.getGender() == 2) {
             defaultChar = charactersRepository.getCharactersByCharacterToken(Constant.CHARACTER_DEFAULT.FEMALE);
         } else {
             defaultChar = charactersRepository.getCharactersByCharacterToken(Constant.CHARACTER_DEFAULT.MALE);
         }
-
         UserItems defaultCharItem = new UserItems();
         defaultCharItem.setItemId(defaultChar.getItemId());
         defaultCharItem.setItemType(Constant.ITEMTYPE.CHARACTER);
@@ -121,28 +120,26 @@ public class UsersServiceImpl extends BaseService implements UsersService {
         defaultCharItem.setNumber(1L);
         defaultCharItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         defaultCharItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        newUser.setCharacterId(defaultChar.getId());
-        newUser.setMypageCharacterId(defaultChar.getId());
-
+        defaultCharItem.setUserId(newUser.getId());
+        defaultCharItem = userItemsRepository.save(defaultCharItem);
+        newUser.setCharacterId(defaultCharItem.getId());
+        newUser.setMypageCharacterId(defaultCharItem.getId());
         //Background default
         Background defaultBackground = backgroundRepository.getBackgroundByBackgroundToken(Constant.BACKGROUND_DEFAULT);
         UserItems defaultBackgroundItem = new UserItems();
         if (defaultBackground != null) {
             defaultBackgroundItem.setItemId(defaultBackground.getItemId());
-            newUser.setBackgroundId(defaultBackground.getId());
         } else {
             defaultBackgroundItem.setItemId(-1L);
-            newUser.setBackgroundId(-1L);
         }
         defaultBackgroundItem.setItemType(Constant.ITEMTYPE.BACKGROUND);
         defaultBackgroundItem.setNumber(1L);
         defaultBackgroundItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         defaultBackgroundItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        newUser = usersRepository.save(newUser);
         defaultBackgroundItem.setUserId(newUser.getId());
-        userItemsRepository.save(defaultBackgroundItem);
-        defaultCharItem.setUserId(newUser.getId());
-        userItemsRepository.save(defaultCharItem);
+        defaultBackgroundItem = userItemsRepository.save(defaultBackgroundItem);
+        newUser.setBackgroundId(defaultBackgroundItem.getId());
+        usersRepository.save(newUser);
         return ResponseDTO.success(super.map(newUser, UserDTO.class));
     }
 
@@ -218,7 +215,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
                 .setParameter("user_id", user.getId())
                 .setParameter("ids", List.of(data.getCharacterId(), data.getBackgroundId())).getSingleResult();
         Assert.isTrue(count.longValue() > 1, MsgUtil.getMessage("setting.invalid"));
-        user.setCharacterId(data.getCharacterId());
+        user.setMypageCharacterId(data.getCharacterId());
         user.setBackgroundId(data.getBackgroundId());
         usersRepository.save(user);
     }

@@ -119,28 +119,30 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 		GrowthTypes growthTypes = growthTypesRepository.findById(resultGachaCharacter.getGrowthTypeId()).orElseThrow(()-> new IllegalArgumentException(MsgUtil.getMessage("growthType.not.exists")));
 		Integer maxCharacterToUp = 0;
 		Field[] fields = GrowthTypes.class.getDeclaredFields();
+		Integer maxLevel = 0;
 		for (var f : fields) {
 			if (f.getName().contains("level")) {
 				f.setAccessible(true);
 				String tail = f.getName().split("level")[1];
-				int nextLv = f.getInt(growthTypes.getLevelMax());
-				if (tail.equals(nextLv)) {
+				if("Max".equals(tail)) {
+					maxLevel = f.getInt(growthTypes);
+				}
+				if (maxLevel.toString().equals(tail)) {
 					maxCharacterToUp = f.getInt(growthTypes);
 				}
 			}
 		}
-		
 		if(!DataUtil.isNullOrEmpty(userCharacterItem)) {
 		//TH ton tai character max level
 			if (growthTypes.getLevelMax() == userCharacterItem.getLevel() && userCharacterItem.getNumber() == Long.valueOf(maxCharacterToUp)) {
-				SpecialItems specialItems = specialItemsRepository.getSpecialItemsBySpecialItemType("MEDAL");
-				gachaResultDTO.setSpecialItems(specialItems);
+				SpecialItems specialItems = specialItemsRepository.getSpecialItemsBySpecialItemType(Constant.SPECIAL_ITEM_TYPE.MEDAL).get(0);
+				gachaResultDTO.setMedal(specialItems);
 				UserItems existingUserItem = userItemsRepository.findUserItemsByUserIdAndItemId(spinGachaForm.getUserId(), specialItems.getItemId());
 				if (DataUtil.isNullOrEmpty(existingUserItem)){
 					UserItems newItem = new UserItems();
 					newItem.setUserId(spinGachaForm.getUserId());
 					newItem.setNumber(1L);
-					newItem.setItemType("MEDAL");
+					newItem.setItemType("SPECIAL_ITEMS");
 					newItem.setItemId(specialItems.getItemId());
 					newItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 					newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
@@ -151,10 +153,10 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 				}
 			}else{
 				Characters characters = charactersRepository.getCharactersByItemId(userCharacterItem.getItemId());
-				GrowthTypes nextLevel = growthTypesRepository.findById(characters.getGrowthTypeId()).orElseThrow(); // Độ: TODO exception message here
+				GrowthTypes nextLevel = growthTypesRepository.findById(characters.getGrowthTypeId()).orElseThrow(); 
 				Integer level = userCharacterItem.getLevel();
 				Field[] fieldMax = GrowthTypes.class.getDeclaredFields();
-				for (var f : fields) {
+				for (var f : fieldMax) {
 					if (f.getName().contains("level")) {
 						f.setAccessible(true);
 						String tail = f.getName().split("level")[1];
@@ -162,6 +164,8 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 						if (!tail.equals("Max")) { 
 							if (Integer.parseInt(tail) - 1 == level && userCharacterItem.getNumber() + 1L == nextLv) {
 								userCharacterItem.setLevel(userCharacterItem.getLevel() + 1);
+								gachaResultDTO.setNextLevel(1);
+								
 							}
 						}
 					}
@@ -170,7 +174,6 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 				userItemsRepository.save(userCharacterItem);
 			}
 		}else {
-			gachaResultDTO.setCharacters(resultGachaCharacter);
 			UserItems newItem = new UserItems();
 			newItem.setUserId(spinGachaForm.getUserId());
 			newItem.setItemId(resultGachaCharacter.getItemId());
@@ -181,6 +184,7 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 			newItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 			userItemsRepository.save(newItem);
 		}
+		gachaResultDTO.setCharacters(resultGachaCharacter);
 		//Tru SL theo gia
 		if(Constant.SPIN_GACHA_PAYMENT.JEWELORCOIN.equals(spinGachaForm.getPaymentMethod())){
 			commonService.changeBalanceProgress(spinGachaForm.getUserId(), paymentMethods.getPaymentType(), gachas.getPrice());

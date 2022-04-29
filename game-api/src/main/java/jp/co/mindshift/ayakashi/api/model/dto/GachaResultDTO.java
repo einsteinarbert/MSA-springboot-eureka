@@ -18,6 +18,7 @@ public class GachaResultDTO {
 	private Long gachaId;
 	private Long characterId;
 	private Long itemId;
+	private Integer nextLevel = 0;
 	private Double probability;
 	private Integer skillLevel;
 	private String pickup;
@@ -25,5 +26,5 @@ public class GachaResultDTO {
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
 	private Characters characters;
-	private SpecialItems specialItems;
+	private SpecialItems medal;
 }
