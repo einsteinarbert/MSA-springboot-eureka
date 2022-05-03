@@ -1,12 +1,10 @@
 package jp.co.mindshift.ayakashi.api.controller;
 
-import jp.co.mindshift.ayakashi.api.model.UserItems;
+import jp.co.mindshift.ayakashi.api.model.dto.ResponseDTO;
 import jp.co.mindshift.ayakashi.api.model.form.GachasForm;
 import jp.co.mindshift.ayakashi.api.model.form.SpinGachaForm;
 import jp.co.mindshift.ayakashi.api.repo.UserItemsRepository;
 import jp.co.mindshift.ayakashi.api.service.GachasService;
-import jp.co.mindshift.ayakashi.api.model.dto.ResponseDTO;
-import jp.co.mindshift.ayakashi.api.model.form.UserItemsForm;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
