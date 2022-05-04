@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("quets")
+@RequestMapping("quest")
 public class QuetsController {
 	private final QuestsService questsService;
 
