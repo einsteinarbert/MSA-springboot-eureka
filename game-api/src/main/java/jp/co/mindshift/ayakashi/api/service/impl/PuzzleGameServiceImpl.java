@@ -27,7 +27,7 @@ public class PuzzleGameServiceImpl extends BaseService implements PuzzleGameServ
 	public static final String sqlListItem = "select row_number() over (order by ui.user_id) id, ui.user_id, ui.item_id, sum(ui.number) number, max(si.picture) picture\n" +
 			"from user_items ui left join special_items si on ui.item_id = si.item_id where ui.user_id = :userId and si.special_item_type = 4\n" +
 			"group by ui.user_id, ui.item_id";
-	
+
 	@Override
 	public ResponseDTO<?> endGameProcess(PuzzleGameForm puzzleGameForm) {
 		Optional<Users> optionalUsers = usersRepository.findById(puzzleGameForm.getUserId());

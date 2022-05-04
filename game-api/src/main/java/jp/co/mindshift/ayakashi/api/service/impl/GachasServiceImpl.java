@@ -57,10 +57,10 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 	@Override
 	public List<GachasForm> getAllGachaForSpin() {
 		List<GachasForm> result = super.mapList(gachasRepository.getListGacha(), GachasForm.class);
-		if(!DataUtil.isNullOrEmpty(result)){
-			for(GachasForm gachasForm : result){
+		if (!DataUtil.isNullOrEmpty(result)) {
+			for (GachasForm gachasForm : result) {
 				List<GachaCharacterDTO> gachaCharacterDTOList = super.mapList(gachaCharactersRepository.findAllByGachaId(gachasForm.getId()), GachaCharacterDTO.class);
-				for(GachaCharacterDTO gachaCharacterDTO : gachaCharacterDTOList){
+				for (GachaCharacterDTO gachaCharacterDTO : gachaCharacterDTOList) {
 					Characters characterDetail = charactersRepository.getById(gachaCharacterDTO.getCharacterId());
 					gachaCharacterDTO.setCharactersDetail(characterDetail);
 				}
@@ -73,7 +73,7 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 	@Override
 	public GachasForm getGachaTicketById(Long id) {
 		Gachas gachaExists = gachasRepository.getById(id);
-		if (DataUtil.isNullOrEmpty(gachaExists)){
+		if (DataUtil.isNullOrEmpty(gachaExists)) {
 			throw new IllegalArgumentException(MsgUtil.getMessage("gacha.notfound"));
 		}
 		return super.map(gachaExists, GachasForm.class);
@@ -88,12 +88,12 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 		Optional<PaymentMethods> paymentMethodsOptional = paymentMethodsRepository.findById(gachas.getPaymentMethodId());
 		Assert.isTrue(gachasOptional.isPresent(), MsgUtil.getMessage("payment.notexits"));
 		PaymentMethods paymentMethods = paymentMethodsOptional.get();
-		if(Constant.SPIN_GACHA_PAYMENT.JEWELORCOIN.equals(spinGachaForm.getPaymentMethod())){
-			if(!commonService.checkBalanceEnought(spinGachaForm.getUserId(), "IOS", paymentMethods.getPaymentType(), gachas.getPrice()))
+		if (Constant.SPIN_GACHA_PAYMENT.JEWELORCOIN.equals(spinGachaForm.getPaymentMethod())) {
+			if (!commonService.checkBalanceEnought(spinGachaForm.getUserId(), "IOS", paymentMethods.getPaymentType(), gachas.getPrice()))
 				return ResponseDTO.success(gachas);
-		}else{
+		} else {
 			String itemType;
-			switch (gachas.getPaymentMethodId2().intValue()){
+			switch (gachas.getPaymentMethodId2().intValue()) {
 				case 0:
 					itemType = "NORMAL_TICKET";
 					break;
@@ -116,7 +116,7 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 		Characters resultGachaCharacter = charactersRepository.findById(gachaResultDTO.getCharacterId()).get();
 		//Check level cua userItems 
 		UserItems userCharacterItem = userItemsRepository.findUserItemsByUserIdAndItemId(spinGachaForm.getUserId(), resultGachaCharacter.getItemId());
-		GrowthTypes growthTypes = growthTypesRepository.findById(resultGachaCharacter.getGrowthTypeId()).orElseThrow(()-> new IllegalArgumentException(MsgUtil.getMessage("growthType.not.exists")));
+		GrowthTypes growthTypes = growthTypesRepository.findById(resultGachaCharacter.getGrowthTypeId()).orElseThrow(() -> new IllegalArgumentException(MsgUtil.getMessage("growthType.not.exists")));
 		Integer maxCharacterToUp = 0;
 		Field[] fields = GrowthTypes.class.getDeclaredFields();
 		Integer maxLevel = 0;
@@ -124,7 +124,7 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 			if (f.getName().contains("level")) {
 				f.setAccessible(true);
 				String tail = f.getName().split("level")[1];
-				if("Max".equals(tail)) {
+				if ("Max".equals(tail)) {
 					maxLevel = f.getInt(growthTypes);
 				}
 				if (maxLevel.toString().equals(tail)) {
@@ -132,13 +132,13 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 				}
 			}
 		}
-		if(!DataUtil.isNullOrEmpty(userCharacterItem)) {
-		//TH ton tai character max level
+		if (!DataUtil.isNullOrEmpty(userCharacterItem)) {
+			//TH ton tai character max level
 			if (growthTypes.getLevelMax() == userCharacterItem.getLevel() && userCharacterItem.getNumber() == Long.valueOf(maxCharacterToUp)) {
 				SpecialItems specialItems = specialItemsRepository.getSpecialItemsBySpecialItemType(Constant.SPECIAL_ITEM_TYPE.MEDAL).get(0);
 				gachaResultDTO.setMedal(specialItems);
 				UserItems existingUserItem = userItemsRepository.findUserItemsByUserIdAndItemId(spinGachaForm.getUserId(), specialItems.getItemId());
-				if (DataUtil.isNullOrEmpty(existingUserItem)){
+				if (DataUtil.isNullOrEmpty(existingUserItem)) {
 					UserItems newItem = new UserItems();
 					newItem.setUserId(spinGachaForm.getUserId());
 					newItem.setNumber(1L);
@@ -151,9 +151,9 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 					existingUserItem.setNumber(existingUserItem.getNumber() + 1L);
 					userItemsRepository.save(existingUserItem);
 				}
-			}else{
+			} else {
 				Characters characters = charactersRepository.getCharactersByItemId(userCharacterItem.getItemId());
-				GrowthTypes nextLevel = growthTypesRepository.findById(characters.getGrowthTypeId()).orElseThrow(); 
+				GrowthTypes nextLevel = growthTypesRepository.findById(characters.getGrowthTypeId()).orElseThrow();
 				Integer level = userCharacterItem.getLevel();
 				Field[] fieldMax = GrowthTypes.class.getDeclaredFields();
 				for (var f : fieldMax) {
@@ -161,11 +161,11 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 						f.setAccessible(true);
 						String tail = f.getName().split("level")[1];
 						int nextLv = f.getInt(nextLevel);
-						if (!tail.equals("Max")) { 
+						if (!tail.equals("Max")) {
 							if (Integer.parseInt(tail) - 1 == level && userCharacterItem.getNumber() + 1L == nextLv) {
 								userCharacterItem.setLevel(userCharacterItem.getLevel() + 1);
 								gachaResultDTO.setNextLevel(1);
-								
+
 							}
 						}
 					}
@@ -173,7 +173,7 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 				userCharacterItem.setNumber(userCharacterItem.getNumber() + 1L);
 				userItemsRepository.save(userCharacterItem);
 			}
-		}else {
+		} else {
 			UserItems newItem = new UserItems();
 			newItem.setUserId(spinGachaForm.getUserId());
 			newItem.setItemId(resultGachaCharacter.getItemId());
@@ -186,11 +186,11 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 		}
 		gachaResultDTO.setCharacters(resultGachaCharacter);
 		//Tru SL theo gia
-		if(Constant.SPIN_GACHA_PAYMENT.JEWELORCOIN.equals(spinGachaForm.getPaymentMethod())){
+		if (Constant.SPIN_GACHA_PAYMENT.JEWELORCOIN.equals(spinGachaForm.getPaymentMethod())) {
 			commonService.changeBalanceProgress(spinGachaForm.getUserId(), paymentMethods.getPaymentType(), gachas.getPrice());
-		}else{
+		} else {
 			String itemType;
-			switch (gachas.getPaymentMethodId2().intValue()){
+			switch (gachas.getPaymentMethodId2().intValue()) {
 				case 0:
 					itemType = "NORMAL_TICKET";
 					break;
@@ -214,12 +214,12 @@ public class GachasServiceImpl extends BaseService implements GachasService {
 		GachaCharacters resultSpin = new GachaCharacters();
 		Double sumOfWeigh = 0D;
 		Random random = new Random();
-		for(int i=0; i< lstGacha.size(); i++){
+		for (int i = 0; i < lstGacha.size(); i++) {
 			sumOfWeigh += lstGacha.get(i).getProbability();
 		}
 		Double rnd = (random.nextDouble() * (sumOfWeigh));
-		for(int i=0; i<lstGacha.size(); i++){
-			if(rnd <= lstGacha.get(i).getProbability())
+		for (int i = 0; i < lstGacha.size(); i++) {
+			if (rnd <= lstGacha.get(i).getProbability())
 				return lstGacha.get(i);
 			rnd -= lstGacha.get(i).getProbability();
 		}

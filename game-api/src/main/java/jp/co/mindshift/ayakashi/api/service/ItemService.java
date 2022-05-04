@@ -15,15 +15,17 @@ import java.io.IOException;
  * Time: 13:28<br/>
  */
 public interface ItemService {
-    boolean buyProduct(SaleInfoForm saleInfo);
-    boolean purchase(PurchaseForm saleInfo) throws JSONException, IOException, IllegalAccessException;
+	boolean buyProduct(SaleInfoForm saleInfo);
 
-    /**
-     * get list saleable product
-     * @param prodId : optional
-     * @param productType product table name like: jewel_products
-     * @param itemType itemType like: heart, background
-     * @return list
-     */
-    ProductListDTO getListProducts (Long prodId, String productType, String itemType);
+	boolean purchase(PurchaseForm saleInfo) throws JSONException, IOException, IllegalAccessException;
+
+	/**
+	 * get list saleable product
+	 *
+	 * @param prodId      : optional
+	 * @param productType product table name like: jewel_products
+	 * @param itemType    itemType like: heart, background
+	 * @return list
+	 */
+	ProductListDTO getListProducts(Long prodId, String productType, String itemType);
 }

@@ -15,6 +15,6 @@ public class LoginRewardsController {
 	
 	@GetMapping("/list")
 	public ResponseDTO<?> getListLoginRewards(){
-		return usersService.getUserById();
+		return null;
 	}
 }

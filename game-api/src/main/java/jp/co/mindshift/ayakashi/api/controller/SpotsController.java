@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("spots")
 public class SpotsController {
 	private final SpotsService spotsService;
-	
+
 	@GetMapping("/list")
-	public ResponseDTO<?> getListSpots(){
+	public ResponseDTO<?> getListSpots() {
 		return spotsService.getList();
 	}
 }

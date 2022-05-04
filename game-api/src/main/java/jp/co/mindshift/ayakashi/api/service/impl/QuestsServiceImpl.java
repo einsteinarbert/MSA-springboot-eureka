@@ -9,6 +9,7 @@ import jp.co.mindshift.ayakashi.api.service.BaseService;
 import jp.co.mindshift.ayakashi.api.service.QuestsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.Date;
 
 @Service
@@ -16,6 +17,7 @@ import java.util.Date;
 public class QuestsServiceImpl extends BaseService implements QuestsService {
 	private final QuestsRepository questsRepository;
 	private final UserQuestsRepository userQuestsRepository;
+
 	@Override
 	public ResponseDTO<?> getList() {
 		return ResponseDTO.success(questsRepository.findAll());
@@ -24,7 +26,7 @@ public class QuestsServiceImpl extends BaseService implements QuestsService {
 	@Override
 	public ResponseDTO<?> clearQuest(ClearQuestForm clearQuestForm) {
 		UserQuests newUserQuest = super.map(clearQuestForm, UserQuests.class);
-		newUserQuest.setUpdatedAt(new Date());	
+		newUserQuest.setUpdatedAt(new Date());
 		newUserQuest.setCreatedAt(new Date());
 		userQuestsRepository.save(newUserQuest);
 		return ResponseDTO.builder().build();

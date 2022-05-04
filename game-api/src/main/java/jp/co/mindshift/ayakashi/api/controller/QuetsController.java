@@ -14,12 +14,12 @@ public class QuetsController {
 
 
 	@GetMapping("/list")
-	public ResponseDTO<?> getListSpots(){
+	public ResponseDTO<?> getListSpots() {
 		return questsService.getList();
 	}
-	
+
 	@PostMapping("/clear")
-	public ResponseDTO<?> getListSpots(@RequestBody ClearQuestForm clearQuestForm){
+	public ResponseDTO<?> getListSpots(@RequestBody ClearQuestForm clearQuestForm) {
 		return questsService.clearQuest(clearQuestForm);
 	}
 }

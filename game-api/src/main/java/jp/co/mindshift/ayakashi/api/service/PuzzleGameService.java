@@ -5,5 +5,6 @@ import jp.co.mindshift.ayakashi.api.model.form.PuzzleGameForm;
 
 public interface PuzzleGameService {
 	ResponseDTO<?> endGameProcess(PuzzleGameForm puzzleGameForm);
+
 	ResponseDTO<?> getListItemPuzzleGame(Long userId);
 }

@@ -1,3 +1,18 @@
+drop table if exists present_boxes;
+create table present_boxes
+(
+    id bigint auto_increment primary key,
+    user_id bigint not null,
+    expired_at timestamp default current_timestamp() not null on update current_timestamp(),
+    status int not null,
+    generatable_type varchar(255) null,
+    generatable_id bigint null,
+    created_at timestamp null,
+    updated_at timestamp null
+);
+
+
+
 drop table if exists present_box_items;
 
 create table present_box_items(
