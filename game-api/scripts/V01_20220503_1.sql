@@ -39,3 +39,15 @@ create table login_reward_items
     created_at timestamp,
     updated_at timestamp
 );
+
+alter table quests
+    add status int default 0 null comment '0: closed, 1: opening';
+
+alter table quests
+    add start_date timestamp null;
+
+alter table quests
+    add end_date timestamp null;
+
+alter table user_quests
+    add status int default 1 not null;

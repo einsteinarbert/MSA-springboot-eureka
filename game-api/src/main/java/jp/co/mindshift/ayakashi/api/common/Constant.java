@@ -122,4 +122,16 @@ public interface Constant {
     }
     
     String BACKGROUND_DEFAULT = "bg0100";
+
+    @Getter
+    enum UserQuestStatus {
+        CANCEL(0), AVAILABLE(1), PLAYING(2), CLEARED(3);
+        final int type;
+        UserQuestStatus(int i) {
+            type = i;
+        }
+    }
+    public static final int MAX_QUEST = 5;
+    public static final int MAX_OLD_DAY_QUEST = -7;
+    public static final int MAX_DAY_REFRESH_QUEST = -2; // cancel quest after two days for get new quests
 }

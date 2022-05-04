@@ -5,8 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.sql.Timestamp;
-import java.util.Objects;
+import java.util.Date;
 
 /**
  * Project: MSA-springboot-eureka.<br/>
@@ -21,8 +20,11 @@ public class Quests {
     private String name;
     private String description;
     private String scenarioFile;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private Date createdAt;
+    private Date updatedAt;
+    private Integer status;
+    private Date startDate;
+    private Date endDate;
 
     @Id
     @Column(name = "id")
@@ -66,34 +68,51 @@ public class Quests {
 
     @Basic
     @Column(name = "created_at")
-    public Timestamp getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
     @Basic
     @Column(name = "updated_at")
-    public Timestamp getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Quests quests = (Quests) o;
-        return id == quests.id && Objects.equals(name, quests.name) && Objects.equals(description, quests.description) && Objects.equals(scenarioFile, quests.scenarioFile) && Objects.equals(createdAt, quests.createdAt) && Objects.equals(updatedAt, quests.updatedAt);
+    @Basic
+    @Column(name = "status")
+    public Integer getStatus() {
+        return status;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, description, scenarioFile, createdAt, updatedAt);
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    @Basic
+    @Column(name = "start_date")
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    @Basic
+    @Column(name = "end_date")
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 }

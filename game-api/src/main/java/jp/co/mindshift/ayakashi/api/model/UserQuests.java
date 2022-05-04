@@ -5,9 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.sql.Timestamp;
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * Project: MSA-springboot-eureka.<br/>
@@ -23,11 +21,16 @@ public class UserQuests {
     private Long questId;
     private Date createdAt;
     private Date updatedAt;
+    private int status;
 
     @Id
     @Column(name = "id")
     public Long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public void setId(Long id) {
@@ -40,6 +43,10 @@ public class UserQuests {
         return userId;
     }
 
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
     public void setUserId(Long userId) {
         this.userId = userId;
     }
@@ -48,6 +55,10 @@ public class UserQuests {
     @Column(name = "quest_id")
     public Long getQuestId() {
         return questId;
+    }
+
+    public void setQuestId(long questId) {
+        this.questId = questId;
     }
 
     public void setQuestId(Long questId) {
@@ -74,16 +85,13 @@ public class UserQuests {
         this.updatedAt = updatedAt;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserQuests userQuests = (UserQuests) o;
-        return id == userQuests.id && userId == userQuests.userId && questId == userQuests.questId && Objects.equals(createdAt, userQuests.createdAt) && Objects.equals(updatedAt, userQuests.updatedAt);
+    @Basic
+    @Column(name = "status")
+    public int getStatus() {
+        return status;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, userId, questId, createdAt, updatedAt);
+    public void setStatus(int status) {
+        this.status = status;
     }
 }
