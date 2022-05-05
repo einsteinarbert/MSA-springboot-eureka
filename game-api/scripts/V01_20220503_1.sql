@@ -7,7 +7,7 @@ create table present_box_items(
     item_number int,
     created_at timestamp,
     updated_at timestamp
-)
+);
 drop table if exists login_rewards;
 create table login_rewards
 (
@@ -40,6 +40,23 @@ create table login_reward_items
     updated_at timestamp
 );
 
+-- auto-generated definition
+create table quests
+(
+    id            bigint auto_increment
+        primary key,
+    name          varchar(255)  not null,
+    description   text          not null,
+    scenario_file varchar(255)  null,
+    created_at    timestamp     null,
+    updated_at    timestamp     null,
+    status        int default 0 null comment '0: closed, 1: opening',
+    start_date    timestamp     null,
+    end_date      timestamp     null
+);
+
+
+
 alter table quests
     add status int default 0 null comment '0: closed, 1: opening';
 
@@ -51,3 +68,15 @@ alter table quests
 
 alter table user_quests
     add status int default 1 not null;
+
+-- auto-generated definition
+create table position_log
+(
+    id         bigint auto_increment
+        primary key,
+    user_id    bigint                                  not null,
+    pos_id   bigint                                  not null,
+    created_at timestamp default current_timestamp()   not null on update current_timestamp(),
+    updated_at timestamp default current_timestamp() not null
+);
+

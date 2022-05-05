@@ -2,6 +2,7 @@ package jp.co.mindshift.ayakashi.api.controller;
 
 import jp.co.mindshift.ayakashi.api.model.dto.ResponseDTO;
 import jp.co.mindshift.ayakashi.api.model.form.ClearQuestForm;
+import jp.co.mindshift.ayakashi.api.service.MapModeService;
 import jp.co.mindshift.ayakashi.api.service.QuestsService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,19 +15,26 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("quest")
-public class QuestController extends BaseController{
+@RequestMapping("map")
+public class MapModeController extends BaseController{
 	private final QuestsService questsService;
+	private final MapModeService mapModeService;
 
 
-	@GetMapping("/list")
+	@GetMapping("/list/quest")
 	public ResponseDTO<?> getListQuest(HttpServletRequest request) {
 		setUserInfo(request);
 		return questsService.getList();
 	}
 	
-	@PostMapping("/clear")
+	@PostMapping("/clear/quest")
 	public ResponseDTO<?> clearQuest(@RequestBody ClearQuestForm clearQuestForm){
 		return questsService.clearQuest(clearQuestForm);
+	}
+
+	@PostMapping("/list/position")
+	public ResponseDTO<?> getListPanel(HttpServletRequest request, Long postId) {
+		setUserInfo(request);
+		return mapModeService.updatePositionMatrix(postId);
 	}
 }

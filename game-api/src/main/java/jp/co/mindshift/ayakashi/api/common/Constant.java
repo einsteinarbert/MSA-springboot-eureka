@@ -131,7 +131,9 @@ public interface Constant {
             type = i;
         }
     }
-    public static final int MAX_QUEST = 5;
-    public static final int MAX_OLD_DAY_QUEST = -7;
-    public static final int MAX_DAY_REFRESH_QUEST = -2; // cancel quest after two days for get new quests
+    int MAX_QUEST = 5;
+    int MAX_OLD_DAY_QUEST = -7;
+    int MAX_DAY_REFRESH_QUEST = -2; // cancel quest after two days for get new quests
+    int MAX_UPDATE_POSITION_GAP_IN_SECS = -60;
+    int PEOPLE_COUNTER_STEP = 10;
 }
