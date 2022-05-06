@@ -24,6 +24,7 @@ public class UserDataEntity {
 	private Long heart30;
 	private Long heart60;
 	private Long stage;
+	private Integer loginBonusFlag; 
 	
 	@Id
 	@Column(name = "id")
@@ -63,6 +64,16 @@ public class UserDataEntity {
 
 	public void setAge(Integer age) {
 		this.age = age;
+	}
+	
+	@Basic
+	@Column(name = "login_bonus_flag")
+	public Integer getLoginBonusFlag() {
+		return loginBonusFlag;
+	}
+
+	public void setLoginBonusFlag(Integer loginBonusFlag) {
+		this.loginBonusFlag = loginBonusFlag;
 	}
 
 	@Basic

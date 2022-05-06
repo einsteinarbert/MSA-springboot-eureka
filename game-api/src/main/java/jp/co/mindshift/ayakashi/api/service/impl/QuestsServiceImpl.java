@@ -136,7 +136,7 @@ public class QuestsServiceImpl extends BaseService implements QuestsService {
 	@Override
 	public ResponseDTO<?> clearQuest(ClearQuestForm clearQuestForm) {
 		UserQuests newUserQuest = super.map(clearQuestForm, UserQuests.class);
-		newUserQuest.setUpdatedAt(new Date());	
+		newUserQuest.setUpdatedAt(new Date());
 		newUserQuest.setCreatedAt(new Date());
 		userQuestsRepository.save(newUserQuest);
 		return ResponseDTO.builder().build();

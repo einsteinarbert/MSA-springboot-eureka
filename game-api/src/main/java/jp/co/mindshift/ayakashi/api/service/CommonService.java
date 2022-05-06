@@ -15,12 +15,15 @@ import java.io.IOException;
  * Time: 17:02<br/>
  */
 public interface CommonService {
-    Object verifyInAppPurchase(PurchaseForm transInfo) throws IllegalAccessException, IOException, JSONException;
-    Users validateUser(ActionUserDTO userDTO);
-    Boolean checkBalanceEnought(Long userId, String platform, Integer paymentMethodType, Integer price);
-    void changeBalanceProgress(Long userId, Integer paymentMethodId, Integer price);
+	Object verifyInAppPurchase(PurchaseForm transInfo) throws IllegalAccessException, IOException, JSONException;
 
-    Boolean checkJewelBonusEnought(Long userId, Integer price);
+	Users validateUser(ActionUserDTO userDTO);
 
-    Integer jewelBonus(Long userId);
+	Boolean checkBalanceEnought(Long userId, String platform, Integer paymentMethodType, Integer price);
+
+	void changeBalanceProgress(Long userId, Integer paymentMethodId, Integer price);
+
+	Boolean checkJewelBonusEnought(Long userId, Integer price);
+
+	Integer jewelBonus(Long userId);
 }

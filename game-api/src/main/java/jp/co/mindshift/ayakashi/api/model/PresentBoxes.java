@@ -1,10 +1,6 @@
 package jp.co.mindshift.ayakashi.api.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
@@ -20,8 +16,6 @@ import java.util.Objects;
 public class PresentBoxes {
     private Long id;
     private Long userId;
-    private Long itemId;
-    private Integer itemNumber;
     private Date expiredAt;
     private Integer status;
     private String generatableType;
@@ -31,6 +25,7 @@ public class PresentBoxes {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
@@ -45,28 +40,8 @@ public class PresentBoxes {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    @Basic
-    @Column(name = "item_id")
-    public long getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(long itemId) {
-        this.itemId = itemId;
-    }
-
-    @Basic
-    @Column(name = "item_number")
-    public Integer getItemNumber() {
-        return itemNumber;
-    }
-
-    public void setItemNumber(Integer itemNumber) {
-        this.itemNumber = itemNumber;
     }
 
     @Basic
@@ -134,11 +109,11 @@ public class PresentBoxes {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PresentBoxes that = (PresentBoxes) o;
-        return id == that.id && userId == that.userId && itemId == that.itemId && itemNumber == that.itemNumber && status == that.status && Objects.equals(expiredAt, that.expiredAt) && Objects.equals(generatableType, that.generatableType) && Objects.equals(generatableId, that.generatableId) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
+        return id == that.id && userId == that.userId  && status == that.status && Objects.equals(expiredAt, that.expiredAt) && Objects.equals(generatableType, that.generatableType) && Objects.equals(generatableId, that.generatableId) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, itemId, itemNumber, expiredAt, status, generatableType, generatableId, createdAt, updatedAt);
+        return Objects.hash(id, userId, expiredAt, status, generatableType, generatableId, createdAt, updatedAt);
     }
 }

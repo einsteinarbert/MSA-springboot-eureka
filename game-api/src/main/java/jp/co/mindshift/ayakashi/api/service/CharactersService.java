@@ -5,7 +5,7 @@ import jp.co.mindshift.ayakashi.api.model.Characters;
 import java.util.List;
 
 public interface CharactersService {
-    List<Characters> getCharacterByUser(Long userId);
+	List<Characters> getCharacterByUser(Long userId);
 
-    Characters getDetailCharacter(Long id);
+	Characters getDetailCharacter(Long id);
 }

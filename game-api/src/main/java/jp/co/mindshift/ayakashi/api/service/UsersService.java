@@ -8,15 +8,19 @@ import jp.co.mindshift.ayakashi.api.model.dto.UserDataDTO;
 import jp.co.mindshift.ayakashi.api.model.form.UserSettingForm;
 
 public interface UsersService {
-    ResponseDTO<?> createUser(CreateUserForm users);
+	ResponseDTO<?> createUser(CreateUserForm users);
+
 	ResponseDTO<?> getUserById(Long id);
+
 	ResponseDTO<?> updateUser(Users users);
+
 	ResponseDTO<?> updateUserPassword(ChangePasswordForm users);
 
 	ResponseDTO<?> getAllUser();
 
 	UserDataDTO getDataUserInMyPage(Long userId);
-    void saveSettingData(UserSettingForm data);
+
+	void saveSettingData(UserSettingForm data);
 
 	UserDataDTO getDataUserInMyPageWithDevice(String deviceId);
 }

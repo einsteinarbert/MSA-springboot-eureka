@@ -17,15 +17,15 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("puzzle-game")
 public class PuzzleGameController {
-    private final PuzzleGameService puzzleGameService;
+	private final PuzzleGameService puzzleGameService;
 
 	@PostMapping("/end-game")
-	public ResponseDTO<?> endPuzzleGame(@Valid @RequestBody PuzzleGameForm puzzleGameForm){
+	public ResponseDTO<?> endPuzzleGame(@Valid @RequestBody PuzzleGameForm puzzleGameForm) {
 		return puzzleGameService.endGameProcess(puzzleGameForm);
 	}
-	
+
 	@GetMapping("/list-item/{userId}")
-	public ResponseDTO<?> getListItemPuzzleGame(@PathVariable Long userId){
+	public ResponseDTO<?> getListItemPuzzleGame(@PathVariable Long userId) {
 		return puzzleGameService.getListItemPuzzleGame(userId);
 	}
 }

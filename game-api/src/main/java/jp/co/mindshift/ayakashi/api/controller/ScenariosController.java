@@ -15,17 +15,17 @@ import java.util.List;
 @RestController
 @RequestMapping("scenarios")
 public class ScenariosController {
-    private final ScenariosService scenariosService;
+	private final ScenariosService scenariosService;
 
-    @GetMapping("get")
-    public ResponseDTO<List<ScenariosDTO>> getListScenario(){
-        return ResponseDTO.success(scenariosService.getListScenarios());
-    }
-    
-    @GetMapping("/detail/{id}")
-    public ResponseDTO<ScenariosDTO> getListScenario(@PathVariable Long id){
-        return ResponseDTO.success(scenariosService.findScenarioById(id));
-    }
+	@GetMapping("get")
+	public ResponseDTO<List<ScenariosDTO>> getListScenario() {
+		return ResponseDTO.success(scenariosService.getListScenarios());
+	}
+
+	@GetMapping("/detail/{id}")
+	public ResponseDTO<ScenariosDTO> getListScenario(@PathVariable Long id) {
+		return ResponseDTO.success(scenariosService.findScenarioById(id));
+	}
 
 
 }
