@@ -6,6 +6,7 @@ import jp.co.mindshift.ayakashi.api.config.ActionUserHolder;
 import jp.co.mindshift.ayakashi.api.model.PositionLog;
 import jp.co.mindshift.ayakashi.api.model.Users;
 import jp.co.mindshift.ayakashi.api.model.dto.ActionUserDTO;
+import jp.co.mindshift.ayakashi.api.model.dto.MatrixResultDTO;
 import jp.co.mindshift.ayakashi.api.model.dto.ResponseDTO;
 import jp.co.mindshift.ayakashi.api.repo.PositionLogRepository;
 import jp.co.mindshift.ayakashi.api.repo.UsersRepository;
@@ -15,13 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static jp.co.mindshift.ayakashi.api.common.Constant.MAX_UPDATE_POSITION_GAP_IN_SECS;
 import static jp.co.mindshift.ayakashi.api.common.Constant.PEOPLE_COUNTER_STEP;
@@ -72,16 +67,9 @@ public class MapModeServiceImpl implements MapModeService {
         var sets = population.entrySet();
         List<MatrixResultDTO> result = new ArrayList<>();
         for (var s: sets) {
-            result.add(
-                    MatrixResultDTO.builder().id(s.getKey()).desity(s.getValue()/PEOPLE_COUNTER_STEP).build();
-            );
+            result.add(MatrixResultDTO.builder().id(s.getKey()).desity(s.getValue()/PEOPLE_COUNTER_STEP).build());
         }
         return ResponseDTO.success(result);
     }
-    @Data
-    @Builder
-    class MatrixResultDTO {
-        private Long id;
-        private Integer desity;
-    }
+
 }
