@@ -55,7 +55,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
 	private static final String userDataSQL = "select * from (select u.id, u.username, u.name, u.age, u.character_id, u.background_id, u.stage,\n" +
 			"ifnull(uw.jewel_number, 0) jewel_number, ifnull(uw.jewel_bonus_number, 0) jewel_bonus_number, ifnull(uw.coin_number, 0) coin_number,\n" +
 			"ifnull(stamina_number, 0) stamina_number,\n" +
-			"ifnull(heart, 0) heart, ifnull(heart_30, 0) heart_30, ifnull(heart_60, 0) heart_60\n" +
+			"ifnull(heart, 0) heart, ifnull(heart_30, 0) heart_30, ifnull(heart_60, 0) heart_60, IF(pb.user_id is null, 0, 1) login_bonus_flag\n" +
 			"from users u\n" +
 			"left join(\n" +
 			"select uw.user_id, sum(IF(w.wallet_type = 0 and w.jewel_type = 0, uw.number, 0)) jewel_number,\n" +
@@ -69,13 +69,14 @@ public class UsersServiceImpl extends BaseService implements UsersService {
 			"                 sum( IF(ui.item_type = 'HEART30', ui.number, 0) ) heart_30,\n" +
 			"                 sum( IF(ui.item_type = 'HEART60', ui.number, 0) ) heart_60\n" +
 			"                 from user_items ui where ui.item_type IN ('STAMINA', 'HEART', 'HEART30', 'HEART60')\n" +
-			"    group by ui.user_id) ui ON u.id = ui.user_id\n" +
+			"    group by ui.user_id) ui ON u.id = ui.user_id \n" +
+			 "left join (select user_id from present_boxes where cast(created_at as date) = current_date) pb on u.id = pb.user_id \n" +
 			"where u.id = :userId ) T limit 1";
 
 	private static final String userDataSQLDevice = "select * from (select u.id, u.username, u.name, u.age, u.character_id, u.background_id, u.stage,\n" +
 			" ifnull(uw.jewel_number, 0) jewel_number, ifnull(uw.jewel_bonus_number, 0) jewel_bonus_number, ifnull(uw.coin_number, 0) coin_number,\n" +
 			"ifnull(stamina_number, 0) stamina_number,\n" +
-			"ifnull(heart, 0) heart, ifnull(heart_30, 0) heart_30, ifnull(heart_60, 0) heart_60\n" +
+			"ifnull(heart, 0) heart, ifnull(heart_30, 0) heart_30, ifnull(heart_60, 0) heart_60, IF(pb.user_id is null, 0, 1) login_bonus_flag\n" +
 			"from users u\n" +
 			"left join(\n" +
 			"select uw.user_id, sum(IF(w.wallet_type = 0 and w.jewel_type = 0, uw.number, 0)) jewel_number,\n" +
@@ -90,6 +91,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
 			"                 sum( IF(ui.item_type = 'HEART60', ui.number, 0) ) heart_60\n" +
 			"                 from user_items ui where ui.item_type IN ('STAMINA', 'HEART', 'HEART30', 'HEART60')\n" +
 			"    group by ui.user_id) ui ON u.id = ui.user_id\n" +
+			"left join (select user_id from present_boxes where cast(created_at as date) = current_date) pb on u.id = pb.user_id \n" +
 			"where u.device_id = :deviceId ) T limit 1";
 
 	@Override
