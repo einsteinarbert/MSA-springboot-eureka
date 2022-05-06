@@ -6,5 +6,5 @@ import lombok.Data;
 @Builder
 public class MatrixResultDTO {
 	private Long id;
-	private Integer desity;
+	private Integer density;
 }

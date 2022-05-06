@@ -67,7 +67,7 @@ public class MapModeServiceImpl implements MapModeService {
         var sets = population.entrySet();
         List<MatrixResultDTO> result = new ArrayList<>();
         for (var s: sets) {
-            result.add(MatrixResultDTO.builder().id(s.getKey()).desity(s.getValue()/PEOPLE_COUNTER_STEP).build());
+            result.add(MatrixResultDTO.builder().id(s.getKey()).density(s.getValue()/PEOPLE_COUNTER_STEP).build());
         }
         return ResponseDTO.success(result);
     }
