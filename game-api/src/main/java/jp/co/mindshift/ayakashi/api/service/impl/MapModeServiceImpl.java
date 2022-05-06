@@ -70,10 +70,18 @@ public class MapModeServiceImpl implements MapModeService {
             population.put(positionLog.getPosId(), count);
         }
         var sets = population.entrySet();
-        Map<Long, Integer> result = new HashMap<>();
+        List<MatrixResultDTO> result = new ArrayList<>();
         for (var s: sets) {
-            result.put(s.getKey(), s.getValue()/PEOPLE_COUNTER_STEP);
+            result.add(
+                    MatrixResultDTO.builder().id(s.getKey()).desity(s.getValue()/PEOPLE_COUNTER_STEP).build();
+            );
         }
         return ResponseDTO.success(result);
+    }
+    @Data
+    @Builder
+    class MatrixResultDTO {
+        private Long id;
+        private Integer desity;
     }
 }
