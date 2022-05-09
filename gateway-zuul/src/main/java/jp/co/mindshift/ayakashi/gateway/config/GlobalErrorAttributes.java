@@ -41,14 +41,15 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
             responseDTO.setMessage(msg);
         }
         int code = (int) map.get("status");
-        convertStatus(msg, code, responseDTO);
+        convertStatus(map, msg, code, responseDTO);
         parameters(responseDTO, map);
         return map;
     }
 
-    private void convertStatus(String msg, int status, ResponseDTO<String> responseDTO) {
+    private void convertStatus(Map<String, Object> map, String msg, int status, ResponseDTO<String> responseDTO) {
         if (status == 500 && msg.contains("JWT expired at")) {
             responseDTO.setStatusCode(ResponseCode.TOKEN_EXPIRED);
+            map.put("status", 401);
         } else if (status > 399 || status < 200) {
             responseDTO.setStatusCode(ResponseCode.FAILURE);
         }
