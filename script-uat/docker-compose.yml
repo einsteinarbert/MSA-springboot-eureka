@@ -17,8 +17,6 @@ services:
             HYSTRIX_COMMAND_DEFAULT_EXECUTION_ISOLATION_THREAD-TIMEOUTINMILLISECONDS: 120000
         deploy:
             replicas: 1
-        depends_on:
-            - db
     game-api-service:
         image: game-api:1.0
         ports:
@@ -36,20 +34,20 @@ services:
         deploy:
             replicas: 1
 
-    admin-service:
-        image: admin-service:1.0
-        ports:
-            - "8001:8080"
-        environment:
-            SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
-            SPRING_DATASOURCE_PASSWORD: lukyluke
-            SPRING_DATASOURCE_USERNAME: root
-            SPRING_PROFILES_ACTIVE: "dev"
-            SPRING_APPLICATION_NAME: game-api-service
-            SERVER_PORT: 8080
-            ZUUL_HOST_CONNECT-TIMEOUT-MILLIS: 130000
-            ZUUL_HOST_SOCKET-TIMEOUT-MILLIS: 130000
-            HYSTRIX_COMMAND_DEFAULT_EXECUTION_ISOLATION_THREAD-TIMEOUTINMILLISECONDS: 120000
-        deploy:
-            replicas: 1
+#    admin-service:
+#        image: admin-service:1.0
+#        ports:
+#            - "8001:8080"
+#        environment:
+#            SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/universe?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+#            SPRING_DATASOURCE_PASSWORD: lukyluke
+#            SPRING_DATASOURCE_USERNAME: root
+#            SPRING_PROFILES_ACTIVE: "dev"
+#            SPRING_APPLICATION_NAME: game-api-service
+#            SERVER_PORT: 8080
+#            ZUUL_HOST_CONNECT-TIMEOUT-MILLIS: 130000
+#            ZUUL_HOST_SOCKET-TIMEOUT-MILLIS: 130000
+#            HYSTRIX_COMMAND_DEFAULT_EXECUTION_ISOLATION_THREAD-TIMEOUTINMILLISECONDS: 120000
+#        deploy:
+#            replicas: 1
 

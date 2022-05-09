@@ -1,3 +1,3 @@
 #!/bin/bash
-docker-compose down
-docker-compose up -d
+docker-compose -p uat down
+docker-compose -p uat up -d
