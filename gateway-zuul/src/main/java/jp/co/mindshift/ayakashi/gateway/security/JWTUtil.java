@@ -1,9 +1,11 @@
 package jp.co.mindshift.ayakashi.gateway.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jp.co.mindshift.ayakashi.gateway.model.Users;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class JWTUtil {
 
     @Value("${jwt.secret}")
@@ -59,8 +62,13 @@ public class JWTUtil {
     }
 
     private Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
+        try {
+            final Date expiration = getExpirationDateFromToken(token);
+            return expiration.before(new Date());
+        } catch (ExpiredJwtException ex) {
+            log.error("ERROR token:", ex);
+            return false;
+        }
     }
 
     private Boolean isRefreshTokenExpired(String token) {
