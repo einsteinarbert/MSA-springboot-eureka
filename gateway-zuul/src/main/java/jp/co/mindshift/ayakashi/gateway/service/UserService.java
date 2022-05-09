@@ -60,6 +60,22 @@ public class UserService {
         return null;
     }
 
+    public ResponseDTO<?> checkDevice(String deviceId) {
+        Users users;
+        List<Users> list = usersRepository.findByDeviceIdAndStatusIn(deviceId, List.of(0, 1));
+        if (list.size() != 0) {
+            users = list.get(0);
+            if (users.getStatus() != 1) {
+                // generate new token
+                String refreshTokenNew = jwtUtil.generateRefreshToken(users);
+                users.setRefreshToken(refreshTokenNew);
+                users = usersRepository.save(users);
+                return ResponseDTO.success(new AuthResponse(jwtUtil.generateToken(users), refreshTokenNew, users.getId(), users.getUsername()));
+            }
+        }
+        return ResponseDTO.success(null);
+    }
+
     public Object loginAnonymous(AuthRequest ar) {
         // has token
         if (StringUtils.hasLength(ar.getRefreshToken())) {

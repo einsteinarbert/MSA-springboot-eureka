@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
@@ -74,5 +75,10 @@ public class AuthenticationREST {
     @PostMapping("/login-anonymous")
     public Object loginAnonymous(@RequestBody AuthRequest ar) {
         return userService.loginAnonymous(ar);
+    }
+
+    @PostMapping("/device-info")
+    public ResponseDTO<?> loginAnonymous(@RequestParam String deviceId) {
+        return userService.checkDevice(deviceId);
     }
 }
