@@ -62,13 +62,8 @@ public class JWTUtil {
     }
 
     private Boolean isTokenExpired(String token) {
-        try {
-            final Date expiration = getExpirationDateFromToken(token);
-            return expiration.before(new Date());
-        } catch (ExpiredJwtException ex) {
-            log.error("ERROR token:", ex);
-            return false;
-        }
+        final Date expiration = getExpirationDateFromToken(token);
+        return expiration.before(new Date());
     }
 
     private Boolean isRefreshTokenExpired(String token) {
