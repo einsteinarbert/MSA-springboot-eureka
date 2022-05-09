@@ -1,14 +1,21 @@
 package jp.co.mindshift.ayakashi.gateway.security;
 
+import com.google.gson.Gson;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import jp.co.mindshift.ayakashi.gateway.model.dto.ResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -24,7 +31,6 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
     @Override
     @SuppressWarnings("unchecked")
     public Mono<Authentication> authenticate(Authentication authentication) {
-        log.info("AAAAAAAAAAAAAAAA@@@@@@@@@@@@@@@@@@ authenticate");
         try {
             String authToken = authentication.getCredentials().toString();
             String username = jwtUtil.getUsernameFromToken(authToken);
@@ -42,7 +48,7 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
                     });
         } catch (ExpiredJwtException e) {
             log.error("JWT expired", e);
-            throw new IllegalArgumentException("JWT expired at " + e.getClaims().getExpiration());
+            return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage()));
         }
     }
 }
