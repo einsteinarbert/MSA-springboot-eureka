@@ -55,7 +55,7 @@ public class UsersServiceImpl extends BaseService implements UsersService {
 	private static final String userDataSQL = "select * from (select u.id, u.username, u.name, u.age, u.character_id, u.background_id, u.stage,\n" +
 			"ifnull(uw.jewel_number, 0) jewel_number, ifnull(uw.jewel_bonus_number, 0) jewel_bonus_number, ifnull(uw.coin_number, 0) coin_number,\n" +
 			"ifnull(stamina_number, 0) stamina_number,\n" +
-			"ifnull(heart, 0) heart, ifnull(heart_30, 0) heart_30, ifnull(heart_60, 0) heart_60, IF(pb.user_id is null, 0, 1) login_bonus_flag, r.rank_token user_rank, \n" +
+			"ifnull(heart, 0) heart, ifnull(heart_30, 0) heart_30, ifnull(heart_60, 0) heart_60, IF(pb.user_id is null, 0, 1) login_bonus_flag, r.rank_token user_rank,		 \n" +
 			"u.gender_type \n" +
 			"from users u\n" +
 			"left join(\n" +
