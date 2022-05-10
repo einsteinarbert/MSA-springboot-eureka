@@ -3,6 +3,7 @@ package jp.co.mindshift.ayakashi.gateway.security;
 import com.google.gson.Gson;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import jp.co.mindshift.ayakashi.gateway.common.Constant;
 import jp.co.mindshift.ayakashi.gateway.model.dto.ResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +49,8 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
                     });
         } catch (ExpiredJwtException e) {
             log.error("JWT expired", e);
-            return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage()));
+//            return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage()));
+            return Mono.error(new ResponseStatusException(Constant.TOKEN_EXPIRED_STATUS, "JWT expired at " + e.getClaims().getExpiration(), e));
         }
     }
 }

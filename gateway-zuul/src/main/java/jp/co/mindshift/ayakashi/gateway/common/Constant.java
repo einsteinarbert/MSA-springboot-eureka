@@ -8,4 +8,5 @@ package jp.co.mindshift.ayakashi.gateway.common;
  */
 public interface Constant {
     String DATE_FORMAT = "yyyy/MM/dd";
+    int TOKEN_EXPIRED_STATUS = 9;
 }
