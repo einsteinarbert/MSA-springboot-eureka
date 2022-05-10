@@ -111,6 +111,7 @@ public class QuestsServiceImpl extends BaseService implements QuestsService {
 			userQuests.setQuestId(q.getId());
 			userQuests.setUserId(uid);
 			userQuests.setCreatedAt(now);
+			userQuests.setType(q.getType());
 			userQuests.setStatus(Constant.UserQuestStatus.AVAILABLE.getType());
 			userQuestsRepository.save(userQuests);
 			questsAssigned.add(q);
