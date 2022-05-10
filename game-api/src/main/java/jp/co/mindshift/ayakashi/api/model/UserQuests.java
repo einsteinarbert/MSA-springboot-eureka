@@ -22,6 +22,7 @@ public class UserQuests {
     private Date createdAt;
     private Date updatedAt;
     private int status;
+    private int type;
 
     @Id
     @Column(name = "id")
@@ -93,5 +94,14 @@ public class UserQuests {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    @Column(name = "type")
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

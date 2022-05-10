@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface QuestsRepository extends JpaRepository<Quests, Long> {
-	List<Quests> findAllByIdIn(List<Long> ids);
-	List<Quests> findByIdNotIn(List<Long> ids);
+	List<Quests> findAllByIdInAndTypeIs(List<Long> ids, int type);
+	List<Quests> findByIdNotInAndTypeIs(List<Long> ids, int type);
 }

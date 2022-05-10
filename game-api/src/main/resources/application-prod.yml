@@ -38,6 +38,7 @@ server:
         context-path: /api/v1
 jwt:
     secret: ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave64ByteLength
-    ext: 28800
+    ext: 604800
     iteration: 33
     keylength: 256
+    refreshExt: 604800

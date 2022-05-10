@@ -40,18 +40,18 @@ public class QuestsServiceImpl extends BaseService implements QuestsService {
 	private final UsersRepository usersRepository;
 	@Override
 	@Transactional
-	public ResponseDTO<?> getList() {
+	public ResponseDTO<?> getList(Integer type) {
 		var user = ActionUserHolder.getActionUser();
 		Optional<Users> userId = usersRepository.findByUsernameAndStatusIn(user.getSub(),
 				Arrays.asList(Constant.STATUS.ANONYMOUS, Constant.STATUS.REGITERED));
 		Assert.isTrue(userId.isPresent(), MsgUtil.getMessage("user.info.null"));
 		Long uid = userId.get().getId();
 		// find all available quest for this user (min 0, max 5)
-		List<UserQuests> activeQuests = userQuestsRepository.findAllByUserIdAndStatusIn(uid, Collections.singletonList
-				(Constant.UserQuestStatus.AVAILABLE.getType()));
+		List<UserQuests> activeQuests = userQuestsRepository.findAllByUserIdAndStatusInAndTypeIs(uid, Collections.singletonList
+				(Constant.UserQuestStatus.AVAILABLE.getType()), type);
 		// find all playing quest (min 0, max 1)
-		List<UserQuests> playingQuests = userQuestsRepository.findAllByUserIdAndStatusIn(uid, Collections.singletonList
-				(Constant.UserQuestStatus.PLAYING.getType()));
+		List<UserQuests> playingQuests = userQuestsRepository.findAllByUserIdAndStatusInAndTypeIs(uid, Collections.singletonList
+				(Constant.UserQuestStatus.PLAYING.getType()), type);
 		// if total (playing + available) quest > 5 or activeQuests not in [0, 5] or playingQuests > 1 then make cancel
 		//  some quests for re-balance quests quality
 		List<Long> cancelQuest = new ArrayList<>();
@@ -76,11 +76,11 @@ public class QuestsServiceImpl extends BaseService implements QuestsService {
 		c.setTime(now);
 		c.add(Calendar.DATE, MAX_DAY_REFRESH_QUEST);
 		Date last2Days = c.getTime();
-		List<UserQuests> inactiveQuests = userQuestsRepository.findAllByUserIdAndCreatedAtBetweenAndStatusIn(uid,
+		List<UserQuests> inactiveQuests = userQuestsRepository.findAllByUserIdAndUpdatedAtBetweenAndStatusInAndTypeIs(uid,
 				last7Days, now, Arrays.asList(Constant.UserQuestStatus.CANCEL.getType(),
-						Constant.UserQuestStatus.CLEARED.getType()));
-		List<UserQuests> refreshQuests = userQuestsRepository.findAllByUserIdAndCreatedAtBetweenAndStatusIn(uid,
-				last2Days, now, List.of(Constant.UserQuestStatus.AVAILABLE.getType()));
+						Constant.UserQuestStatus.CLEARED.getType()), type);
+		List<UserQuests> refreshQuests = userQuestsRepository.findAllByUserIdAndUpdatedAtBetweenAndStatusInAndTypeIs(uid,
+				last2Days, now, List.of(Constant.UserQuestStatus.AVAILABLE.getType()), type);
 		for (var quest: refreshQuests) {
 			quest.setStatus(Constant.UserQuestStatus.CANCEL.getType());
 			userQuestsRepository.save(quest);
@@ -91,19 +91,19 @@ public class QuestsServiceImpl extends BaseService implements QuestsService {
 
 
 		// now get list quest again
-		activeQuests = userQuestsRepository.findAllByUserIdAndStatusIn(uid, Collections.singletonList
-				(Constant.UserQuestStatus.AVAILABLE.getType()));
-		playingQuests = userQuestsRepository.findAllByUserIdAndStatusIn(uid, Collections.singletonList
-				(Constant.UserQuestStatus.PLAYING.getType()));
+		activeQuests = userQuestsRepository.findAllByUserIdAndStatusInAndTypeIs(uid, Collections.singletonList
+				(Constant.UserQuestStatus.AVAILABLE.getType()), type);
+		playingQuests = userQuestsRepository.findAllByUserIdAndStatusInAndTypeIs(uid, Collections.singletonList
+				(Constant.UserQuestStatus.PLAYING.getType()), type);
 		List<Long> activeIds = activeQuests.stream().map(UserQuests::getQuestId).collect(Collectors.toList());
 		activeIds.addAll(playingQuests.stream().map(UserQuests::getQuestId).collect(Collectors.toList()));
 		cancelQuest.addAll(activeIds);
-		List<Quests> questsAssigned = questsRepository.findAllByIdIn(activeIds);
-		List<Quests> newFreshQuests = questsRepository.findByIdNotIn(cancelQuest);
+		List<Quests> questsAssigned = questsRepository.findAllByIdInAndTypeIs(activeIds, type);
+		List<Quests> newFreshQuests = questsRepository.findByIdNotInAndTypeIs(cancelQuest, type);
 		int counter = activeIds.size();
 		int min = 0;
 		int max = newFreshQuests.size() - 1;
-		while (counter < MAX_QUEST) {
+		while (counter < MAX_QUEST && newFreshQuests.size() > 0) {
 			Random r = new Random();
 			int ran = r.nextInt(max - min + 1) + min;
 			var q = newFreshQuests.get(ran);

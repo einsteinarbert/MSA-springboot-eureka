@@ -25,6 +25,7 @@ public class Quests {
     private Integer status;
     private Date startDate;
     private Date endDate;
+    private Integer type;
 
     @Id
     @Column(name = "id")
@@ -114,5 +115,14 @@ public class Quests {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    @Column(name = "type")
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }
