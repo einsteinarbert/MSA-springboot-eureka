@@ -44,10 +44,13 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
             if (e.getMessage().contains("No matching constant for [9]")) {
                 map.put("status", HttpStatus.UNAUTHORIZED.value());
                 map.put("statusCode", Constant.TOKEN_EXPIRED_STATUS);
+                map.put("message", "JWT token expired");
             } else {
                 map.put("status", "500");
                 map.put("statusCode", "1");
+                map.put("message", e.getMessage());
             }
+            map.put("data", "");
             return map;
         }
         Object obj = map.get("message");
