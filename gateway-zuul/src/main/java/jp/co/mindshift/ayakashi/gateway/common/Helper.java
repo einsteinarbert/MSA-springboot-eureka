@@ -1,9 +1,6 @@
 package jp.co.mindshift.ayakashi.gateway.common;
 
-import org.springframework.util.StringUtils;
-
 import java.util.Date;
-import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -13,11 +10,13 @@ import java.util.Random;
  * Date: 19/04/2022<br/>
  */
 public class Helper {
+    public static final int LENGTH = 6;
     public static String generateUserName() {
         Date now = new Date();
         Random r = new Random();
-        int code = Integer.parseInt(String.valueOf(now.getTime()).substring(3))/100 * (r.nextInt(100) + 1);
-        return encodeString(6) + "_" +  code;
+        String time = String.valueOf(now.getTime()).substring(3);
+        int code = (int) (Long.parseLong(time)/100 * (r.nextInt(100) + 1));
+        return encodeString(LENGTH) + "_" +  code;
     }
 
     private static String encodeString(int input) {
