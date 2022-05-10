@@ -26,7 +26,7 @@ public class UserDataDTO {
 	private Long stage;
 	private Integer loginBonusFlag;
 	private String userRank;
-	
+	private Integer genderType;	
 	private CharacterDTO characters;
 	private BackgroundDTO background;
 }

@@ -1,6 +1,7 @@
 package jp.co.mindshift.ayakashi.api.model.entity;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
 
 /**
  * Project: MSA-springboot-eureka.<br/>
@@ -25,6 +26,7 @@ public class UserDataEntity {
 	private Long heart60;
 	private Long stage;
 	private String userRank;
+	private Integer genderType;
 	private Integer loginBonusFlag; 
 	
 	@Id
@@ -55,6 +57,15 @@ public class UserDataEntity {
 
 	public void setUserRank(String userRank) {
 		this.userRank = userRank;
+	}
+	@Basic
+	@Column(name = "gender_type")
+	public Integer getGenderType() {
+		return genderType;
+	}
+
+	public void setGenderType(Integer genderType) {
+		this.genderType = genderType;
 	}
 
 	@Basic
