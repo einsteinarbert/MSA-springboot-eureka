@@ -95,3 +95,8 @@ create table position_log
     updated_at timestamp default current_timestamp() not null
 );
 
+alter table user_quests
+    add type int default 0 not null comment '0: quest in virtual map, 1: in real map';
+
+alter table quests
+    add type int default 0 not null comment '0: virtual map quest, 1: real map quest';

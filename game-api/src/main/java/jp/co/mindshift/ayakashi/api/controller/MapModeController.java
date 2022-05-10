@@ -22,9 +22,9 @@ public class MapModeController extends BaseController{
 
 
 	@GetMapping("/list/quest")
-	public ResponseDTO<?> getListQuest(HttpServletRequest request) {
+	public ResponseDTO<?> getListQuest(HttpServletRequest request, Integer type) {
 		setUserInfo(request);
-		return questsService.getList();
+		return questsService.getList(type);
 	}
 	
 	@PostMapping("/clear/quest")

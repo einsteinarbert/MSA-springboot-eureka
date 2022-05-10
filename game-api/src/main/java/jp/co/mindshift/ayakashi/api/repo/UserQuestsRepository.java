@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface UserQuestsRepository extends JpaRepository<UserQuests, Long> {
-    List<UserQuests> findAllByUserIdAndCreatedAtBetweenAndStatusIn(Long uid, Date from, Date to, List<Integer> status);
-    List<UserQuests> findAllByUserIdAndStatusIn(Long uid, List<Integer> status);
+    List<UserQuests> findAllByUserIdAndUpdatedAtBetweenAndStatusInAndTypeIs(Long uid, Date from, Date to, List<Integer> status, Integer type);
+    List<UserQuests> findAllByUserIdAndStatusInAndTypeIs(Long uid, List<Integer> status, Integer type);
 }
