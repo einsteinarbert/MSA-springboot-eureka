@@ -14,4 +14,5 @@ import javax.validation.constraints.NotNull;
 public class PuzzleGameForm {
 	@NotNull(message = "userId must not be null")
 	private Long userId;
+	private Integer coinNumber;
 }

@@ -35,6 +35,9 @@ public class PuzzleGameServiceImpl extends BaseService implements PuzzleGameServ
 		Users users = optionalUsers.get();
 		users.setStage(users.getStage() + 1);
 		users = usersRepository.save(users);
+		
+		
+		
 		return ResponseDTO.success(super.map(users, UserDTO.class));
 	}
 

@@ -24,6 +24,7 @@ public class UserDataEntity {
 	private Long heart30;
 	private Long heart60;
 	private Long stage;
+	private String userRank;
 	private Integer loginBonusFlag; 
 	
 	@Id
@@ -44,6 +45,16 @@ public class UserDataEntity {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}	
+	
+	@Basic
+	@Column(name = "user_rank")
+	public String getUserRank() {
+		return userRank;
+	}
+
+	public void setUserRank(String userRank) {
+		this.userRank = userRank;
 	}
 
 	@Basic
