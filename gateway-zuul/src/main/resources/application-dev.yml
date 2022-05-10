@@ -35,7 +35,7 @@ jwt:
     secret: ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave64ByteLength
     refreshSecret: Con43249dfsdfsdfdkssasssdsa34324328safsaio#$*
     ext: 172800
-    refreshExt: 345600
+    refreshExt: 604800
     iteration: 33
     keylength: 256
 
