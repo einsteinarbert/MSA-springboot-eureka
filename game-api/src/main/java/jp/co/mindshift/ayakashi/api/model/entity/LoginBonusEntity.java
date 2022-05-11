@@ -19,9 +19,6 @@ public class LoginBonusEntity {
 	@Column(name = "day")
 	private int day;
 	@Basic
-	@Column(name = "item_id")
-	private long itemId;
-	@Basic
 	@Column(name = "claim")
 	private int claim;
 	@Basic
@@ -63,14 +60,6 @@ public class LoginBonusEntity {
 		this.day = day;
 	}
 
-	public long getItemId() {
-		return itemId;
-	}
-
-	public void setItemId(long itemId) {
-		this.itemId = itemId;
-	}
-
 	public int getClaim() {
 		return claim;
 	}
@@ -100,11 +89,11 @@ public class LoginBonusEntity {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		LoginBonusEntity that = (LoginBonusEntity) o;
-		return id == that.id && day == that.day && itemId == that.itemId && claim == that.claim && toDay == that.toDay && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate) && Objects.equals(userId, that.userId);
+		return id == that.id && day == that.day && claim == that.claim && toDay == that.toDay && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate) && Objects.equals(userId, that.userId);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, startDate, endDate, day, itemId, claim, userId, toDay);
+		return Objects.hash(id, startDate, endDate, day, claim, userId, toDay);
 	}
 }

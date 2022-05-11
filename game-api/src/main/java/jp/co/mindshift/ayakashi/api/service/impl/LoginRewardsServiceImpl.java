@@ -2,9 +2,11 @@ package jp.co.mindshift.ayakashi.api.service.impl;
 
 import jp.co.mindshift.ayakashi.api.common.DataUtil;
 import jp.co.mindshift.ayakashi.api.model.*;
+import jp.co.mindshift.ayakashi.api.model.dto.LoginBonusDTO;
 import jp.co.mindshift.ayakashi.api.model.dto.ResponseDTO;
 import jp.co.mindshift.ayakashi.api.model.entity.LoginBonusEntity;
 import jp.co.mindshift.ayakashi.api.repo.*;
+import jp.co.mindshift.ayakashi.api.service.BaseService;
 import jp.co.mindshift.ayakashi.api.service.LoginRewardsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @AllArgsConstructor
-public class LoginRewardsServiceImpl implements LoginRewardsService {
+public class LoginRewardsServiceImpl extends BaseService implements LoginRewardsService {
 	@PersistenceContext
 	EntityManager em;
 	private final PresentBoxesRepository presentBoxesRepository;
@@ -26,12 +28,11 @@ public class LoginRewardsServiceImpl implements LoginRewardsService {
 	private final LoginRewardItemsRepository loginRewardItemsRepository;
 	private final UserItemsRepository userItemsRepository;
 	private final PresentBoxesItemsRepository presentBoxesItemsRepository;
-	private static final String sql = "select row_number() over (order by lro.day) as id, lr.start_date, lr.end_date, lro.day, lri.item_id, IF(pb.user_id is null, 0, 1) claim, pb.user_id,\n" +
+	private static final String sql = "select row_number() over (order by lro.day) as id, lr.start_date, lr.end_date, lro.day, " +
+	 						"lri.item_id, IF(pb.user_id is null, 0, 1) claim, :userId as user_id,\n" +
 			"if(lro.day = :toDate, 1, 0) to_day \n" +
 			"from login_rewards lr inner join login_reward_options lro on lr.id = lro.login_reward_id \n" +
-			"inner join login_reward_items lri on lro.id = lri.login_reward_option_id\n" +
-			"inner join special_items si on lri.item_id = si.item_id\n" +
-			"left join present_boxes pb on pb.generatable_id = lro.id and pb.generatable_type = 'LOGIN_REWARDS' and pb.user_id = :userId\n" +
+			"left join  (select * from present_boxes pb order by pb.created_at desc limit 7) pb on pb.generatable_id = lro.id and pb.generatable_type = 'LOGIN_REWARDS' and pb.user_id = :userId\n" +
 			"where curdate() between cast(lr.start_date as date) and cast(lr.end_date as date) and lr.login_reward_type = 1";
 
 	@Override
@@ -45,11 +46,16 @@ public class LoginRewardsServiceImpl implements LoginRewardsService {
 			Long diffrence = time.convert(diff, TimeUnit.MILLISECONDS);
 			toDate = Math.toIntExact(diffrence) % 7;
 		}
-		//Tra ra list
 		List<LoginBonusEntity> loginBonusEntity = em.createNativeQuery(sql, LoginBonusEntity.class)
 				.setParameter("userId", userId)
 				.setParameter("toDate", toDate)
 				.getResultList();
+		//Lay danh sach item
+		List<LoginBonusDTO> bonusDTOS = super.mapList(loginBonusEntity, LoginBonusDTO.class);
+		for(LoginBonusDTO bonus : bonusDTOS){
+			LoginRewardItems 
+		}
+		
 		//save today item - presentBoxes
 		LoginRewardOptions toDay = loginRewardOptionsRepository.findByDay(toDate);
 		List<LoginRewardItems> lstTodayItem = loginRewardItemsRepository.findAllByLoginRewardOptionId(toDay.getId());
