@@ -15,15 +15,14 @@ import jp.co.mindshift.ayakashi.api.service.BaseService;
 import jp.co.mindshift.ayakashi.api.service.QuestsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -83,11 +82,7 @@ public class QuestsServiceImpl extends BaseService implements QuestsService {
 						Constant.UserQuestStatus.CLEARED.getType()), type);
 		List<UserQuests> refreshQuests = userQuestsRepository.findAllByUserIdAndUpdatedAtBetweenAndStatusInAndTypeIs(uid,
 				last2Days, now, List.of(Constant.UserQuestStatus.AVAILABLE.getType()), type);
-		for (var quest: refreshQuests) {
-			quest.setStatus(Constant.UserQuestStatus.CANCEL.getType());
-			userQuestsRepository.save(quest);
-			cancelQuest.add(quest.getQuestId());
-		}
+		userQuestsRepository.deleteAll(refreshQuests);
 		List<Long> inactiveIds = inactiveQuests.stream().map(UserQuests::getQuestId).collect(Collectors.toList());
 		cancelQuest.addAll(inactiveIds);
 
@@ -101,6 +96,9 @@ public class QuestsServiceImpl extends BaseService implements QuestsService {
 		activeIds.addAll(playingQuests.stream().map(UserQuests::getQuestId).collect(Collectors.toList()));
 		cancelQuest.addAll(activeIds);
 		List<Quests> questsAssigned = questsRepository.findAllByIdInAndTypeIs(activeIds, type);
+		if (cancelQuest.size() == 0) {
+			cancelQuest.add(-1L);
+		}
 		LinkedList<Quests> immutableList = new LinkedList<>(questsRepository.findByIdNotInAndTypeIs(cancelQuest, type));
 		int size = immutableList.size();
 		int counter = activeIds.size();
@@ -111,11 +109,13 @@ public class QuestsServiceImpl extends BaseService implements QuestsService {
 			Random r = new Random();
 			int ran = r.nextInt(max - min + 1) + min;
 			size --;
+			max = size - 1;
 			var q = immutableList.get(ran);
 			immutableList.remove(ran);
 			while (ranLst.contains(ran) && size > 0) {
 				ran = r.nextInt(max - min + 1) + min;
 				size --;
+				max = size - 1;
 				q = immutableList.get(ran);
 				immutableList.remove(ran);
 			}
