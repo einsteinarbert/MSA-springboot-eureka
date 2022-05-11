@@ -5,6 +5,8 @@ services:
         image: gateway-service:1.0
         ports:
             - "8761:8761"
+        volumes:
+            - ${PWD}/log:/tmp/log
         environment:
             SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/ayakashi_dev?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
             SPRING_DATASOURCE_PASSWORD: lukyluke
@@ -23,6 +25,8 @@ services:
         image: game-api:1.0
         ports:
             - "8200:8080"
+        volumes:
+            - ${PWD}/log:/tmp/log
         environment:
             SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/ayakashi_dev?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
             SPRING_DATASOURCE_PASSWORD: lukyluke

@@ -23,6 +23,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -99,19 +101,29 @@ public class QuestsServiceImpl extends BaseService implements QuestsService {
 		activeIds.addAll(playingQuests.stream().map(UserQuests::getQuestId).collect(Collectors.toList()));
 		cancelQuest.addAll(activeIds);
 		List<Quests> questsAssigned = questsRepository.findAllByIdInAndTypeIs(activeIds, type);
-		List<Quests> newFreshQuests = questsRepository.findByIdNotInAndTypeIs(cancelQuest, type);
+		LinkedList<Quests> immutableList = new LinkedList<>(questsRepository.findByIdNotInAndTypeIs(cancelQuest, type));
+		int size = immutableList.size();
 		int counter = activeIds.size();
 		int min = 0;
-		int max = newFreshQuests.size() - 1;
+		int max = size - 1;
 		List<Integer> ranLst = new ArrayList<>();
-		while (counter < MAX_QUEST && newFreshQuests.size() > 0) {
+		while (counter < MAX_QUEST && size > 0) {
 			Random r = new Random();
 			int ran = r.nextInt(max - min + 1) + min;
-			while (ranLst.contains(ran)) {
+			size --;
+			var q = immutableList.get(ran);
+			immutableList.remove(ran);
+			while (ranLst.contains(ran) && size > 0) {
 				ran = r.nextInt(max - min + 1) + min;
+				size --;
+				q = immutableList.get(ran);
+				immutableList.remove(ran);
+			}
+			if (size == 0) {
+				break;
 			}
 			ranLst.add(ran);
-			var q = newFreshQuests.get(ran);
+
 			UserQuests userQuests = new UserQuests();
 			userQuests.setQuestId(q.getId());
 			userQuests.setUserId(uid);
