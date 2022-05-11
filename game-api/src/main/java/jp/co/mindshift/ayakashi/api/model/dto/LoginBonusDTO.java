@@ -14,8 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class LoginBonusDTO {
 	private Long id;
-	private Date startDate;
-	private Date endDate;
+	private Long loginRewardOptionId;
 	private Integer day;
 	private Integer claim;
 	private Long userId;

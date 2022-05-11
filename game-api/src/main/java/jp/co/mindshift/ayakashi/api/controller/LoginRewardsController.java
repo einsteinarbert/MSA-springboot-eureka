@@ -16,6 +16,6 @@ public class LoginRewardsController {
 
 	@GetMapping("/list/{userId}")
 	public ResponseDTO<?> getListLoginRewards(@PathVariable Long userId) {
-		return ResponseDTO.success(loginRewardsService.getList(userId));
+		return loginRewardsService.getList(userId);
 	}
 }

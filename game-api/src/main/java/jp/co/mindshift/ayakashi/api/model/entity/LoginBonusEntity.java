@@ -27,7 +27,9 @@ public class LoginBonusEntity {
 	@Basic
 	@Column(name = "to_day")
 	private int toDay;
-
+	@Basic
+	@Column(name = "login_reward_option_id")
+	private Long loginRewardOptionid;
 	public long getId() {
 		return id;
 	}
@@ -82,6 +84,14 @@ public class LoginBonusEntity {
 
 	public void setToDay(int toDay) {
 		this.toDay = toDay;
+	}
+
+	public Long getLoginRewardOptionid() {
+		return loginRewardOptionid;
+	}
+
+	public void setLoginRewardOptionid(Long loginRewardOptionid) {
+		this.loginRewardOptionid = loginRewardOptionid;
 	}
 
 	@Override

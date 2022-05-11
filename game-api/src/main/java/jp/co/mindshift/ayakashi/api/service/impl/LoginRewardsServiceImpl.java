@@ -29,8 +29,8 @@ public class LoginRewardsServiceImpl extends BaseService implements LoginRewards
 	private final LoginRewardItemsRepository loginRewardItemsRepository;
 	private final UserItemsRepository userItemsRepository;
 	private final PresentBoxesItemsRepository presentBoxesItemsRepository;
-	private static final String sql = "select row_number() over (order by lro.day) as id, lr.start_date, lr.end_date, lro.day, " +
-	 						"lri.item_id, IF(pb.user_id is null, 0, 1) claim, :userId as user_id,\n" +
+	private static final String sql = "select row_number() over (order by lro.day) as id, lr.start_date, lro.id login_reward_option_id, lr.end_date, lro.day, " +
+	 						" IF(pb.user_id is null, 0, 1) claim, :userId as user_id,\n" +
 			"if(lro.day = :toDate, 1, 0) to_day \n" +
 			"from login_rewards lr inner join login_reward_options lro on lr.id = lro.login_reward_id \n" +
 			"left join  (select * from present_boxes pb order by pb.created_at desc limit 7) pb on pb.generatable_id = lro.id and pb.generatable_type = 'LOGIN_REWARDS' and pb.user_id = :userId\n" +
@@ -64,12 +64,10 @@ public class LoginRewardsServiceImpl extends BaseService implements LoginRewards
 		List<LoginBonusDTO> bonusDTOS = super.mapList(loginBonusEntity, LoginBonusDTO.class);
 		for(LoginBonusDTO bonus : bonusDTOS){
 			List<LoginRewardItemEntity> items =  em.createNativeQuery(sqlGetLoginItem, LoginRewardItemEntity.class)
-					.setParameter("userId", userId)
-					.setParameter("toDate", toDate)
+					.setParameter("loginRewardOption", bonus.getLoginRewardOptionId())
 					.getResultList();
 			bonus.setItems(items);
 		}
-		
 		//save today item - presentBoxes
 		LoginRewardOptions toDay = loginRewardOptionsRepository.findByDay(toDate);
 		List<LoginRewardItems> lstTodayItem = loginRewardItemsRepository.findAllByLoginRewardOptionId(toDay.getId());
@@ -109,6 +107,6 @@ public class LoginRewardsServiceImpl extends BaseService implements LoginRewards
 			}
 		}
 		presentBoxesItemsRepository.saveAll(lstPresentItem);
-		return ResponseDTO.success(loginBonusEntity);
+		return ResponseDTO.success(bonusDTOS);
 	}
 }
