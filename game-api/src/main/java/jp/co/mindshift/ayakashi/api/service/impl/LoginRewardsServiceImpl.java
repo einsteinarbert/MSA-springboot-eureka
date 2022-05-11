@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,6 +51,7 @@ public class LoginRewardsServiceImpl extends BaseService implements LoginRewards
 	public ResponseDTO<?> getList(Long userId) {
 		//Startdate = ngay nhan dau tien cua user
 		Integer toDate = 1;
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		List<PresentBoxes> presentBoxesList = presentBoxesRepository.findPresentBoxesByUserIdOrderByCreatedAtAsc(userId);
 		if (!DataUtil.isNullOrEmpty(presentBoxesList)) {
 			Long diff = new Date().getTime() - presentBoxesList.get(0).getCreatedAt().getTime();
@@ -70,43 +73,46 @@ public class LoginRewardsServiceImpl extends BaseService implements LoginRewards
 		}
 		//save today item - presentBoxes
 		LoginRewardOptions toDay = loginRewardOptionsRepository.findByDay(toDate);
-		List<LoginRewardItems> lstTodayItem = loginRewardItemsRepository.findAllByLoginRewardOptionId(toDay.getId());
-		List<PresentBoxItems> lstPresentItem = new ArrayList<>();
+		//Check ngay hnay da nhan thuong chua
+		if(presentBoxesRepository.checkPresentBoxes(userId, toDay.getId(), df.format(new Date())) == 0L) {
+			List<LoginRewardItems> lstTodayItem = loginRewardItemsRepository.findAllByLoginRewardOptionId(toDay.getId());
+			List<PresentBoxItems> lstPresentItem = new ArrayList<>();
 
-		PresentBoxes toDayPresent = new PresentBoxes();
-		toDayPresent.setUserId(userId);
-		toDayPresent.setGeneratableType("LOGIN_REWARDS");
-		toDayPresent.setGeneratableId(toDay.getId());
-		toDayPresent.setCreatedAt(new Date());
-		toDayPresent.setUpdatedAt(new Date());
-		toDayPresent.setStatus(1);
-		toDayPresent = presentBoxesRepository.save(toDayPresent);
-		for (LoginRewardItems bonusItem : lstTodayItem) {
-			PresentBoxItems presentBoxItems = new PresentBoxItems();
-			presentBoxItems.setPresentBoxId(toDayPresent.getId());
-			presentBoxItems.setItemId(bonusItem.getItemId());
-			presentBoxItems.setItemNumber(bonusItem.getNumber());
-			presentBoxItems.setCreatedAt(new Date());
-			presentBoxItems.setUpdatedAt(new Date());
-			lstPresentItem.add(presentBoxItems);
+			PresentBoxes toDayPresent = new PresentBoxes();
+			toDayPresent.setUserId(userId);
+			toDayPresent.setGeneratableType("LOGIN_REWARDS");
+			toDayPresent.setGeneratableId(toDay.getId());
+			toDayPresent.setCreatedAt(new Date());
+			toDayPresent.setUpdatedAt(new Date());
+			toDayPresent.setStatus(1);
+			toDayPresent = presentBoxesRepository.save(toDayPresent);
+			for (LoginRewardItems bonusItem : lstTodayItem) {
+				PresentBoxItems presentBoxItems = new PresentBoxItems();
+				presentBoxItems.setPresentBoxId(toDayPresent.getId());
+				presentBoxItems.setItemId(bonusItem.getItemId());
+				presentBoxItems.setItemNumber(bonusItem.getNumber());
+				presentBoxItems.setCreatedAt(new Date());
+				presentBoxItems.setUpdatedAt(new Date());
+				lstPresentItem.add(presentBoxItems);
 
-			UserItems existItem = userItemsRepository.findUserItemsByUserIdAndItemId(userId, bonusItem.getItemId());
-			if (DataUtil.isNullOrEmpty(existItem)) {
-				UserItems newItem = new UserItems();
-				newItem.setUserId(userId);
-				newItem.setItemId(bonusItem.getItemId());
-				newItem.setNumber(Long.valueOf(bonusItem.getNumber()));
-				newItem.setItemType("SPECIAL_ITEMS");
-				newItem.setCreatedAt(new Date());
-				newItem.setUpdatedAt(new Date());
-				userItemsRepository.save(newItem);
-			} else {
-				existItem.setNumber(existItem.getNumber() + Long.valueOf(bonusItem.getNumber()));
-				existItem.setUpdatedAt(new Date());
-				userItemsRepository.save(existItem);
+				UserItems existItem = userItemsRepository.findUserItemsByUserIdAndItemId(userId, bonusItem.getItemId());
+				if (DataUtil.isNullOrEmpty(existItem)) {
+					UserItems newItem = new UserItems();
+					newItem.setUserId(userId);
+					newItem.setItemId(bonusItem.getItemId());
+					newItem.setNumber(Long.valueOf(bonusItem.getNumber()));
+					newItem.setItemType("SPECIAL_ITEMS");
+					newItem.setCreatedAt(new Date());
+					newItem.setUpdatedAt(new Date());
+					userItemsRepository.save(newItem);
+				} else {
+					existItem.setNumber(existItem.getNumber() + Long.valueOf(bonusItem.getNumber()));
+					existItem.setUpdatedAt(new Date());
+					userItemsRepository.save(existItem);
+				}
 			}
+			presentBoxesItemsRepository.saveAll(lstPresentItem);
 		}
-		presentBoxesItemsRepository.saveAll(lstPresentItem);
 		return ResponseDTO.success(bonusDTOS);
 	}
 }
