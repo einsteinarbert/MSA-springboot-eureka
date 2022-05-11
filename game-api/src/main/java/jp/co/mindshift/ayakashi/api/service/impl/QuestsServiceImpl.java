@@ -1,11 +1,13 @@
 package jp.co.mindshift.ayakashi.api.service.impl;
 
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import jp.co.mindshift.ayakashi.api.common.Constant;
 import jp.co.mindshift.ayakashi.api.common.MsgUtil;
 import jp.co.mindshift.ayakashi.api.config.ActionUserHolder;
 import jp.co.mindshift.ayakashi.api.model.Quests;
 import jp.co.mindshift.ayakashi.api.model.UserQuests;
 import jp.co.mindshift.ayakashi.api.model.Users;
+import jp.co.mindshift.ayakashi.api.model.dto.QuestDTO;
 import jp.co.mindshift.ayakashi.api.model.dto.ResponseDTO;
 import jp.co.mindshift.ayakashi.api.model.form.ClearQuestForm;
 import jp.co.mindshift.ayakashi.api.repo.QuestsRepository;
@@ -14,6 +16,7 @@ import jp.co.mindshift.ayakashi.api.repo.UsersRepository;
 import jp.co.mindshift.ayakashi.api.service.BaseService;
 import jp.co.mindshift.ayakashi.api.service.QuestsService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -93,9 +96,21 @@ public class QuestsServiceImpl extends BaseService implements QuestsService {
 		playingQuests = userQuestsRepository.findAllByUserIdAndStatusInAndTypeIs(uid, Collections.singletonList
 				(Constant.UserQuestStatus.PLAYING.getType()), type);
 		List<Long> activeIds = activeQuests.stream().map(UserQuests::getQuestId).collect(Collectors.toList());
-		activeIds.addAll(playingQuests.stream().map(UserQuests::getQuestId).collect(Collectors.toList()));
+		List<Long> playIds = playingQuests.stream().map(UserQuests::getQuestId).collect(Collectors.toList());
+		activeIds.addAll(playIds);
 		cancelQuest.addAll(activeIds);
 		List<Quests> questsAssigned = questsRepository.findAllByIdInAndTypeIs(activeIds, type);
+		List<QuestDTO> result = new ArrayList<>();
+		questsAssigned.forEach(quests -> {
+			QuestDTO dto = new QuestDTO();
+			BeanUtils.copyProperties(quests, dto);
+			if (playIds.contains(dto.getId())) {
+				dto.setQuestStatus(Constant.UserQuestStatus.PLAYING.getType());
+			} else {
+				dto.setQuestStatus(Constant.UserQuestStatus.AVAILABLE.getType());
+			}
+			result.add(dto);
+		});
 		if (cancelQuest.size() == 0) {
 			cancelQuest.add(-1L);
 		}
@@ -123,7 +138,6 @@ public class QuestsServiceImpl extends BaseService implements QuestsService {
 				break;
 			}
 			ranLst.add(ran);
-
 			UserQuests userQuests = new UserQuests();
 			userQuests.setQuestId(q.getId());
 			userQuests.setUserId(uid);
@@ -131,10 +145,13 @@ public class QuestsServiceImpl extends BaseService implements QuestsService {
 			userQuests.setType(q.getType());
 			userQuests.setStatus(Constant.UserQuestStatus.AVAILABLE.getType());
 			userQuestsRepository.save(userQuests);
-			questsAssigned.add(q);
+			QuestDTO dto = new QuestDTO();
+			BeanUtils.copyProperties(q, dto);
+			dto.setQuestStatus(Constant.UserQuestStatus.AVAILABLE.getType());
+			result.add(dto);
 			counter++;
 		}
-		return ResponseDTO.success(questsAssigned);
+		return ResponseDTO.success(result);
 	}
 
 	private void balanceQuests(List<UserQuests> userQuests, List<Long> cancelQuest, Date now, int count) {
