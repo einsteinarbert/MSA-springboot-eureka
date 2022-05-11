@@ -3,6 +3,7 @@ package jp.co.mindshift.ayakashi.api.service.impl;
 import jp.co.mindshift.ayakashi.api.common.DataUtil;
 import jp.co.mindshift.ayakashi.api.model.*;
 import jp.co.mindshift.ayakashi.api.model.dto.LoginBonusDTO;
+import jp.co.mindshift.ayakashi.api.model.dto.LoginRewardItemEntity;
 import jp.co.mindshift.ayakashi.api.model.dto.ResponseDTO;
 import jp.co.mindshift.ayakashi.api.model.entity.LoginBonusEntity;
 import jp.co.mindshift.ayakashi.api.repo.*;
@@ -34,6 +35,15 @@ public class LoginRewardsServiceImpl extends BaseService implements LoginRewards
 			"from login_rewards lr inner join login_reward_options lro on lr.id = lro.login_reward_id \n" +
 			"left join  (select * from present_boxes pb order by pb.created_at desc limit 7) pb on pb.generatable_id = lro.id and pb.generatable_type = 'LOGIN_REWARDS' and pb.user_id = :userId\n" +
 			"where curdate() between cast(lr.start_date as date) and cast(lr.end_date as date) and lr.login_reward_type = 1";
+	private static final String sqlGetLoginItem = "select row_number() over (order by si.special_item_type) as id,  IF(si.special_item_type = 1, 'JEWEL', " +
+	 "IF(si.special_item_type = 2, 'GACHA_TICKET', " +
+	  "IF(si.special_item_type = 3, 'POWER_UP_TICKET', " +
+	   "IF(si.special_item_type = 4, 'PUZZLE_ITEM', " +
+	    "IF(si.special_item_type = 5, 'COIN', " +
+	     "IF(si.special_item_type = 6, 'MEDAL', " +
+	      "IF(si.special_item_type = 7, 'HEART', " +
+	       "IF(si.special_item_type = 8, 'STAMINA', '')))))))) as item_type, lri.number amount " +
+	        "from login_reward_items lri inner join special_items si on lri.item_id = si.item_id where lri.login_reward_option_id = :loginRewardOption";
 
 	@Override
 	public ResponseDTO<?> getList(Long userId) {
@@ -53,7 +63,11 @@ public class LoginRewardsServiceImpl extends BaseService implements LoginRewards
 		//Lay danh sach item
 		List<LoginBonusDTO> bonusDTOS = super.mapList(loginBonusEntity, LoginBonusDTO.class);
 		for(LoginBonusDTO bonus : bonusDTOS){
-			LoginRewardItems 
+			List<LoginRewardItemEntity> items =  em.createNativeQuery(sqlGetLoginItem, LoginRewardItemEntity.class)
+					.setParameter("userId", userId)
+					.setParameter("toDate", toDate)
+					.getResultList();
+			bonus.setItems(items);
 		}
 		
 		//save today item - presentBoxes
