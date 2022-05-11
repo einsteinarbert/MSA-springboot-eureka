@@ -103,14 +103,20 @@ public class QuestsServiceImpl extends BaseService implements QuestsService {
 		int counter = activeIds.size();
 		int min = 0;
 		int max = newFreshQuests.size() - 1;
+		List<Integer> ranLst = new ArrayList<>();
 		while (counter < MAX_QUEST && newFreshQuests.size() > 0) {
 			Random r = new Random();
 			int ran = r.nextInt(max - min + 1) + min;
+			while (ranLst.contains(ran)) {
+				ran = r.nextInt(max - min + 1) + min;
+			}
+			ranLst.add(ran);
 			var q = newFreshQuests.get(ran);
 			UserQuests userQuests = new UserQuests();
 			userQuests.setQuestId(q.getId());
 			userQuests.setUserId(uid);
 			userQuests.setCreatedAt(now);
+			userQuests.setType(q.getType());
 			userQuests.setStatus(Constant.UserQuestStatus.AVAILABLE.getType());
 			userQuestsRepository.save(userQuests);
 			questsAssigned.add(q);
